@@ -62,8 +62,8 @@ const Page = async () => {
                         className="object-contain size-full"
                       />
                     </div>
-					{/* make it center */}
-					<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 size-20">
+                    {/* make it center */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 size-20">
                       <Image
                         src="/logo.png"
                         alt={"logo"}
@@ -93,11 +93,11 @@ const Page = async () => {
                     </div>
                     <div
                       className="mt-3 text-sm prose prose-sm max-w-none
-           prose-headings:font-bold
-           prose-headings:text-muted-foreground
-           prose-a:text-primary prose-a:underline
-           prose-ul:list-disc prose-ol:list-decimal
-           prose-li:marker:text-muted-foreground"
+                        prose-headings:font-bold
+                        prose-headings:text-muted-foreground
+                        prose-a:text-primary prose-a:underline
+                        prose-ul:list-disc prose-ol:list-decimal
+                        prose-li:marker:text-muted-foreground"
                       dangerouslySetInnerHTML={{ __html: product.inclusion }}
                     />
                     <Link

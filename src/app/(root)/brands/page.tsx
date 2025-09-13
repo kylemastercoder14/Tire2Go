@@ -125,7 +125,11 @@ const Page = async () => {
   });
   return (
     <div className="min-h-screen">
-      <div className="w-full pt-24 h-[20vh] flex items-center justify-center bg-gray-500">
+      <div className="w-full pt-24 h-[20vh] flex items-center justify-center bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://gogulong.ph/_nuxt/img/breadcrumbs-bg.f31fb0b.png')",
+        }}>
         <h3 className="text-white font-bold text-center">BRANDS</h3>
       </div>
       <section className="py-10 max-w-7xl mx-auto">
