@@ -1,0 +1,573 @@
+"use server";
+
+import z from "zod";
+import {
+  BrandValidators,
+  FaqsValidators,
+  InventoryValidators,
+  ProductValidators,
+  TipsGuidesValidators,
+} from "@/validators";
+import db from "@/lib/db";
+import { InventoryResponse } from "@/types";
+import { getStockStatus } from "@/lib/utils";
+
+export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
+  const parseValues = BrandValidators.parse(values);
+
+  try {
+    // Check if there is existing brand with the same name
+    const existingBrand = await db.brands.findFirst({
+      where: { name: parseValues.name },
+    });
+
+    if (existingBrand) {
+      return { error: "Brand with this name already exists" };
+    }
+
+    const brand = await db.brands.create({
+      data: parseValues,
+    });
+
+    return { success: "Brand created successfully", brand };
+  } catch (error) {
+    console.error("Error creating brand:", error);
+    return { error: "Failed to create brand" };
+  }
+};
+
+export const updateBrand = async (
+  id: string,
+  values: z.infer<typeof BrandValidators>
+) => {
+  const parseValues = BrandValidators.parse(values);
+
+  try {
+    const existingBrand = await db.brands.findFirst({
+      where: { id },
+    });
+
+    if (!existingBrand) {
+      return { error: "Brand not found" };
+    }
+
+    if (existingBrand.name !== parseValues.name) {
+      const duplicateBrand = await db.brands.findFirst({
+        where: { name: parseValues.name },
+      });
+
+      if (duplicateBrand) {
+        return { error: "Another brand with this name already exists" };
+      }
+    }
+
+    const updatedBrand = await db.brands.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return { success: "Brand updated successfully", brand: updatedBrand };
+  } catch (error) {
+    console.error("Error updating brand:", error);
+    return { error: "Failed to update brand" };
+  }
+};
+
+export const deleteBrand = async (id: string) => {
+  try {
+    const existingBrand = await db.brands.findFirst({
+      where: { id },
+    });
+
+    if (!existingBrand) {
+      return { error: "Brand not found" };
+    }
+
+    await db.brands.delete({
+      where: { id },
+    });
+    return { success: "Brand deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting brand:", error);
+    return { error: "Failed to delete brand" };
+  }
+};
+
+export const createProduct = async (
+  values: z.infer<typeof ProductValidators>
+) => {
+  const parseValues = ProductValidators.parse(values);
+
+  try {
+    const existingProduct = await db.products.findFirst({
+      where: { name: parseValues.name },
+    });
+
+    if (existingProduct) {
+      return { error: "Product with this name already exists" };
+    }
+
+    const product = await db.products.create({
+      data: parseValues,
+    });
+    return { success: "Product created successfully", product };
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return { error: "Failed to create product" };
+  }
+};
+
+export const updateProduct = async (
+  id: string,
+  values: z.infer<typeof ProductValidators>
+) => {
+  const parseValues = ProductValidators.parse(values);
+  try {
+    const existingProduct = await db.products.findFirst({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      return { error: "Product not found" };
+    }
+
+    if (existingProduct.name !== parseValues.name) {
+      const duplicateProduct = await db.products.findFirst({
+        where: { name: parseValues.name },
+      });
+
+      if (duplicateProduct) {
+        return { error: "Another product with this name already exists" };
+      }
+    }
+
+    const updatedProduct = await db.products.update({
+      where: { id },
+      data: parseValues,
+    });
+    return { success: "Product updated successfully", product: updatedProduct };
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return { error: "Failed to update product" };
+  }
+};
+
+export const deleteProduct = async (id: string) => {
+  try {
+    const existingProduct = await db.products.findFirst({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      return { error: "Product not found" };
+    }
+
+    await db.products.delete({
+      where: { id },
+    });
+
+    return { success: "Product deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return { error: "Failed to delete product" };
+  }
+};
+
+export const createInventory = async (
+  values: z.infer<typeof InventoryValidators>
+) => {
+  const parseValues = InventoryValidators.parse(values);
+
+  try {
+    const product = await db.products.findFirst({
+      where: { id: parseValues.productId },
+    });
+
+    if (!product) {
+      return { error: "Product not found" };
+    }
+
+    const existingInventory = await db.inventory.findFirst({
+      where: { productId: parseValues.productId },
+    });
+
+    if (existingInventory) {
+      return { error: "Inventory for this product already exists" };
+    }
+
+    // check if the quantity is more than maxStock
+    if (
+      parseValues.maxStock !== undefined &&
+      parseValues.quantity > parseValues.maxStock
+    ) {
+      return { error: "Quantity cannot be more than max stock" };
+    }
+
+    // check if the quantity is less than minStock
+    if (parseValues.quantity < parseValues.minStock) {
+      return { error: "Quantity cannot be less than min stock" };
+    }
+
+    // check if the minStock is more than maxStock
+    if (
+      parseValues.maxStock !== undefined &&
+      parseValues.minStock > parseValues.maxStock
+    ) {
+      return { error: "Min stock cannot be more than max stock" };
+    }
+
+    // check if the minStock is less than 0
+    if (parseValues.minStock < 0) {
+      return { error: "Min stock cannot be less than 0" };
+    }
+
+    // check if the quantity is less than 0
+    if (parseValues.quantity < 0) {
+      return { error: "Quantity cannot be less than 0" };
+    }
+
+    const inventory = await db.inventory.create({
+      data: {
+        productId: parseValues.productId,
+        quantity: parseValues.quantity,
+        minStock: parseValues.minStock,
+        maxStock: parseValues.maxStock,
+        sku: parseValues.sku,
+      },
+    });
+
+    return { success: "Inventory created successfully", inventory };
+  } catch (error) {
+    console.error("Error creating inventory:", error);
+    return { error: "Failed to create inventory" };
+  }
+};
+
+export const updateInventory = async (
+  id: string,
+  values: z.infer<typeof InventoryValidators>
+) => {
+  const parseValues = InventoryValidators.parse(values);
+  try {
+    const existingInventory = await db.inventory.findFirst({
+      where: { id },
+    });
+
+    if (!existingInventory) {
+      return { error: "Inventory not found" };
+    }
+
+    const product = await db.products.findFirst({
+      where: { id: parseValues.productId },
+    });
+
+    if (!product) {
+      return { error: "Product not found" };
+    }
+
+    if (existingInventory.productId !== parseValues.productId) {
+      const duplicateInventory = await db.inventory.findFirst({
+        where: { productId: parseValues.productId },
+      });
+
+      if (duplicateInventory) {
+        return { error: "Inventory for this product already exists" };
+      }
+    }
+
+    // check if the quantity is more than maxStock
+    if (
+      parseValues.maxStock !== undefined &&
+      parseValues.quantity > parseValues.maxStock
+    ) {
+      return { error: "Quantity cannot be more than max stock" };
+    }
+
+    // check if the quantity is less than minStock
+    if (parseValues.quantity < parseValues.minStock) {
+      return { error: "Quantity cannot be less than min stock" };
+    }
+
+    // check if the minStock is more than maxStock
+    if (
+      parseValues.maxStock !== undefined &&
+      parseValues.minStock > parseValues.maxStock
+    ) {
+      return { error: "Min stock cannot be more than max stock" };
+    }
+
+    // check if the minStock is less than 0
+    if (parseValues.minStock < 0) {
+      return { error: "Min stock cannot be less than 0" };
+    }
+
+    // check if the quantity is less than 0
+    if (parseValues.quantity < 0) {
+      return { error: "Quantity cannot be less than 0" };
+    }
+
+    const updatedInventory = await db.inventory.update({
+      where: { id },
+      data: {
+        productId: parseValues.productId,
+        quantity: parseValues.quantity,
+        minStock: parseValues.minStock,
+        maxStock: parseValues.maxStock,
+        sku: parseValues.sku,
+      },
+    });
+
+    return {
+      success: "Inventory updated successfully",
+      inventory: updatedInventory,
+    };
+  } catch (error) {
+    console.error("Error updating inventory:", error);
+    return { error: "Failed to update inventory" };
+  }
+};
+
+export const deleteInventory = async (id: string) => {
+  try {
+    const existingInventory = await db.inventory.findFirst({
+      where: { id },
+    });
+
+    if (!existingInventory) {
+      return { error: "Inventory not found" };
+    }
+
+    await db.inventory.delete({
+      where: { id },
+    });
+
+    return { success: "Inventory deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting inventory:", error);
+    return { error: "Failed to delete inventory" };
+  }
+};
+
+export const updateStockQuantity = async (
+  id: string,
+  quantity: number
+): Promise<InventoryResponse> => {
+  const existingInventory = await db.inventory.findUnique({ where: { id } });
+  if (!existingInventory) throw new Error("Inventory not found");
+
+  if (quantity < 0) throw new Error("Quantity cannot be less than 0");
+  if (
+    existingInventory.maxStock != null &&
+    quantity > existingInventory.maxStock
+  ) {
+    throw new Error("Quantity cannot be more than max stock");
+  }
+
+  const updatedInventory = await db.inventory.update({
+    where: { id },
+    data: {
+      quantity,
+      status: getStockStatus(quantity, existingInventory.minStock),
+    },
+  });
+
+  return {
+    success: "Stock updated successfully",
+    inventory: updatedInventory,
+  };
+};
+
+export const updateMinimumStock = async (
+  id: string,
+  minStock: number
+): Promise<InventoryResponse> => {
+  const existingInventory = await db.inventory.findUnique({ where: { id } });
+  if (!existingInventory) throw new Error("Inventory not found");
+
+  if (minStock < 0) throw new Error("Minimum stock cannot be less than 0");
+  if (
+    existingInventory.maxStock != null &&
+    minStock > existingInventory.maxStock
+  ) {
+    throw new Error("Minimum stock cannot be more than max stock");
+  }
+
+  const updatedInventory = await db.inventory.update({
+    where: { id },
+    data: {
+      minStock,
+      status: getStockStatus(existingInventory.quantity, minStock),
+    },
+  });
+
+  return {
+    success: "Minimum stock updated successfully",
+    inventory: updatedInventory,
+  };
+};
+
+export const updateMaximumStock = async (
+  id: string,
+  maxStock: number
+): Promise<InventoryResponse> => {
+  const existingInventory = await db.inventory.findUnique({ where: { id } });
+  if (!existingInventory) throw new Error("Inventory not found");
+
+  if (maxStock < 0) throw new Error("Maximum stock cannot be less than 0");
+  if (maxStock < existingInventory.minStock) {
+    throw new Error("Maximum stock cannot be less than min stock");
+  }
+  if (existingInventory.quantity > maxStock) {
+    throw new Error("Maximum stock cannot be less than current quantity");
+  }
+
+  const updatedInventory = await db.inventory.update({
+    where: { id },
+    data: {
+      maxStock,
+      status: getStockStatus(
+        existingInventory.quantity,
+        existingInventory.minStock
+      ),
+    },
+  });
+
+  return {
+    success: "Maximum stock updated successfully",
+    inventory: updatedInventory,
+  };
+};
+
+export const createTipsGuides = async (
+  values: z.infer<typeof TipsGuidesValidators>
+) => {
+  const parseValues = TipsGuidesValidators.parse(values);
+
+  try {
+    const tipsGuides = await db.tipsGuides.create({
+      data: parseValues,
+    });
+
+    return { success: "Tips & guides created successfully", tipsGuides };
+  } catch (error) {
+    console.error("Error creating tips & guides:", error);
+    return { error: "Failed to create tips & guides" };
+  }
+};
+
+export const updateTipsGuides = async (
+  id: string,
+  values: z.infer<typeof TipsGuidesValidators>
+) => {
+  const parseValues = TipsGuidesValidators.parse(values);
+
+  try {
+    const existingTipsGuides = await db.tipsGuides.findFirst({
+      where: { id },
+    });
+
+    if (!existingTipsGuides) {
+      return { error: "Tips & guides not found" };
+    }
+
+    const updatedTipsGuides = await db.tipsGuides.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return {
+      success: "Tips & guides updated successfully",
+      tipsGuides: updatedTipsGuides,
+    };
+  } catch (error) {
+    console.error("Error updating tips & guides:", error);
+    return { error: "Failed to update tips & guides" };
+  }
+};
+
+export const deleteTipsGuides = async (id: string) => {
+  try {
+    const existingTipsGuides = await db.tipsGuides.findFirst({
+      where: { id },
+    });
+
+    if (!existingTipsGuides) {
+      return { error: "Tips & guides not found" };
+    }
+
+    await db.tipsGuides.delete({
+      where: { id },
+    });
+
+    return { success: "Tips & guides deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting tips & guides:", error);
+    return { error: "Failed to delete tips & guides" };
+  }
+};
+
+export const createFaqs = async (values: z.infer<typeof FaqsValidators>) => {
+  const parseValues = FaqsValidators.parse(values);
+
+  try {
+    const faqs = await db.faqs.create({
+      data: parseValues,
+    });
+
+    return { success: "FAQs created successfully", faqs };
+  } catch (error) {
+    console.error("Error creating FAQs:", error);
+    return { error: "Failed to create FAQs" };
+  }
+};
+
+export const updateFaqs = async (
+  id: string,
+  values: z.infer<typeof FaqsValidators>
+) => {
+  const parseValues = FaqsValidators.parse(values);
+
+  try {
+    const existingFaqs = await db.faqs.findFirst({
+      where: { id },
+    });
+
+    if (!existingFaqs) {
+      return { error: "FAQs not found" };
+    }
+
+    const updatedFaqs = await db.faqs.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return {
+      success: "FAQs updated successfully",
+      faqs: updatedFaqs,
+    };
+  } catch (error) {
+    console.error("Error updating FAQs:", error);
+    return { error: "Failed to update FAQs" };
+  }
+};
+
+export const deleteFaqs = async (id: string) => {
+  try {
+    const existingFaqs = await db.faqs.findFirst({
+      where: { id },
+    });
+
+    if (!existingFaqs) {
+      return { error: "FAQs not found" };
+    }
+
+    await db.faqs.delete({
+      where: { id },
+    });
+
+    return { success: "FAQs deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting FAQs:", error);
+    return { error: "Failed to delete FAQs" };
+  }
+};

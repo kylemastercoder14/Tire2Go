@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id              String   @id @default(uuid())
+  authId          String?  @unique // from Clerk
+  email           String   @unique
+  password        String
+  firstName       String
+  lastName        String
+  mobileNumber    String
+  ipAddress       String?
+  userAgent       String?
+  deviceType      String? // mobile/tablet/desktop
+  isEmailVerified Boolean  @default(false)
+  role            String   @default("USER") // USER, ADMIN
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Brands {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  logo        String
+  type        String // e.g., "Premium", "Mid-range", "Budget"
+  thumbnail   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Products[]
+}
+
+model Products {
+  id              String   @id @default(uuid())
+  name            String
+  description     String
+  price           Float
+  images          String[]
+  inclusion       String
+  warranty        String
+  tireSize        String
+  isClearanceSale Boolean  @default(false)
+  discountedPrice Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  brandId String
+  brand   Brands @relation(fields: [brandId], references: [id])
+
+  inventory Inventory[]
+}
+
+model Inventory {
+  id            String    @id @default(uuid())
+  quantity      Int // current stock on hand
+  minStock      Int // threshold for "low stock" alerts
+  maxStock      Int? // optional: max capacity (warehouse limit)
+  sku           String?   @unique
+  status        String    @default("IN_STOCK") // IN_STOCK, LOW_STOCK, OUT_OF_STOCK, DISCONTINUED
+  lastRestocked DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  productId String
+  product   Products @relation(fields: [productId], references: [id])
+}
+
+model TipsGuides {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  thumbnail String?
+  category  String // e.g., "Maintenance", "Buying Guide", "Safety Tips"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Faqs {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
