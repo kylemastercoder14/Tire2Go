@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
