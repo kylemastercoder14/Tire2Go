@@ -174,7 +174,7 @@ const Page = async () => {
                 />
               </div>
               <span className="uppercase mt-3 font-semibold">{brand.name}</span>
-              <p className="mt-2 text-muted-foreground text-sm">
+              <p className="mt-2 line-clamp-6 text-muted-foreground text-sm">
                 {brand.description}
               </p>
             </Link>
@@ -200,7 +200,7 @@ const Page = async () => {
                 />
               </div>
               <span className="uppercase mt-3 font-semibold">{brand.name}</span>
-              <p className="mt-2 text-muted-foreground text-sm">
+              <p className="mt-2 line-clamp-6 text-muted-foreground text-sm">
                 {brand.description}
               </p>
             </Link>
@@ -226,7 +226,7 @@ const Page = async () => {
                 />
               </div>
               <span className="uppercase mt-3 font-semibold">{brand.name}</span>
-              <p className="mt-2 text-muted-foreground text-sm">
+              <p className="mt-2 line-clamp-6 text-muted-foreground text-sm">
                 {brand.description}
               </p>
             </Link>
