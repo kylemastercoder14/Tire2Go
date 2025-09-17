@@ -5,7 +5,9 @@ import {
   BrandValidators,
   FaqsValidators,
   InventoryValidators,
+  PolicyValidators,
   ProductValidators,
+  StaffValidators,
   TipsGuidesValidators,
 } from "@/validators";
 import db from "@/lib/db";
@@ -569,5 +571,170 @@ export const deleteFaqs = async (id: string) => {
   } catch (error) {
     console.error("Error deleting FAQs:", error);
     return { error: "Failed to delete FAQs" };
+  }
+};
+
+export const createStaff = async (values: z.infer<typeof StaffValidators>) => {
+  const parseValues = StaffValidators.parse(values);
+
+  try {
+    // Check if there is existing staff with the same email
+    const existingStaff = await db.staff.findFirst({
+      where: { email: parseValues.email },
+    });
+
+    if (existingStaff) {
+      return { error: "Staff with this email already exists" };
+    }
+
+    const staff = await db.staff.create({
+      data: parseValues,
+    });
+
+    return { success: "Staff created successfully", staff };
+  } catch (error) {
+    console.error("Error creating staff:", error);
+    return { error: "Failed to create staff" };
+  }
+};
+
+export const updateStaff = async (
+  id: string,
+  values: z.infer<typeof StaffValidators>
+) => {
+  const parseValues = StaffValidators.parse(values);
+
+  try {
+    const existingStaff = await db.staff.findFirst({
+      where: { id },
+    });
+
+    if (!existingStaff) {
+      return { error: "Staff not found" };
+    }
+
+    if (existingStaff.email !== parseValues.email) {
+      const duplicateStaff = await db.staff.findFirst({
+        where: { email: parseValues.email },
+      });
+
+      if (duplicateStaff) {
+        return { error: "Another staff member with this email already exists" };
+      }
+    }
+
+    const updatedStaff = await db.staff.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return { success: "Staff updated successfully", staff: updatedStaff };
+  } catch (error) {
+    console.error("Error updating staff:", error);
+    return { error: "Failed to update staff" };
+  }
+};
+
+export const deleteStaff = async (id: string) => {
+  try {
+    const existingStaff = await db.staff.findFirst({
+      where: { id },
+    });
+
+    if (!existingStaff) {
+      return { error: "Staff not found" };
+    }
+
+    await db.staff.delete({
+      where: { id },
+    });
+
+    return { success: "Staff deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting staff:", error);
+    return { error: "Failed to delete staff" };
+  }
+};
+
+export const createPolicy = async (
+  values: z.infer<typeof PolicyValidators>
+) => {
+  const parseValues = PolicyValidators.parse(values);
+
+  try {
+    // Check if there is existing policy with the same type
+    const existingPolicy = await db.policies.findFirst({
+      where: { type: parseValues.type },
+    });
+
+    if (existingPolicy) {
+      return { error: "Policy with this type already exists" };
+    }
+
+    const policy = await db.policies.create({
+      data: parseValues,
+    });
+
+    return { success: "Policy created successfully", policy };
+  } catch (error) {
+    console.error("Error creating policy:", error);
+    return { error: "Failed to create policy" };
+  }
+};
+
+export const updatePolicy = async (
+  id: string,
+  values: z.infer<typeof PolicyValidators>
+) => {
+  const parseValues = PolicyValidators.parse(values);
+
+  try {
+    const existingPolicy = await db.policies.findFirst({
+      where: { id },
+    });
+
+    if (!existingPolicy) {
+      return { error: "Policy not found" };
+    }
+
+    if (existingPolicy.type !== parseValues.type) {
+      const duplicatePolicy = await db.policies.findFirst({
+        where: { type: parseValues.type },
+      });
+      if (duplicatePolicy) {
+        return { error: "Another policy with this type already exists" };
+      }
+    }
+
+    const updatedPolicy = await db.policies.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return { success: "Policy updated successfully", policy: updatedPolicy };
+  } catch (error) {
+    console.error("Error updating policy:", error);
+    return { error: "Failed to update policy" };
+  }
+};
+
+export const deletePolicy = async (id: string) => {
+  try {
+    const existingPolicy = await db.policies.findFirst({
+      where: { id },
+    });
+
+    if (!existingPolicy) {
+      return { error: "Policy not found" };
+    }
+
+    await db.policies.delete({
+      where: { id },
+    });
+
+    return { success: "Policy deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting policy:", error);
+    return { error: "Failed to delete policy" };
   }
 };

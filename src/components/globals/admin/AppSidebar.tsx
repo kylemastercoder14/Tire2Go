@@ -9,8 +9,8 @@ import {
   IconFileText,
   IconHelpCircle,
   IconScale,
-  IconSettings,
   IconTag,
+  IconUserCog,
   IconUsersGroup,
   IconWallet,
   IconWheel,
@@ -60,6 +60,11 @@ const data = {
       title: "Customers",
       url: "/admin/customers",
       icon: IconUsersGroup,
+    },
+    {
+      title: "Staff Management",
+      url: "/admin/staff-management",
+      icon: IconUserCog,
     },
     {
       title: "Orders",

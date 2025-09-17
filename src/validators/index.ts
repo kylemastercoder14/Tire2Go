@@ -42,3 +42,18 @@ export const FaqsValidators = z.object({
   question: z.string().min(2, { message: "Question is required." }),
   answer: z.string().min(10, { message: "Answer is required." }),
 });
+
+export const StaffValidators = z.object({
+  firstName: z.string().min(2, { message: "First name is required." }),
+  lastName: z.string().min(2, { message: "Last name is required." }),
+  email: z.string().email({ message: "Invalid email address." }),
+  role: z.string().min(2, { message: "Role is required." }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters." }),
+});
+
+export const PolicyValidators = z.object({
+  type: z.string().min(2, { message: "Type is required." }),
+  content: z.string().min(2, { message: "Content is required." }),
+});
