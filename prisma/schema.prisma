@@ -22,6 +22,12 @@ model Users {
   role            String   @default("USER") // USER, ADMIN
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  feedback   Feedback[]
+  ticket     Ticket[]
+  cart       Cart[]
+  systemLogs SystemLogs[]
+  order      Order[]
 }
 
 model Staff {
@@ -53,6 +59,7 @@ model Brands {
 model Products {
   id              String   @id @default(uuid())
   name            String
+  promotionsId    String?
   description     String
   price           Float
   images          String[]
@@ -67,7 +74,10 @@ model Products {
   brandId String
   brand   Brands @relation(fields: [brandId], references: [id])
 
-  inventory Inventory[]
+  inventory  Inventory[]
+  cartItem   CartItem[]
+  promotions Promotions? @relation(fields: [promotionsId], references: [id])
+  orderItem  OrderItem[]
 }
 
 model Inventory {
@@ -105,8 +115,148 @@ model Faqs {
 
 model Policies {
   id        String   @id @default(uuid())
-  type      String   // e.g., "Privacy Policy", "Return Policy", "Shipping Policy"
+  type      String // e.g., "Privacy Policy", "Return Policy", "Shipping Policy"
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Promotions {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  type        String // e.g. percentage, fixed amount, buy one get one
+  value       Float
+  startDate   DateTime
+  endDate     DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Products[]
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  userId    String
+  rating    Int // e.g., 1 to 5
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Ticket {
+  id          String         @id @default(uuid())
+  userId      String
+  subject     String
+  description String
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(MEDIUM)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String
+  total     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     Users      @relation(fields: [userId], references: [id])
+  cartItem CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int
+  price     Float // price at the time of adding to cart
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart     @relation(fields: [cartId], references: [id])
+  product Products @relation(fields: [productId], references: [id])
+}
+
+model SystemLogs {
+  id        String   @id @default(uuid())
+  action    String
+  userId    String?
+  ipAddress String?
+  userAgent String?
+  timestamp DateTime @default(now())
+
+  user Users? @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id            String        @id @default(uuid())
+  userId        String
+  totalAmount   Float
+  address       String
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentMethod String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user      Users       @relation(fields: [userId], references: [id])
+  orderItem OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float // price at the time of order
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order   Order    @relation(fields: [orderId], references: [id])
+  product Products @relation(fields: [productId], references: [id])
+}
+
+model Inquiries {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
