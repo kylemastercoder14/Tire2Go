@@ -57,3 +57,8 @@ export const PolicyValidators = z.object({
   type: z.string().min(2, { message: "Type is required." }),
   content: z.string().min(2, { message: "Content is required." }),
 });
+
+export const SalesValidators = z.object({
+  name: z.string().min(2, { message: "Name is required" }),
+  description: z.string().optional(),
+});
