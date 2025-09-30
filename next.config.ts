@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       "erp-ncst.s3.us-east-1.amazonaws.com",
       "images.unsplash.com",
       "images.pexels.com",
+      "adzktgbqdq.cloudimg.io",
     ],
   },
   eslint: {

@@ -3,16 +3,15 @@ import TireSearch from "@/components/globals/TireSearch";
 import Image from "next/image";
 import BrandsCollection from "@/components/globals/BrandsCollection";
 import { Button } from "@/components/ui/button";
-import BannerCarousel from "@/components/globals/BannerCarousel";
 
 const Page = () => {
   return (
     <div className="min-h-screen">
-      <div className="bg-hero w-full h-[75vh]">
-        <div className="grid max-w-7xl pb-18 mx-auto pt-40 gap-10 lg:grid-cols-2 grid-cols-1">
-          <BannerCarousel />
-          <TireSearch />
+      <div className="bg-hero w-full flex flex-col items-start justify-end py-20 h-[75vh]">
+        <div className="px-80 mb-10">
+          <h3 className='text-white font-semibold text-5xl italic tracking-tight leading-relaxed'>FIND THE INNOVATIVE TIRE <br /><span className='font-black'>YOU NEED</span></h3>
         </div>
+        <TireSearch />
       </div>
       <section className="pt-10 bg-[#f5f5f5] pb-10">
         <h3 className="text-primary text-center text-4xl font-bold tracking-tight">
