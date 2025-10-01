@@ -7,6 +7,7 @@ import {
   InventoryValidators,
   PolicyValidators,
   ProductValidators,
+  PromotionValidators,
   StaffValidators,
   TipsGuidesValidators,
 } from "@/validators";
@@ -736,5 +737,70 @@ export const deletePolicy = async (id: string) => {
   } catch (error) {
     console.error("Error deleting policy:", error);
     return { error: "Failed to delete policy" };
+  }
+};
+
+export const createPromotion = async (
+  values: z.infer<typeof PromotionValidators>
+) => {
+  const parseValues = PromotionValidators.parse(values);
+
+  try {
+    const promotion = await db.promotions.create({
+      data: parseValues,
+    });
+    return { success: "Promotion created successfully", promotion };
+  } catch (error) {
+    console.error("Error creating promotion:", error);
+    return { error: "Failed to create promotion" };
+  }
+};
+
+export const updatePromotion = async (
+  id: string,
+  values: z.infer<typeof PromotionValidators>
+) => {
+  const parseValues = PromotionValidators.parse(values);
+  try {
+    const existingPromotion = await db.promotions.findFirst({
+      where: { id },
+    });
+
+    if (!existingPromotion) {
+      return { error: "Promotion not found" };
+    }
+
+    const updatedPromotion = await db.promotions.update({
+      where: { id },
+      data: parseValues,
+    });
+    return {
+      success: "Promotion updated successfully",
+      promotion: updatedPromotion,
+    };
+  } catch (error) {
+    console.error("Error updating promotion:", error);
+    return { error: "Failed to update promotion" };
+  }
+};
+
+export const deletePromotion = async (id: string) => {
+  try {
+    const existingPromotion = await db.promotions.findFirst({
+      where: { id },
+    });
+
+    if (!existingPromotion) {
+      return { error: "Promotion not found" };
+    }
+
+    await db.promotions.delete({
+      where: { id },
+    });
+
+    return { success: "Promotion deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting promotion:", error);
+    return { error: "Failed to delete promotion" };
   }
 };

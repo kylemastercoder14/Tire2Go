@@ -51,6 +51,7 @@ const ImageUpload = ({
       "image/jpg": [".jpg", ".jpeg"],
       "image/svg+xml": [".svg"],
       "image/webp": [".webp"],
+      "image/avif": [".avif"],
     },
     maxFiles: imageCount,
     onDrop: async (acceptedFiles) => {

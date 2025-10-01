@@ -53,7 +53,7 @@ model Brands {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  products Products[]
+  products   Products[]
 }
 
 model Products {
@@ -76,7 +76,6 @@ model Products {
 
   inventory  Inventory[]
   cartItem   CartItem[]
-  promotions Promotions? @relation(fields: [promotionsId], references: [id])
   orderItem  OrderItem[]
 }
 
@@ -125,15 +124,13 @@ model Promotions {
   id          String   @id @default(uuid())
   name        String
   description String
-  type        String // e.g. percentage, fixed amount, buy one get one
-  value       Float
+  criteria    String
+  thumbnail   String
   startDate   DateTime
   endDate     DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  products Products[]
 }
 
 model Feedback {

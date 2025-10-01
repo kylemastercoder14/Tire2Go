@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       "images.unsplash.com",
       "images.pexels.com",
       "adzktgbqdq.cloudimg.io",
+      "yokohamatire.ph",
     ],
   },
   eslint: {

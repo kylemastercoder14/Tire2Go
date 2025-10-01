@@ -6,7 +6,7 @@ import Link from "next/link";
 const Page = () => {
   return (
     <div className="min-h-screen">
-      <div className="w-full pt-24 h-[20vh] flex items-center justify-center bg-cover bg-center"
+      <div className="w-full pt-30 h-[20vh] flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage:
             "url('https://gogulong.ph/_nuxt/img/breadcrumbs-bg.f31fb0b.png')",

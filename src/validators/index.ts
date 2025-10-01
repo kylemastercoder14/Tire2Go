@@ -62,3 +62,12 @@ export const SalesValidators = z.object({
   name: z.string().min(2, { message: "Name is required" }),
   description: z.string().optional(),
 });
+
+export const PromotionValidators = z.object({
+  name: z.string().min(2, { message: "Name is required." }),
+  description: z.string().min(10, { message: "Description is required." }),
+  criteria: z.string().min(10, { message: "Criteria is required." }),
+  thumbnail: z.string().min(10, { message: "Thumbnail is required." }),
+  startDate: z.date(),
+  endDate: z.date(),
+});

@@ -92,7 +92,7 @@ const Page = async () => {
                       </p>
                     </div>
                     <div
-                      className="mt-3 text-sm prose prose-sm max-w-none
+                      className="my-3 text-sm prose prose-sm max-w-none
                         prose-headings:font-bold
                         prose-headings:text-muted-foreground
                         prose-a:text-primary prose-a:underline

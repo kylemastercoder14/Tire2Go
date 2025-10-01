@@ -3,7 +3,7 @@ import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { ChevronDown, LifeBuoy, User } from 'lucide-react';
+import { ChevronDown, LifeBuoy, User } from "lucide-react";
 
 const Navbar = () => {
   const { isSignedIn } = useUser();
@@ -12,17 +12,56 @@ const Navbar = () => {
 
   const menuItems = [
     {
-      name: 'Products',
-      items: ['Clearance Sale', 'Promos', 'Brands']
+      name: "Products",
+      items: [
+        {
+          label: "Clearance Sale",
+          url: "clearance-sale",
+        },
+        {
+          label: "Promos",
+          url: "promos",
+        },
+        {
+          label: "Brands",
+          url: "brands",
+        },
+      ],
     },
     {
-      name: 'Services',
-      items: ['Installation', 'Maintenance', 'Consultation']
+      name: "Services",
+      items: [
+        {
+          label: "Installation",
+          url: "installation",
+        },
+        {
+          label: "Maintenance",
+          url: "maintenance",
+        },
+        {
+          label: "Consultation",
+          url: "consultation",
+        },
+      ],
     },
     {
-      name: 'Resources',
-      items: ['Tips & Advice', 'FAQs', 'Car Models']
-    }
+      name: "Resources",
+      items: [
+        {
+          label: "Tips & Advice",
+          url: "tips-and-advice",
+        },
+        {
+          label: "FAQs",
+          url: "faqs",
+        },
+        {
+          label: "Car Models",
+          url: "car-models",
+        },
+      ],
+    },
   ];
 
   return (
@@ -32,15 +71,24 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-10">
             <div className="flex items-center gap-6 text-xs text-white">
-              <Link href="tel:+639778355320" className="hover:text-white/80 transition-colors">
+              <Link
+                href="tel:+639778355320"
+                className="hover:text-white/80 transition-colors"
+              >
                 +63977 835 5320
               </Link>
-              <Link href="mailto:business.202magstires@gmail.com" className="hover:text-white/80 transition-colors hidden md:block">
+              <Link
+                href="mailto:business.202magstires@gmail.com"
+                className="hover:text-white/80 transition-colors hidden md:block"
+              >
                 business.202magstires@gmail.com
               </Link>
             </div>
             <div className="flex items-center gap-4">
-              <Link href="/assistance" className="text-xs text-white hover:text-white/80 transition-colors">
+              <Link
+                href="/assistance"
+                className="text-xs text-white hover:text-white/80 transition-colors"
+              >
                 Assistance
               </Link>
               <div className="flex items-center gap-3">
@@ -49,8 +97,13 @@ const Navbar = () => {
                   href="https://www.facebook.com/202magsandtires/"
                   className="text-white hover:text-white/80 transition-colors"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
                   </svg>
                 </Link>
                 <Link
@@ -58,8 +111,13 @@ const Navbar = () => {
                   href="https://www.instagram.com/202magstires?igsh=M3ZzbnZpanExZnl5"
                   className="text-white hover:text-white/80 transition-colors"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" />
                   </svg>
                 </Link>
               </div>
@@ -102,10 +160,10 @@ const Navbar = () => {
                         {menu.items.map((item, itemIdx) => (
                           <Link
                             key={itemIdx}
-                            href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                            href={`/${item.url}`}
                             className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                           >
-                            {item}
+                            {item.label}
                           </Link>
                         ))}
                       </div>
@@ -128,14 +186,14 @@ const Navbar = () => {
                 href="/tire-selector"
                 className="bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center gap-2"
               >
-                <LifeBuoy className='size-4' />
+                <LifeBuoy className="size-4" />
                 Tire selector
               </Link>
               <Link
                 href="/sign-in"
                 className="border border-primary text-primary px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center gap-2"
               >
-                <User className='size-4' />
+                <User className="size-4" />
                 Sign in
               </Link>
               {isSignedIn && <UserButton />}
@@ -146,11 +204,26 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden text-black p-2"
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 )}
               </svg>
             </button>
@@ -164,26 +237,37 @@ const Navbar = () => {
           <div className="px-4 pt-2 pb-3 space-y-1">
             {menuItems.map((menu, idx) => (
               <div key={idx} className="border-b border-gray-100 pb-2 mb-2">
-                <div className="font-medium text-gray-900 px-3 py-2">{menu.name}</div>
+                <div className="font-medium text-gray-900 px-3 py-2">
+                  {menu.name}
+                </div>
                 {menu.items.map((item, itemIdx) => (
                   <Link
                     key={itemIdx}
-                    href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                    href={`/${item.url}`}
                     className="block px-6 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50"
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 ))}
               </div>
             ))}
-            <Link href="/about-us" className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50">
+            <Link
+              href="/about-us"
+              className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50"
+            >
               About Us
             </Link>
             <div className="pt-3 space-y-2">
-              <Link href="/tire-selector" className="block bg-primary text-gray-900 px-4 py-2 rounded font-medium text-center">
+              <Link
+                href="/tire-selector"
+                className="block bg-primary text-gray-900 px-4 py-2 rounded font-medium text-center"
+              >
                 Tire selector
               </Link>
-              <Link href="/find-dealer" className="block bg-gray-700 text-white px-4 py-2 rounded font-medium text-center">
+              <Link
+                href="/find-dealer"
+                className="block bg-gray-700 text-white px-4 py-2 rounded font-medium text-center"
+              >
                 Find a dealer
               </Link>
             </div>
