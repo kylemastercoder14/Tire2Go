@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import TireDetails from "@/components/globals/TireDetails";
-import UnderConstruction from '@/components/globals/UnderConstruction';
+import UnderConstruction from "@/components/globals/UnderConstruction";
 
 const Page = async (props: {
   params: Promise<{
@@ -28,12 +28,12 @@ const Page = async (props: {
   });
 
   const otherProducts = await db.products.findMany({
-	where: {
-	  brandId: data?.brandId,
-	  id: {
-		not: data?.id,
-	  },
-	},
+    where: {
+      brandId: data?.brandId,
+      id: {
+        not: data?.id,
+      },
+    },
   });
 
   return (
@@ -67,10 +67,12 @@ const Page = async (props: {
       <section className="pt-8 pb-12 px-10 lg:px-24">
         <TireDetails data={data!} />
       </section>
-	  <section className='pb-16 flex flex-col items-center justify-center px-10 lg:px-24'>
-		<h3 className="text-xl font-bold border-b-2 pb-1 border-primary inline-block mx-auto text-center justify-center items-center tracking-tight mb-5">More tires from {data?.brand.name}</h3>
-		<UnderConstruction />
-	  </section>
+      <section className="pb-16 flex flex-col items-center justify-center px-10 lg:px-24">
+        <h3 className="text-xl font-bold border-b-2 pb-1 border-primary inline-block mx-auto text-center justify-center items-center tracking-tight mb-5">
+          More tires from {data?.brand.name}
+        </h3>
+        <UnderConstruction />
+      </section>
     </div>
   );
 };

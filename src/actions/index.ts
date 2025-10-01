@@ -12,8 +12,12 @@ import {
   TipsGuidesValidators,
 } from "@/validators";
 import db from "@/lib/db";
-import { InventoryResponse } from "@/types";
+import { InventoryResponse, OrderWithOrderItem } from "@/types";
 import { getStockStatus } from "@/lib/utils";
+import { CartItem, CustomerDetails, DeliveryOption } from "@/hooks/use-cart";
+import { auth } from "@clerk/nextjs/server";
+import { OrderCompleteHTML } from "@/components/email-template/order-complete";
+import { sendMail } from "@/lib/nodemailer";
 
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
@@ -802,5 +806,98 @@ export const deletePromotion = async (id: string) => {
   } catch (error) {
     console.error("Error deleting promotion:", error);
     return { error: "Failed to delete promotion" };
+  }
+};
+
+export const placeOrder = async (data: {
+  items: CartItem[];
+  preferredSchedule: Date | null;
+  customerDetails: CustomerDetails;
+  deliveryOption: DeliveryOption;
+  totalAmount: number;
+  discountedAmount?: number;
+}) => {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { error: "You must log in first before you checkout" };
+    }
+
+    const user = await db.users.findUnique({ where: { authId: userId } });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    const fullName = `${data.customerDetails.firstName} ${data.customerDetails.lastName}`;
+
+    // Create order
+    const response = await db.order.create({
+      data: {
+        userId: user.id,
+        totalAmount: data.totalAmount,
+        discountedAmount: data.discountedAmount ?? 0,
+        name: fullName,
+        email: data.customerDetails.email,
+        phoneNumber: data.customerDetails.phone,
+        orderOption: data.deliveryOption,
+        preferredDate: data.preferredSchedule || new Date(),
+        remarks: data.customerDetails.remarks,
+      },
+    });
+
+    // Insert order items
+    await db.orderItem.createMany({
+      data: data.items.map((item) => ({
+        orderId: response.id,
+        productId: item.id,
+        quantity: item.quantity,
+        price: item.unitPrice,
+      })),
+    });
+
+    // Fetch order with items to return
+    const orderWithItems = await db.order.findUnique({
+      where: { id: response.id },
+      include: {
+        orderItem: {
+          include: { product: { include: { brand: true } } },
+        },
+      },
+    });
+
+    await sendOrderCompletedEmail(
+      orderWithItems as OrderWithOrderItem,
+      data.customerDetails.email
+    );
+
+    return { success: "Order placed successfully", order: orderWithItems };
+  } catch (error) {
+    console.error("Error placing order:", error);
+    return { error: "Failed to place order" };
+  }
+};
+
+export const sendOrderCompletedEmail = async (
+  order: OrderWithOrderItem,
+  email: string
+) => {
+  try {
+    const htmlContent = await OrderCompleteHTML({
+      order,
+    });
+
+    await sendMail(
+      email,
+      `Your order has been completed`,
+      `Your order "${order.id}" has been completed.`,
+      htmlContent
+    );
+
+    return { success: "Email has been sent." };
+  } catch (error) {
+    console.error("Error sending product status email:", error);
+    return { message: "An error occurred. Please try again." };
   }
 };

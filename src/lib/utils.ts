@@ -56,3 +56,9 @@ export function formatDate(date: Date) {
     day: "numeric",
   });
 }
+
+export const formatCurrency = (value: number) =>
+  value.toLocaleString("en-PH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });

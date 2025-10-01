@@ -189,14 +189,17 @@ const Navbar = () => {
                 <LifeBuoy className="size-4" />
                 Tire selector
               </Link>
-              <Link
-                href="/sign-in"
-                className="border border-primary text-primary px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center gap-2"
-              >
-                <User className="size-4" />
-                Sign in
-              </Link>
-              {isSignedIn && <UserButton />}
+              {isSignedIn ? (
+                <UserButton />
+              ) : (
+                <Link
+                  href="/sign-in"
+                  className="border border-primary text-primary px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center gap-2"
+                >
+                  <User className="size-4" />
+                  Sign in
+                </Link>
+              )}
             </div>
 
             {/* Mobile menu button */}

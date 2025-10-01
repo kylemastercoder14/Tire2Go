@@ -53,7 +53,7 @@ model Brands {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  products   Products[]
+  products Products[]
 }
 
 model Products {
@@ -74,9 +74,9 @@ model Products {
   brandId String
   brand   Brands @relation(fields: [brandId], references: [id])
 
-  inventory  Inventory[]
-  cartItem   CartItem[]
-  orderItem  OrderItem[]
+  inventory Inventory[]
+  cartItem  CartItem[]
+  orderItem OrderItem[]
 }
 
 model Inventory {
@@ -193,15 +193,20 @@ model SystemLogs {
 }
 
 model Order {
-  id            String        @id @default(uuid())
-  userId        String
-  totalAmount   Float
-  address       String
-  status        OrderStatus   @default(PENDING)
-  paymentStatus PaymentStatus @default(PENDING)
-  paymentMethod String
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id               String        @id @default(uuid())
+  userId           String
+  totalAmount      Float
+  discountedAmount Float?
+  name             String
+  email            String
+  phoneNumber      String
+  status           OrderStatus   @default(PENDING)
+  paymentStatus    PaymentStatus @default(PENDING)
+  orderOption      String
+  preferredDate    DateTime
+  remarks          String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   user      Users       @relation(fields: [userId], references: [id])
   orderItem OrderItem[]
@@ -212,7 +217,7 @@ model OrderItem {
   orderId   String
   productId String
   quantity  Int
-  price     Float // price at the time of order
+  price     Float // unit price
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

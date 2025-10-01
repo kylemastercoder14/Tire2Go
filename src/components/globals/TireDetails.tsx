@@ -14,8 +14,27 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { IconShare, IconShoppingCart } from "@tabler/icons-react";
 import { Separator } from "@/components/ui/separator";
+import useCart from '@/hooks/use-cart';
+import { useRouter } from 'next/navigation';
 
 const TireDetails = ({ data }: { data: ProductWithBrand }) => {
+  const router = useRouter();
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    addItem({
+      id: data.id,
+      name: data.name,
+      unitPrice: data.price,
+      discountedPrice: data.discountedPrice ?? 0,
+      quantity: 1,
+      image: data.images[0],
+      brand: data.brand.name,
+      tireSize: data.tireSize,
+    })
+
+    router.push('/cart');
+  }
   return (
     <div>
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
@@ -116,7 +135,7 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
            prose-li:marker:text-muted-foreground"
             dangerouslySetInnerHTML={{ __html: data.inclusion }}
           />
-          <Button className="w-full mt-3" size="lg">
+          <Button onClick={handleAddToCart} className="w-full mt-3" size="lg">
             <IconShoppingCart className="size-4" />
             Place Order
           </Button>
