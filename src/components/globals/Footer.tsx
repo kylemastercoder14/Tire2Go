@@ -13,7 +13,7 @@ const Footer = () => {
           <p>|</p>
           <Link className='hover:text-primary' href="/track-order">Tracking of Order</Link>
           <p>|</p>
-          <Link className='hover:text-primary' href="/tire-shop-solutions">Tire Shop Solutions</Link>
+          <Link className='hover:text-primary' href="/feedback">Feedback</Link>
           <p>|</p>
           <Link className='hover:text-primary' href="/privacy-policy">Privacy Policy</Link>
           <p>|</p>

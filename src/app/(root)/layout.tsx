@@ -5,6 +5,7 @@ import Navbar from "@/components/globals/Navbar";
 import Footer from "@/components/globals/Footer";
 import { useCheckProfile } from "@/hooks/use-check-profile";
 import { LoaderOne } from "@/components/globals/Loader";
+import ChatApp from '@/components/globals/ChatApp';
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const { loading } = useCheckProfile();
@@ -21,6 +22,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <Navbar />
       <main>{children}</main>
       <Footer />
+      <ChatApp />
     </div>
   );
 };

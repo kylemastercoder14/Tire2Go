@@ -23,11 +23,12 @@ model Users {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  feedback   Feedback[]
-  ticket     Ticket[]
-  cart       Cart[]
-  systemLogs SystemLogs[]
-  order      Order[]
+  feedback         Feedback[]
+  ticket           Ticket[]
+  cart             Cart[]
+  systemLogs       SystemLogs[]
+  order            Order[]
+  forwardedMessage ForwardedMessage[]
 }
 
 model Staff {
@@ -232,14 +233,15 @@ model OrderItem {
   product Products @relation(fields: [productId], references: [id])
 }
 
-model Inquiries {
-  id        String   @id @default(uuid())
-  name      String
-  email     String
-  subject   String
+model ForwardedMessage {
+  id        String                 @id @default(cuid())
+  userId    String? // if you have authentication, otherwise optional
+  user      Users?                 @relation(fields: [userId], references: [authId])
   message   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status    ForwardedMessageStatus @default(PENDING)
+  reply     String? // admin’s reply
+  repliedAt DateTime? // when admin replied
+  createdAt DateTime               @default(now())
 }
 
 enum OrderStatus {
@@ -268,4 +270,10 @@ enum TicketPriority {
   MEDIUM
   HIGH
   URGENT
+}
+
+enum ForwardedMessageStatus {
+  PENDING
+  SEEN
+  RESOLVED
 }
