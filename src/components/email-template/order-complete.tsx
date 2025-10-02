@@ -89,6 +89,7 @@ export const OrderComplete = ({ order }: OrderCompleteProps) => (
                   {item.product.name}
                 </Text>
                 <Text style={global.text}>{item.product.tireSize}</Text>
+                <Text style={global.text}>x{item.quantity}</Text>
               </Column>
             </Row>
           ))}

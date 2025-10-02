@@ -3,13 +3,17 @@ import TireSearch from "@/components/globals/TireSearch";
 import Image from "next/image";
 import BrandsCollection from "@/components/globals/BrandsCollection";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Page = () => {
   return (
     <div className="min-h-screen">
       <div className="bg-hero w-full flex flex-col items-start justify-end py-20 h-[75vh]">
         <div className="px-80 mb-10">
-          <h3 className='text-white font-semibold text-5xl italic tracking-tight leading-relaxed'>FIND THE INNOVATIVE TIRE <br /><span className='font-black'>YOU NEED</span></h3>
+          <h3 className="text-white font-semibold text-5xl italic tracking-tight leading-relaxed">
+            FIND THE INNOVATIVE TIRE <br />
+            <span className="font-black">YOU NEED</span>
+          </h3>
         </div>
         <TireSearch />
       </div>
@@ -38,9 +42,11 @@ const Page = () => {
               className="object-contain size-full"
             />
           </div>
-          <Button size="lg" className="mx-auto mt-5 text-center">
-            View Car Models
-          </Button>
+          <Link href="/car-models">
+            <Button size="lg" className="mx-auto mt-5 text-center">
+              View Car Models
+            </Button>
+          </Link>
         </div>
       </section>
       <section className="pt-10 pb-10 flex flex-col items-center justify-center bg-[#f5f5f5]">

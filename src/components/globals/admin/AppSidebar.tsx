@@ -8,6 +8,7 @@ import {
   IconDashboard,
   IconFileText,
   IconHelpCircle,
+  IconMessage,
   IconScale,
   IconTag,
   IconUserCog,
@@ -82,9 +83,14 @@ const data = {
       icon: IconHelpCircle,
     },
     {
-      title: "Feedback & Inquiries",
-      url: "/admin/feedback-and-inquiries",
+      title: "Feedback",
+      url: "/admin/feedback",
       icon: IconFileText,
+    },
+    {
+      title: "Inquiries",
+      url: "/admin/inquiries",
+      icon: IconMessage,
     },
     {
       title: "FAQs",

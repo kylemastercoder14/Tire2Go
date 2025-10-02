@@ -45,26 +45,22 @@ const useCart = create<CartStore>((set, get) => ({
 
   addItem: (data: CartItem) => {
     const currentItems = get().items;
+    const existingItem = currentItems.find((item) => item.id === data.id);
 
-    if (currentItems.length > 0) {
-      // Replace the existing product with the new one
-      if (currentItems[0].id !== data.id) {
-        set({ items: [data] });
-        toast.success(`Cart replaced with ${data.name}`);
-      } else {
-        // If same product, just update the quantity
-        set({
-          items: currentItems.map((item) =>
-            item.id === data.id
-              ? { ...item, quantity: item.quantity + data.quantity }
-              : item
-          ),
-        });
-        toast.success(`Updated quantity for ${data.name}`);
-      }
+    if (existingItem) {
+      // Update quantity if already exists
+      set({
+        items: currentItems.map((item) =>
+          item.id === data.id
+            ? { ...item, quantity: item.quantity + data.quantity }
+            : item
+        ),
+      });
+      toast.success(`Updated quantity for ${data.name}`);
     } else {
-      set({ items: [data] });
-      toast.success("Item added to cart");
+      // Add as new item
+      set({ items: [...currentItems, data] });
+      toast.success(`${data.name} added to cart`);
     }
   },
 

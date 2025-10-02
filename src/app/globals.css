@@ -236,3 +236,25 @@
   scrollbar-width: thin;          /* Makes scrollbar thin */
   scrollbar-color: #a0a0a0 transparent; /* Thumb color + track color */
 }
+
+.tracking-panel {
+  padding: calc(13px + .0025*(100vw - 320px)) 0 calc(13px + .0025*(100vw - 320px)) calc(21px + .00625*(100vw - 320px));
+}
+
+.tracking-panel:after {
+  opacity: 1;
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: -16px;
+  width: 0;
+  height: 0;
+  border-top: calc(28px + .0075*(100vw - 320px)) solid transparent;
+  border-bottom: calc(28px + .0075*(100vw - 320px)) solid transparent;
+  border-left: 16px solid #f4f4f5;
+  transition: border-color 0.2s ease;
+}
+
+.tracking-panel.active:after {
+  border-left: 17px solid #f7e2e2;
+}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import z from "zod";
@@ -18,6 +19,8 @@ import { CartItem, CustomerDetails, DeliveryOption } from "@/hooks/use-cart";
 import { auth } from "@clerk/nextjs/server";
 import { OrderCompleteHTML } from "@/components/email-template/order-complete";
 import { sendMail } from "@/lib/nodemailer";
+import { OrderStatusEmailHTML } from "@/components/email-template/order-status";
+import { OrderRejectionEmailHTML } from "@/components/email-template/order-rejection";
 
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
@@ -892,6 +895,163 @@ export const sendOrderCompletedEmail = async (
       email,
       `Your order has been completed`,
       `Your order "${order.id}" has been completed.`,
+      htmlContent
+    );
+
+    return { success: "Email has been sent." };
+  } catch (error) {
+    console.error("Error sending product status email:", error);
+    return { message: "An error occurred. Please try again." };
+  }
+};
+
+export async function updateOrderStatus(orderId: string, status: string) {
+  const now = new Date();
+
+  let updateData: any = { status };
+
+  switch (status.toUpperCase()) {
+    case "PROCESSING":
+      updateData.processingAt = now;
+      break;
+    case "SHIPPED":
+      updateData.shippedAt = now;
+      break;
+    case "COMPLETED":
+      updateData.completedAt = now;
+      break;
+    case "PENDING":
+      updateData = {
+        status,
+        processingAt: null,
+        shippedAt: null,
+        completedAt: null,
+      };
+      break;
+  }
+
+  const order = await db.order.update({
+    where: { id: orderId },
+    data: updateData,
+    include: {
+      orderItem: { include: { product: { include: { brand: true } } } },
+    },
+  });
+
+  // ✅ send email notification
+  await sendOrderStatusEmail(order, order.email);
+
+  return order;
+}
+
+export const sendOrderStatusEmail = async (
+  order: OrderWithOrderItem,
+  email: string
+) => {
+  try {
+    const htmlContent = await OrderStatusEmailHTML({
+      order,
+    });
+
+    await sendMail(
+      email,
+      `Your order has been ${order.status}`,
+      `Your order "${order.id}" has been ${order.status}.`,
+      htmlContent
+    );
+
+    return { success: "Email has been sent." };
+  } catch (error) {
+    console.error("Error sending product status email:", error);
+    return { message: "An error occurred. Please try again." };
+  }
+};
+
+export async function toggleOrderPayment(
+  orderId: string,
+  status: "PAID" | "FAILED"
+) {
+  try {
+    const order = await db.order.update({
+      where: { id: orderId },
+      data: { paymentStatus: status },
+    });
+
+    return { success: true, order };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to update payment status" };
+  }
+}
+
+export const deleteOrder = async (id: string) => {
+  try {
+    const existingOrder = await db.order.findFirst({
+      where: { id },
+    });
+
+    if (!existingOrder) {
+      return { error: "Order not found" };
+    }
+
+    await db.order.delete({
+      where: { id },
+    });
+
+    await db.orderItem.deleteMany({
+      where: { orderId: id },
+    });
+
+    return { success: "Order deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    return { error: "Failed to delete order" };
+  }
+};
+
+export async function rejectOrder(orderId: string, reason: string) {
+  try {
+    const order = await db.order.update({
+      where: { id: orderId },
+      data: {
+        status: "CANCELLED",
+        paymentStatus: "FAILED",
+        reasonCancelled: reason,
+        cancelledAt: new Date(),
+      },
+      include: {
+        orderItem: {
+          include: {
+            product: {
+              include: { brand: true },
+            },
+          },
+        },
+      },
+    });
+
+    await sendOrderRejectionEmail(order, order.email);
+
+    return { success: true, order };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to reject order" };
+  }
+}
+
+export const sendOrderRejectionEmail = async (
+  order: OrderWithOrderItem,
+  email: string
+) => {
+  try {
+    const htmlContent = await OrderRejectionEmailHTML({
+      order,
+    });
+
+    await sendMail(
+      email,
+      `Your order has been REJECTED`,
+      `Your order "${order.id}" has been rejected. Reason: ${order.reasonCancelled}`,
       htmlContent
     );
 
