@@ -242,7 +242,7 @@ const Page = async () => {
             Aside from searching for tires by your preferred tire brand, you may
             also search tires by size or by car model here at Tire2Go:
           </p>
-          <TireSearch isHomepage={false} />
+          <TireSearch />
         </div>
       </section>
       <section className="py-10 max-w-7xl mx-auto">
