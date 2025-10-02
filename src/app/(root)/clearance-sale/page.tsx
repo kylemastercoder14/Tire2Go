@@ -30,7 +30,9 @@ const Page = async () => {
   });
   return (
     <div className="min-h-screen">
-      <div className="w-full h-[40vh] bg-gray-500"></div>
+      <div className="w-full relative h-[40vh] bg-gray-500">
+        <Image src="/CLEARANCE SALE.png" alt="Clearance Sale Banner" className='object-cover' fill />
+      </div>
       <section className="px-24 pt-10 grid lg:grid-cols-10 grid-cols-1 gap-10">
         <div className="lg:col-span-2 p-5">
           <FilterSidebar brands={brands} />

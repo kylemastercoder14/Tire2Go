@@ -14,7 +14,9 @@ import { AnimatedTestimonials } from "@/components/globals/AnimatedTestimonials"
 const Page = () => {
   return (
     <div className="min-h-screen">
-      <div className="w-full h-[75vh] bg-gray-500"></div>
+      <div className="w-full h-[75vh] relative bg-gray-500">
+        <Image src="/16.png" alt="About Us Banner" className='object-cover' fill />
+      </div>
       <section className="mt-10 pb-20 grid lg:grid-cols-2 gap-10 grid-cols-1 px-20">
         <div className="">
           <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
