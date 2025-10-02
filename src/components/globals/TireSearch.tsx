@@ -366,7 +366,7 @@ const TireSearch = () => {
       )}
 
       {/* ---- MAIN CARD ---- */}
-      <div className="w-full h-[200px] max-w-7xl mx-auto">
+      <div className="w-full h-[200px] max-w-4xl mx-auto">
         <div className="w-full px-5 h-full bg-primary shadow-xl rounded-2xl py-5 overflow-hidden">
           {/* Tabs */}
           <div className="flex w-full border-b gap-5 items-center">

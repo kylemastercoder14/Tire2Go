@@ -29,23 +29,6 @@ const Navbar = () => {
       ],
     },
     {
-      name: "Services",
-      items: [
-        {
-          label: "Installation",
-          url: "installation",
-        },
-        {
-          label: "Maintenance",
-          url: "maintenance",
-        },
-        {
-          label: "Consultation",
-          url: "consultation",
-        },
-      ],
-    },
-    {
       name: "Resources",
       items: [
         {
@@ -177,6 +160,12 @@ const Navbar = () => {
                 className="px-4 py-2 text-black hover:text-primary transition-colors text-sm font-medium"
               >
                 About Us
+              </Link>
+              <Link
+                href="/contact-us"
+                className="px-4 py-2 text-black hover:text-primary transition-colors text-sm font-medium"
+              >
+                Contact Us
               </Link>
             </div>
 

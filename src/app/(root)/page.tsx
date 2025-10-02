@@ -4,18 +4,22 @@ import Image from "next/image";
 import BrandsCollection from "@/components/globals/BrandsCollection";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import HeroCarousel from '@/components/globals/HeroCarousel';
 
 const Page = () => {
   return (
     <div className="min-h-screen">
-      <div className="bg-hero w-full flex flex-col items-start justify-end py-20 h-[75vh]">
-        <div className="px-80 mb-10">
+      <div className="bg-hero w-full flex flex-col items-start justify-end py-20 h-[80vh]">
+        <div className="px-40 flex w-full items-center justify-between mb-10">
           <h3 className="text-white font-semibold text-5xl italic tracking-tight leading-relaxed">
             FIND THE INNOVATIVE TIRE <br />
             <span className="font-black">YOU NEED</span>
           </h3>
         </div>
-        <TireSearch />
+        <div className="flex w-full px-40 items-start justify-between">
+          <HeroCarousel />
+          <TireSearch />
+        </div>
       </div>
       <section className="pt-10 bg-[#f5f5f5] pb-10">
         <h3 className="text-primary text-center text-4xl font-bold tracking-tight">
