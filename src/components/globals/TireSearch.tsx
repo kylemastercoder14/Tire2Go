@@ -23,7 +23,7 @@ const TABS = [
   { id: "car", label: "Search by car", icon: IconCarFilled },
 ];
 
-const TireSearch = () => {
+const TireSearch = ({ className }: { className?: string }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = React.useState<"size" | "car">("size");
   const [isOpen, setIsOpen] = React.useState<{
@@ -155,10 +155,10 @@ const TireSearch = () => {
                     {selectedWidth === ""
                       ? "Please enter the width..."
                       : selectedAspect === ""
-                      ? "Please enter the ratio..."
-                      : selectedRim === ""
-                      ? "Please enter the diameter..."
-                      : "All set!"}
+                        ? "Please enter the ratio..."
+                        : selectedRim === ""
+                          ? "Please enter the diameter..."
+                          : "All set!"}
                   </h3>
 
                   <div className="relative size-60">
@@ -180,8 +180,8 @@ const TireSearch = () => {
                       selectedWidth === ""
                         ? "width"
                         : selectedAspect === ""
-                        ? "ratio"
-                        : "diameter"
+                          ? "ratio"
+                          : "diameter"
                     }...`}
                     className="w-full border-none outline-none"
                   />
@@ -225,7 +225,11 @@ const TireSearch = () => {
 
                 {/* Final search */}
                 {selectedWidth && selectedAspect && selectedRim && (
-                  <Button variant="secondary" className="mt-6" onClick={handleSearch}>
+                  <Button
+                    variant="secondary"
+                    className="mt-6"
+                    onClick={handleSearch}
+                  >
                     Search
                   </Button>
                 )}
@@ -285,10 +289,10 @@ const TireSearch = () => {
                     {selectedBrand === ""
                       ? "Please select the brand..."
                       : selectedModel === ""
-                      ? "Please select the model..."
-                      : selectedYear === ""
-                      ? "Please select the year..."
-                      : "All set!"}
+                        ? "Please select the model..."
+                        : selectedYear === ""
+                          ? "Please select the year..."
+                          : "All set!"}
                   </h3>
                   <div className="relative size-64">
                     <Image
@@ -309,8 +313,8 @@ const TireSearch = () => {
                       selectedBrand === ""
                         ? "brand"
                         : selectedModel === ""
-                        ? "model"
-                        : "year"
+                          ? "model"
+                          : "year"
                     }...`}
                     className="w-full border-none outline-none"
                   />
@@ -366,7 +370,7 @@ const TireSearch = () => {
       )}
 
       {/* ---- MAIN CARD ---- */}
-      <div className="w-full h-[200px] max-w-4xl mx-auto">
+      <div className={`w-full h-[200px] max-w-4xl mx-auto ${className}`}>
         <div className="w-full px-5 h-full bg-primary shadow-xl rounded-2xl py-5 overflow-hidden">
           {/* Tabs */}
           <div className="flex w-full border-b gap-5 items-center">

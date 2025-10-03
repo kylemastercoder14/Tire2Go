@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
       "images.pexels.com",
       "adzktgbqdq.cloudimg.io",
       "yokohamatire.ph",
+      "gogulong.com",
+      "static.carfromjapan.com",
+      "www.carlogos.org",
+      "www.giti.com.ph",
+      "falken-tires-website-storage.s3.amazonaws.com",
     ],
   },
   eslint: {
