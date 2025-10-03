@@ -1,7 +1,7 @@
 export const showTireBrandBanner = (brandName: string) => {
   switch (brandName.toLowerCase()) {
     case "comforser":
-      return "https://scontent.fmnl19-1.fna.fbcdn.net/v/t39.30808-6/476633739_635931812267639_5153040531081127616_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFKaP9SPMKuZc8A9kT_6WzXdniQ948pS4d2eJD3jylLh6D4JE0a_kSZxQUkBdi5nxaHtSuSmjqITgWbXNkJvZ3L&_nc_ohc=xugGBSl6bzYQ7kNvwE-MZyu&_nc_oc=AdlpqDFsAh9CJE6S-rYIK4ToqmZiD8SQYaMEckpKoAvYWLwp-NlzbY_jemWyIJC82VM&_nc_zt=23&_nc_ht=scontent.fmnl19-1.fna&_nc_gid=08evbl3Ezl6pZKACT_EMQw&oh=00_Afek3HWc2srbLTMDw5uLUbutCzGSmBqceHgNVq4nzDLF7w&oe=68E54A97";
+      return "/brands/comforser.jpg";
     case "michelin":
       return "https://gogulong.com/wp-content/uploads/2022/02/michelin-banner-desktop-2022.jpg";
     case "dunlop":
@@ -11,11 +11,11 @@ export const showTireBrandBanner = (brandName: string) => {
     case "roadx":
       return "https://tse1.mm.bing.net/th/id/OIP.Xm6bVojbf8n3jpeQh6Ss_gHaB6?pid=Api&P=0&h=180";
     case "falken":
-      return "https://falken-tires-website-storage.s3.amazonaws.com/storage/app/media/Exports/Articles/Images/2022%20September%2001/FK460_main.jpg";
+      return "https://www.falkentyre.com/__image/a/308671/alias/xxl/v/3/c/23/ar/16-9/fn/Abrieb%20Englisch.jpg";
     case "sailun":
       return "https://gogulong.com/wp-content/uploads/2021/05/sailun-banner-desktop.jpg";
     case "monsta":
-      return "https://tse3.mm.bing.net/th/id/OIP.x935sWMeUmWG3g40sy62xwHaCF?pid=Api&P=0&h=180";
+      return "https://gigaplus.makeshop.jp/tireshop4u/uploadimages/slider/monsta.jpg";
     case "roadcruza":
       return "https://chinesetyremarket.com/img-featured/Roadcruza.jpg";
     case "raiden":
