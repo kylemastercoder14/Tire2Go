@@ -174,21 +174,29 @@ const Page = async (props: {
                     <div className="px-2 py-1">
                       <h4 className="font-bold text-lg">{product.name}</h4>
                       <p className="font-bold text-sm">{product.tireSize}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <p className="line-through text-muted-foreground text-sm font-medium">
-                          ₱{product.price.toLocaleString()}
-                        </p>
-                        <p className="text-primary font-bold text-lg">
-                          ₱
-                          {product.discountedPrice !== null &&
-                          product.discountedPrice !== undefined
-                            ? product.discountedPrice.toLocaleString()
-                            : ""}{" "}
-                          <span className="font-medium text-base">
-                            per tire
-                          </span>
-                        </p>
-                      </div>
+                      <p className="flex items-center gap-2 mt-2">
+                        {product.discountedPrice &&
+                        product.discountedPrice > 0 ? (
+                          <>
+                            <p className="line-through text-muted-foreground text-sm font-medium">
+                              ₱{product.price.toLocaleString()}
+                            </p>
+                            <p className="text-primary font-bold text-lg">
+                              ₱{product.discountedPrice.toLocaleString()}{" "}
+                              <span className="font-medium text-base">
+                                per tire
+                              </span>
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-primary font-bold text-lg">
+                            ₱{product.price.toLocaleString()}{" "}
+                            <span className="font-medium text-base">
+                              per tire
+                            </span>
+                          </p>
+                        )}
+                      </p>
                       <div
                         className="my-3 text-sm prose prose-sm max-w-none
 								  prose-headings:font-bold
