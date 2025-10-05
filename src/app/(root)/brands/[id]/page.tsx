@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import db from "@/lib/db";
 import {
@@ -9,11 +10,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import Image from "next/image";
 import { IconChecks, IconHandClick } from "@tabler/icons-react";
 import TireSearch from "@/components/globals/TireSearch";
 import { buttonVariants } from "@/components/ui/button";
-import { showTireBrandBanner } from '@/lib/show-brand-banner';
+import { showTireBrandBanner } from "@/lib/show-brand-banner";
 
 const Page = async (props: {
   params: Promise<{
@@ -78,11 +78,10 @@ const Page = async (props: {
       </div>
       <section className="max-w-7xl mx-auto pb-10">
         <div className="relative w-full h-[30vh]">
-          <Image
+          <img
             src={showTireBrandBanner(initialData.name)}
-            fill
             alt={initialData.name}
-            className="object-cover"
+            className="object-cover size-full"
           />
         </div>
         <div className="mt-3">
@@ -148,26 +147,23 @@ const Page = async (props: {
                     className="border border-primary shadow rounded-md"
                   >
                     <div className="relative w-full h-60">
-                      <Image
+                      <img
                         src={product.images[0]}
                         alt={product.name}
-                        fill
                         className="object-contain size-full"
                       />
                       <div className="absolute top-2 right-2 size-15">
-                        <Image
+                        <img
                           src={product.brand.logo}
                           alt={product.brand.name}
-                          fill
                           className="object-contain size-full"
                         />
                       </div>
                       {/* make it center */}
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 size-20">
-                        <Image
+                        <img
                           src="/logo.png"
                           alt={"logo"}
-                          fill
                           className="object-contain size-full opacity-30"
                         />
                       </div>

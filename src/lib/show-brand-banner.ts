@@ -1,5 +1,6 @@
 export const showTireBrandBanner = (brandName: string) => {
-  switch (brandName.toLowerCase()) {
+  const name = brandName.trim().toLowerCase();
+  switch (name) {
     case "comforser":
       return "/brands/comforser.jpg";
     case "michelin":
