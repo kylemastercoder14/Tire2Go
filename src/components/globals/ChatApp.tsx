@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { IconBubbleTextFilled, IconX } from "@tabler/icons-react";
@@ -27,12 +28,48 @@ const ChatApp = () => {
   const chatIconRef = useRef<HTMLButtonElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
-  const { messages, sendMessage, status, stop, error, regenerate } = useChat({
+  const {
+    messages,
+    setMessages,
+    sendMessage,
+    status,
+    stop,
+    error,
+    regenerate,
+  } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
     }),
   });
+
+  // Fetch messages from DB on mount
+  useEffect(() => {
+    const fetchConversation = async () => {
+      try {
+        const res = await fetch("/api/conversations");
+        if (res.ok) {
+          const data = await res.json();
+
+          // Map DB messages to useChat format
+          const mapped = data?.messages?.map((msg: any) => ({
+            id: msg.id,
+            role: msg.senderType === "CUSTOMER" ? "user" : "assistant",
+            content: msg.content,
+            parts: [{ type: "text", text: msg.content }],
+          }));
+
+          if (mapped) setMessages(mapped);
+        }
+      } catch (e) {
+        console.error("Failed to load conversation", e);
+      } finally {
+        setLoaded(true);
+      }
+    };
+    fetchConversation();
+  }, [setMessages]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,21 +80,23 @@ const ChatApp = () => {
         setIsOpen(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
-    setIsFullscreen(false); // reset fullscreen when reopening
+    setIsFullscreen(false);
   };
 
+  // Auto scroll to bottom when messages change
   useEffect(() => {
-    if(scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages])
+  }, [messages]);
+
+  if (!loaded) return null; // wag muna mag render kung di pa loaded
 
   return (
     <>
@@ -95,42 +134,42 @@ const ChatApp = () => {
             className={`fixed z-50 ${
               isFullscreen
                 ? "inset-0 w-full h-full flex items-center justify-center p-4"
-                : "bottom-20 right-4 w-[95%] md:w-[500px]"
+                : "bottom-20 right-4 w-[95%] md:w-[900px]"
             }`}
           >
-            <Card className="border-2">
-              <CardHeader>
-                <div className="flex items-center justify-between pb-3">
-                  <div>
-                    <CardTitle>Chat Support</CardTitle>
-                    <CardDescription>How can we help you?</CardDescription>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => setIsFullscreen(!isFullscreen)}
-                      size="icon"
-                      className="rounded-full"
-                      variant="ghost"
-                    >
-                      {isFullscreen ? (
-                        <Minimize className="size-5" />
-                      ) : (
-                        <Maximize className="size-5" />
-                      )}
-                    </Button>
-                    <Button
-                      onClick={toggleChat}
-                      size="icon"
-                      className="rounded-full"
-                      variant="ghost"
-                    >
-                      <X className="size-5" />
-                    </Button>
-                  </div>
+            <Card className="flex flex-col w-full h-full border-2 shadow-xl">
+              <CardHeader className="flex flex-row justify-between items-center border-b">
+                <div>
+                  <CardTitle>Chat Support</CardTitle>
+                  <CardDescription>How can we help you?</CardDescription>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setIsFullscreen(!isFullscreen)}
+                    size="icon"
+                    className="rounded-full"
+                    variant="ghost"
+                  >
+                    {isFullscreen ? (
+                      <Minimize className="size-5" />
+                    ) : (
+                      <Maximize className="size-5" />
+                    )}
+                  </Button>
+                  <Button
+                    onClick={toggleChat}
+                    size="icon"
+                    className="rounded-full"
+                    variant="ghost"
+                  >
+                    <X className="size-5" />
+                  </Button>
                 </div>
               </CardHeader>
-              <CardContent>
-                <ScrollArea className={`${isFullscreen ? "h-full" : "h-[300px]"} pr-4`}>
+              <CardContent className="flex flex-1 overflow-hidden">
+                <ScrollArea
+                  className={`${isFullscreen ? "h-full" : "h-[500px]"} pr-4`}
+                >
                   {messages.length === 0 && (
                     <div className="w-full mt-32 text-gray-500 items-center justify-center flex gap-3">
                       No message yet.

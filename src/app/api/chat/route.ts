@@ -20,6 +20,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Get or create conversation
+  let conversation = await db.conversation.findFirst({
+    where: { userId, status: "OPEN" },
+  });
+
+  if (!conversation) {
+    conversation = await db.conversation.create({
+      data: { userId, status: "OPEN" },
+    });
+  }
+
   // Run the model with streaming
   const result = streamText({
     model: google("gemini-2.5-pro"),
@@ -27,26 +38,34 @@ export async function POST(req: Request) {
     temperature: 0.5,
   });
 
-  // Collect full response text (blocking, but allows inspection)
+  // Collect full response
   const fullText = await result.text;
 
-  if (
-    fullText.includes("I’m sorry, that’s beyond my scope") ||
-    fullText.includes("forward your concern to a real Tire2Go staff")
-  ) {
-    await db.forwardedMessage.create({
-      data: {
-        userId: userId || null,
-        message:
-          messages[messages.length - 1]?.parts
-            ?.map((p: any) => p.text)
-            .join(" ")
-            .trim() || "No content",
-        status: "PENDING",
-      },
-    });
-  }
+  // Last user message
+  const lastUserMessage =
+    messages[messages.length - 1]?.parts
+      ?.map((p: any) => p.text)
+      .join(" ")
+      .trim() || "No content";
 
-  // Return stream back to client
+  // Save customer message
+  await db.message.create({
+    data: {
+      conversationId: conversation.id,
+      senderType: "CUSTOMER",
+      content: lastUserMessage,
+    },
+  });
+
+  // Save AI/system reply
+  await db.message.create({
+    data: {
+      conversationId: conversation.id,
+      senderType: "SYSTEM",
+      content: fullText,
+    },
+  });
+
+  // Always return streaming response to the UI
   return result.toUIMessageStreamResponse();
 }

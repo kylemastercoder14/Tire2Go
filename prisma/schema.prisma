@@ -23,12 +23,12 @@ model Users {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  feedback         Feedback[]
-  ticket           Ticket[]
-  cart             Cart[]
-  systemLogs       SystemLogs[]
-  order            Order[]
-  forwardedMessage ForwardedMessage[]
+  feedback     Feedback[]
+  ticket       Ticket[]
+  cart         Cart[]
+  systemLogs   SystemLogs[]
+  order        Order[]
+  conversation Conversation[]
 }
 
 model Staff {
@@ -233,15 +233,37 @@ model OrderItem {
   product Products @relation(fields: [productId], references: [id])
 }
 
-model ForwardedMessage {
-  id        String                 @id @default(cuid())
-  userId    String? // if you have authentication, otherwise optional
-  user      Users?                 @relation(fields: [userId], references: [authId])
-  message   String
-  status    ForwardedMessageStatus @default(PENDING)
-  reply     String? // admin’s reply
-  repliedAt DateTime? // when admin replied
-  createdAt DateTime               @default(now())
+model Conversation {
+  id        String             @id @default(cuid())
+  userId    String?
+  user      Users?             @relation(fields: [userId], references: [authId])
+  status    ConversationStatus @default(OPEN)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  messages Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderType SenderType
+  senderId   String? // optional, kung gusto mong i-track kung aling admin/staff ang sumagot
+  content    String
+  createdAt  DateTime   @default(now())
+}
+
+enum SenderType {
+  CUSTOMER
+  SYSTEM
+}
+
+enum ConversationStatus {
+  OPEN
+  PENDING
+  CLOSED
 }
 
 enum OrderStatus {
