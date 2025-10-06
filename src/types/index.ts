@@ -1,6 +1,5 @@
 import {
   Brands,
-  ForwardedMessage,
   Inventory,
   Order,
   OrderItem,
@@ -44,8 +43,4 @@ export interface OrderWithOrderItem extends Order {
   orderItem: (OrderItem & {
     product: Products & { brand: Brands };
   })[];
-}
-
-export interface ForwardedMessageWithUser extends ForwardedMessage {
-  user: Users | null;
 }

@@ -293,9 +293,3 @@ enum TicketPriority {
   HIGH
   URGENT
 }
-
-enum ForwardedMessageStatus {
-  PENDING
-  SEEN
-  RESOLVED
-}
