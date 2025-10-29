@@ -17,6 +17,10 @@ const Page = async (props: {
   });
 
   const brands = await db.brands.findMany({ orderBy: { name: "asc" } });
+  const carMakes = await db.carMake.findMany({ 
+    orderBy: { name: "asc" },
+    include: { models: { orderBy: { name: "asc" } } }
+  });
 
   const title = initialData ? "Edit Product" : "Create New Product";
   const description = initialData
@@ -27,7 +31,7 @@ const Page = async (props: {
     <div>
       <Heading title={title} description={description} />
       <div className="mt-5">
-        <ProductForm initialData={initialData} brands={brands} />
+        <ProductForm initialData={initialData} brands={brands} carMakes={carMakes} />
       </div>
     </div>
   );

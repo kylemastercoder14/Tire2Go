@@ -117,9 +117,64 @@ export const createProduct = async (
       return { error: "Product with this name already exists" };
     }
 
+    // Create the product first
     const product = await db.products.create({
-      data: parseValues,
+      data: {
+        name: parseValues.name,
+        description: parseValues.description,
+        price: parseValues.price,
+        isClearanceSale: parseValues.isClearanceSale,
+        discountedPrice: parseValues.discountedPrice,
+        images: parseValues.images,
+        inclusion: parseValues.inclusion,
+        warranty: parseValues.warranty,
+        tireSize: parseValues.tireSize,
+        brandId: parseValues.brandId,
+      },
     });
+
+    // Create tire sizes if provided
+    if (parseValues.tireSizes && parseValues.tireSizes.length > 0) {
+      for (const tireSizeData of parseValues.tireSizes) {
+        // Check if tire size already exists
+        let tireSize = await db.tireSize.findFirst({
+          where: {
+            width: tireSizeData.width,
+            ratio: tireSizeData.ratio,
+            diameter: tireSizeData.diameter,
+          },
+        });
+
+        // Create tire size if it doesn't exist
+        if (!tireSize) {
+          tireSize = await db.tireSize.create({
+            data: tireSizeData,
+          });
+        }
+
+        // Create product size relationship
+        await db.productSize.create({
+          data: {
+            productId: product.id,
+            tireSizeId: tireSize.id,
+          },
+        });
+      }
+    }
+
+    // Create car compatibilities if provided
+    if (parseValues.carCompatibilities && parseValues.carCompatibilities.length > 0) {
+      for (const compatibilityData of parseValues.carCompatibilities) {
+        await db.productCompatibility.create({
+          data: {
+            productId: product.id,
+            modelId: compatibilityData.modelId,
+            year: compatibilityData.year,
+          },
+        });
+      }
+    }
+
     return { success: "Product created successfully", product };
   } catch (error) {
     console.error("Error creating product:", error);
@@ -151,10 +206,73 @@ export const updateProduct = async (
       }
     }
 
+    // Update the product
     const updatedProduct = await db.products.update({
       where: { id },
-      data: parseValues,
+      data: {
+        name: parseValues.name,
+        description: parseValues.description,
+        price: parseValues.price,
+        isClearanceSale: parseValues.isClearanceSale,
+        discountedPrice: parseValues.discountedPrice,
+        images: parseValues.images,
+        inclusion: parseValues.inclusion,
+        warranty: parseValues.warranty,
+        tireSize: parseValues.tireSize,
+        brandId: parseValues.brandId,
+      },
     });
+
+    // Delete existing product sizes and compatibilities
+    await db.productSize.deleteMany({
+      where: { productId: id },
+    });
+    await db.productCompatibility.deleteMany({
+      where: { productId: id },
+    });
+
+    // Create new tire sizes if provided
+    if (parseValues.tireSizes && parseValues.tireSizes.length > 0) {
+      for (const tireSizeData of parseValues.tireSizes) {
+        // Check if tire size already exists
+        let tireSize = await db.tireSize.findFirst({
+          where: {
+            width: tireSizeData.width,
+            ratio: tireSizeData.ratio,
+            diameter: tireSizeData.diameter,
+          },
+        });
+
+        // Create tire size if it doesn't exist
+        if (!tireSize) {
+          tireSize = await db.tireSize.create({
+            data: tireSizeData,
+          });
+        }
+
+        // Create product size relationship
+        await db.productSize.create({
+          data: {
+            productId: id,
+            tireSizeId: tireSize.id,
+          },
+        });
+      }
+    }
+
+    // Create new car compatibilities if provided
+    if (parseValues.carCompatibilities && parseValues.carCompatibilities.length > 0) {
+      for (const compatibilityData of parseValues.carCompatibilities) {
+        await db.productCompatibility.create({
+          data: {
+            productId: id,
+            modelId: compatibilityData.modelId,
+            year: compatibilityData.year,
+          },
+        });
+      }
+    }
+
     return { success: "Product updated successfully", product: updatedProduct };
   } catch (error) {
     console.error("Error updating product:", error);

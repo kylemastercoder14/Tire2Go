@@ -21,6 +21,17 @@ export const ProductValidators = z.object({
   warranty: z.string().min(10, { message: "Warranty details are required." }),
   tireSize: z.string().min(1, { message: "Tire size is required." }),
   brandId: z.string().min(1, { message: "Brand is required." }),
+  // New fields for tire sizes, car compatibility
+  tireSizes: z.array(z.object({
+    width: z.number().min(1, { message: "Width must be at least 1." }),
+    ratio: z.number().min(1, { message: "Ratio must be at least 1." }),
+    diameter: z.number().min(1, { message: "Diameter must be at least 1." }),
+  })).optional(),
+  carCompatibilities: z.array(z.object({
+    makeId: z.string().min(1, { message: "Car make is required." }),
+    modelId: z.string().min(1, { message: "Car model is required." }),
+    year: z.number().min(1900, { message: "Year must be at least 1900." }),
+  })).optional(),
 });
 
 export const InventoryValidators = z.object({

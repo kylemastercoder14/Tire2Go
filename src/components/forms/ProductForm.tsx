@@ -26,18 +26,22 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createProduct, updateProduct } from "@/actions";
-import { Brands, Products } from "@prisma/client";
+import { Brands, Products, CarMake, CarModel } from "@prisma/client";
 import ImageUpload from "@/components/globals/ImageUpload";
 import { RichTextEditor } from "@/components/globals/RichTextEditor";
 import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 const ProductForm = ({
   initialData,
   brands,
+  carMakes,
 }: {
   initialData: Products | null;
   brands: Brands[];
+  carMakes: (CarMake & { models: CarModel[] })[];
 }) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof ProductValidators>>({
@@ -54,6 +58,8 @@ const ProductForm = ({
       warranty: initialData?.warranty || "",
       tireSize: initialData?.tireSize || "",
       brandId: initialData?.brandId || "",
+      tireSizes: [],
+      carCompatibilities: [],
     },
   });
 
@@ -289,6 +295,254 @@ const ProductForm = ({
               </FormItem>
             )}
           />
+
+          {/* Tire Sizes Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Tire Sizes</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const currentSizes = form.getValues("tireSizes") || [];
+                  form.setValue("tireSizes", [
+                    ...currentSizes,
+                    { width: 0, ratio: 0, diameter: 0 },
+                  ]);
+                }}
+              >
+                <IconPlus className="size-4 mr-2" />
+                Add Tire Size
+              </Button>
+            </div>
+            <FormField
+              control={form.control}
+              name="tireSizes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="space-y-3">
+                      {field.value?.map((tireSize, index) => (
+                        <div key={index} className="grid grid-cols-4 gap-3 p-3 border rounded-lg">
+                          <FormField
+                            control={form.control}
+                            name={`tireSizes.${index}.width`}
+                            render={({ field: widthField }) => (
+                              <FormItem>
+                                <FormLabel>Width</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="number"
+                                    placeholder="e.g., 205"
+                                    {...widthField}
+                                    onChange={(e) => widthField.onChange(parseInt(e.target.value) || 0)}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`tireSizes.${index}.ratio`}
+                            render={({ field: ratioField }) => (
+                              <FormItem>
+                                <FormLabel>Ratio</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="number"
+                                    placeholder="e.g., 50"
+                                    {...ratioField}
+                                    onChange={(e) => ratioField.onChange(parseInt(e.target.value) || 0)}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`tireSizes.${index}.diameter`}
+                            render={({ field: diameterField }) => (
+                              <FormItem>
+                                <FormLabel>Diameter</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="number"
+                                    placeholder="e.g., 16"
+                                    {...diameterField}
+                                    onChange={(e) => diameterField.onChange(parseInt(e.target.value) || 0)}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex items-end">
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => {
+                                const currentSizes = form.getValues("tireSizes") || [];
+                                const newSizes = currentSizes.filter((_, i) => i !== index);
+                                form.setValue("tireSizes", newSizes);
+                              }}
+                            >
+                              <IconTrash className="size-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      {(!field.value || field.value.length === 0) && (
+                        <p className="text-sm text-muted-foreground text-center py-4">
+                          No tire sizes added yet. Click "Add Tire Size" to add one.
+                        </p>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Car Compatibility Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Car Compatibility</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const currentCompatibilities = form.getValues("carCompatibilities") || [];
+                  form.setValue("carCompatibilities", [
+                    ...currentCompatibilities,
+                    { makeId: "", modelId: "", year: new Date().getFullYear() },
+                  ]);
+                }}
+              >
+                <IconPlus className="size-4 mr-2" />
+                Add Compatibility
+              </Button>
+            </div>
+            <FormField
+              control={form.control}
+              name="carCompatibilities"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="space-y-3">
+                      {field.value?.map((compatibility, index) => (
+                        <div key={index} className="grid grid-cols-4 gap-3 p-3 border rounded-lg">
+                          <FormField
+                            control={form.control}
+                            name={`carCompatibilities.${index}.makeId`}
+                            render={({ field: makeField }) => (
+                              <FormItem>
+                                <FormLabel>Car Make</FormLabel>
+                                <Select
+                                  onValueChange={makeField.onChange}
+                                  value={makeField.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select make" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {carMakes.map((make) => (
+                                      <SelectItem key={make.id} value={make.id}>
+                                        {make.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`carCompatibilities.${index}.modelId`}
+                            render={({ field: modelField }) => {
+                              const selectedMake = carMakes.find(
+                                (make) => make.id === form.watch(`carCompatibilities.${index}.makeId`)
+                              );
+                              return (
+                                <FormItem>
+                                  <FormLabel>Car Model</FormLabel>
+                                  <Select
+                                    onValueChange={modelField.onChange}
+                                    value={modelField.value}
+                                    disabled={!selectedMake}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select model" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {selectedMake?.models.map((model) => (
+                                        <SelectItem key={model.id} value={model.id}>
+                                          {model.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`carCompatibilities.${index}.year`}
+                            render={({ field: yearField }) => (
+                              <FormItem>
+                                <FormLabel>Year</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="number"
+                                    placeholder="e.g., 2020"
+                                    {...yearField}
+                                    onChange={(e) => yearField.onChange(parseInt(e.target.value) || new Date().getFullYear())}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex items-end">
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => {
+                                const currentCompatibilities = form.getValues("carCompatibilities") || [];
+                                const newCompatibilities = currentCompatibilities.filter((_, i) => i !== index);
+                                form.setValue("carCompatibilities", newCompatibilities);
+                              }}
+                            >
+                              <IconTrash className="size-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      {(!field.value || field.value.length === 0) && (
+                        <p className="text-sm text-muted-foreground text-center py-4">
+                          No car compatibilities added yet. Click "Add Compatibility" to add one.
+                        </p>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}
