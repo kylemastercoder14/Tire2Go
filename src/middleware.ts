@@ -21,6 +21,8 @@ const isPublicRoute = createRouteMatcher([
   "/contact-us",
   "/brands(.*)",
   "/api/user(.*)", // allow signup + verify API calls
+  "/api/stats(.*)",
+  "/api/database(.*)",
   "/admin(.*)", // allow access to admin panel for now, later it should be protected
 ]);
 

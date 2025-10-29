@@ -1,11 +1,4 @@
-import {
-  Brands,
-  Inventory,
-  Order,
-  OrderItem,
-  Products,
-  Users,
-} from "@prisma/client";
+import { Brands, Inventory, Order, OrderItem, Products } from "@prisma/client";
 
 export interface ProductWithBrand extends Products {
   brand: Brands;

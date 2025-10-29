@@ -53,7 +53,7 @@ const Navbar = () => {
       <div className="w-full bg-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-10">
-            <div className="flex items-center gap-6 text-xs text-white">
+            <div className="flex items-center gap-6 text-sm text-white">
               <Link
                 href="tel:+639778355320"
                 className="hover:text-white/80 transition-colors"
@@ -70,7 +70,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4">
               <Link
                 href="/assistance"
-                className="text-xs text-white hover:text-white/80 transition-colors"
+                className="text-sm text-white hover:text-white/80 transition-colors"
               >
                 Assistance
               </Link>
@@ -81,8 +81,8 @@ const Navbar = () => {
                   className="text-white hover:text-white/80 transition-colors"
                 >
                   <svg
-                    width="16"
-                    height="16"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
@@ -95,8 +95,8 @@ const Navbar = () => {
                   className="text-white hover:text-white/80 transition-colors"
                 >
                   <svg
-                    width="16"
-                    height="16"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >

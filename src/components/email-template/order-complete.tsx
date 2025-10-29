@@ -50,7 +50,7 @@ export const OrderComplete = ({ order }: OrderCompleteProps) => (
             src={`https://tire2-go.vercel.app/_next/image?url=%2Flogo.png&w=256&q=75`}
             width="66"
             height="22"
-            alt="Tire2Go"
+            alt="Tyre2Go"
             style={{ margin: "auto" }}
           />
           <Heading style={global.heading}>Order Completed</Heading>
@@ -172,7 +172,7 @@ export const OrderComplete = ({ order }: OrderCompleteProps) => (
           </Row>
           <Row>
             <Text style={footer.text}>
-              © 2025 Tire2Go. All Rights Reserved.
+              © 2025 Tyre2Go. All Rights Reserved.
             </Text>
           </Row>
         </Section>

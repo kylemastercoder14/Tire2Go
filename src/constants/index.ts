@@ -171,25 +171,25 @@ export const SEARCH_BY_SIZE: SearchBySize = {
   315: {},
 };
 
-export const HISTORY = `Tire2Go is the evolution of 202 Mags and Tires, a business built
+export const HISTORY = `Tyre2Go is the evolution of 202 Mags and Tires, a business built
             from a passion for cars and a commitment to providing quality wheels
             and tires. What began three years ago as a small online marketplace
             post quickly gained the trust of customers through reliable
-            products, affordable prices, and excellent service. <br /> <br /> From those humble beginnings, Tire2Go grew from online selling to
+            products, affordable prices, and excellent service. <br /> <br /> From those humble beginnings, Tyre2Go grew from online selling to
             opening a physical store, serving more car owners with the same
-            dedication and personal touch. Today, Tire2Go continues to be a
+            dedication and personal touch. Today, Tyre2Go continues to be a
             trusted name in the community, driven by the belief that every car
             owner deserves access to dependable, affordable, and stylish wheels
             and tires.`;
 
-export const MISSION = `Our mission at Tire2Go is to empower every car owner with access
+export const MISSION = `Our mission at Tyre2Go is to empower every car owner with access
                 to dependable, high-quality, and stylish wheels and tires at
                 prices that remain within reach. We are committed not only to
                 providing products that ensure safety and performance but also
                 to creating a customer experience built on trust, care, and
                 expertise.`;
 
-export const VISION = `Our vision is to establish Tire2Go as the leading tire and wheel
+export const VISION = `Our vision is to establish Tyre2Go as the leading tire and wheel
                 provider in the Philippines, recognized for our unwavering
                 dedication to quality, value, and customer satisfaction. We
                 aspire to expand beyond being just a store, evolving into a
@@ -270,35 +270,35 @@ export const TEAM = [
 export const TESTIMONIALS = [
   {
     quote:
-      "Tire2Go made upgrading my car’s mags and tires so easy! The quality is top-notch and the prices are better than anywhere else I checked.",
+      "Tyre2Go made upgrading my car’s mags and tires so easy! The quality is top-notch and the prices are better than anywhere else I checked.",
     name: "Sarah Chen",
     designation: "Car Enthusiast",
     src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop",
   },
   {
     quote:
-      "The team at Tire2Go guided me in choosing the right tire size for my SUV. Fast service, affordable rates, and excellent customer support!",
+      "The team at Tyre2Go guided me in choosing the right tire size for my SUV. Fast service, affordable rates, and excellent customer support!",
     name: "Michael Rodriguez",
     designation: "SUV Owner",
     src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop",
   },
   {
     quote:
-      "I was worried about finding genuine mags online, but Tire2Go delivered exactly what was promised. My ride looks and feels brand new.",
+      "I was worried about finding genuine mags online, but Tyre2Go delivered exactly what was promised. My ride looks and feels brand new.",
     name: "Emily Watson",
     designation: "Satisfied Customer",
     src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop",
   },
   {
     quote:
-      "Smooth transaction and quick delivery. Tire2Go’s wide selection of tires made it easy to get the perfect fit for my sedan.",
+      "Smooth transaction and quick delivery. Tyre2Go’s wide selection of tires made it easy to get the perfect fit for my sedan.",
     name: "James Kim",
     designation: "Daily Driver",
     src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop",
   },
   {
     quote:
-      "Tire2Go is my go-to for all my tire needs. Reliable, affordable, and customer service that truly cares. Highly recommended!",
+      "Tyre2Go is my go-to for all my tire needs. Reliable, affordable, and customer service that truly cares. Highly recommended!",
     name: "Lisa Thompson",
     designation: "Long-time Customer",
     src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop",

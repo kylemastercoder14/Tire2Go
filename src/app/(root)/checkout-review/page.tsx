@@ -196,7 +196,7 @@ const Page = () => {
                   </div>
                 </div>
                 <p className="text-destructive font-medium text-sm mt-2">
-                  Note: This order is subject to Tire2Go confirmation. Please
+                  Note: This order is subject to Tyre2Go confirmation. Please
                   wait for the confirmation, <strong>via email address</strong>.
                 </p>
 

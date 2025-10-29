@@ -1,48 +1,62 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
+import { OrderWithOrderItem } from "@/types";
+import { useMemo } from 'react';
 
-export const description = "A radar chart"
-
-const chartData = [
-  { brand: "Dunlop", sold: 305 },
-  { brand: "Yokohama", sold: 273 },
-  { brand: "Michelin", sold: 237 },
-  { brand: "Raiden", sold: 214 },
-  { brand: "Comforser", sold: 209 },
-  { brand: "Monsta", sold: 186 },
-]
+type BrandChartProps = {
+  orders: OrderWithOrderItem[];
+};
 
 const chartConfig = {
   sold: {
     label: "Sold",
     color: "#ac0000",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function BrandChart() {
+export function BrandChart({ orders }: BrandChartProps) {
+  // Compute top 5 brands
+  const chartData = useMemo(() => {
+    const brandMap: Record<string, number> = {};
+
+    orders.forEach((order) => {
+      if (order.status === "COMPLETED") {
+        order.orderItem.forEach((item) => {
+          const brandName = item.product.brand.name;
+          if (!brandMap[brandName]) brandMap[brandName] = 0;
+          brandMap[brandName] += item.quantity;
+        });
+      }
+    });
+
+    // Convert to array and sort by sold quantity descending
+    return Object.entries(brandMap)
+      .map(([brand, sold]) => ({ brand, sold }))
+      .sort((a, b) => b.sold - a.sold)
+      .slice(0, 5); // Top 5
+  }, [orders]);
+
   return (
     <Card>
       <CardHeader className="items-center pb-4">
         <CardTitle>Top 5 Brands</CardTitle>
         <CardDescription>
-          Showing top 5 brands for the last 6 months
+          Showing top 5 brands for completed orders
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
@@ -54,22 +68,10 @@ export function BrandChart() {
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="brand" />
             <PolarGrid />
-            <Radar
-              dataKey="sold"
-              fill="var(--color-sold)"
-              fillOpacity={0.6}
-            />
+            <Radar dataKey="sold" fill="var(--color-sold)" fillOpacity={0.6} />
           </RadarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground flex items-center gap-2 leading-none">
-          March - September 2025
-        </div>
-      </CardFooter>
     </Card>
-  )
+  );
 }

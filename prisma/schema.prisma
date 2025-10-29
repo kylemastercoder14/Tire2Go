@@ -75,9 +75,54 @@ model Products {
   brandId String
   brand   Brands @relation(fields: [brandId], references: [id])
 
-  inventory Inventory[]
-  cartItem  CartItem[]
-  orderItem OrderItem[]
+  inventory            Inventory[]
+  cartItem             CartItem[]
+  orderItem            OrderItem[]
+  productCompatibility ProductCompatibility[]
+  productSize          ProductSize[]
+}
+
+model TireSize {
+  id       String @id @default(uuid())
+  width    Int // e.g., 155
+  ratio    Int // aspect ratio, e.g., 30
+  diameter Int // rim diameter, e.g., 13
+
+  products ProductSize[]
+}
+
+model ProductSize {
+  id        String   @id @default(uuid())
+  productId String
+  product   Products @relation(fields: [productId], references: [id])
+
+  tireSizeId String
+  tireSize   TireSize @relation(fields: [tireSizeId], references: [id])
+}
+
+model CarMake {
+  id     String     @id @default(uuid())
+  name   String     @unique // e.g., "MITSUBISHI", "TOYOTA"
+  models CarModel[]
+}
+
+model CarModel {
+  id              String                 @id @default(uuid())
+  name            String // e.g., "LANCER", "VIOS"
+  makeId          String
+  make            CarMake                @relation(fields: [makeId], references: [id])
+  compatibilities ProductCompatibility[]
+}
+
+model ProductCompatibility {
+  id        String   @id @default(uuid())
+  productId String
+  product   Products @relation(fields: [productId], references: [id])
+
+  modelId String
+  model   CarModel @relation(fields: [modelId], references: [id])
+
+  year Int // Year of the car this tire is compatible with
 }
 
 model Inventory {
@@ -292,4 +337,12 @@ enum TicketPriority {
   MEDIUM
   HIGH
   URGENT
+}
+
+model BackupHistory {
+  id        String   @id @default(cuid())
+  action    String
+  filename  String
+  status    String
+  createdAt DateTime @default(now())
 }

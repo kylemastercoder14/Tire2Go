@@ -6,6 +6,7 @@ import {
   IconBox,
   IconCircleDotFilled,
   IconDashboard,
+  IconDatabase,
   IconFileText,
   IconHelpCircle,
   IconScale,
@@ -91,10 +92,15 @@ const data = {
       url: "/admin/faqs",
       icon: IconZoomQuestion,
     },
-     {
+    {
       title: "Policies",
       url: "/admin/policies",
       icon: IconScale,
+    },
+    {
+      title: "Backup & Recovery",
+      url: "/admin/backup-recovery",
+      icon: IconDatabase,
     },
   ],
 };
@@ -110,10 +116,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="/admin/dashboard" className="flex items-center gap-2">
-                {/* <Image src="/logo.png" alt="Tire2Go" width={70} height={70} /> */}
+                {/* <Image src="/logo.png" alt="Tyre2Go" width={70} height={70} /> */}
                 <IconCircleDotFilled className="!size-5" />
                 <span className="text-base font-semibold">
-                  Tire2Go Admin Panel
+                  Tyre2Go Admin Panel
                 </span>
               </a>
             </SidebarMenuButton>

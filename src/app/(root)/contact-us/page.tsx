@@ -51,7 +51,7 @@ const Page = () => {
               <div className="grid gap-2">
                 <Label htmlFor="terms-2">Accept terms and conditions</Label>
                 <p className="text-muted-foreground text-sm">
-                  By clicking this checkbox, you agree to Tire2Go&apos;s{" "}
+                  By clicking this checkbox, you agree to Tyre2Go&apos;s{" "}
                   <Link href="/terms" className="text-primary underline">
                     terms and conditions
                   </Link>{" "}

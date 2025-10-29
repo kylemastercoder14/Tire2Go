@@ -125,7 +125,7 @@ const Page = async () => {
   });
   return (
     <div className="min-h-screen">
-      <div className="w-full pt-24 h-[20vh] flex items-center justify-center bg-cover bg-center"
+      <div className="w-full pt-30 h-[20vh] flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage:
             "url('https://gogulong.ph/_nuxt/img/breadcrumbs-bg.f31fb0b.png')",
@@ -142,16 +142,16 @@ const Page = async () => {
           on gas and repairs. And that&apos;s not even mentioning how it can
           keep you safe on the road. Now one of the things to consider when
           buying tires is the brand. And when it comes to the best tire brands
-          in the Philippines, there&apos;s no better place to shop than Tire2Go.
+          in the Philippines, there&apos;s no better place to shop than Tyre2Go.
         </p>
         <h3 className="text-2xl mt-10 font-bold tracking-tight text-center">
-          Top Tire Brands Available at Tire2Go
+          Top Tire Brands Available at Tyre2Go
         </h3>
         <p className="mt-5">
-          From premium tires to budget tires, Tire2Go offers all kinds of
+          From premium tires to budget tires, Tyre2Go offers all kinds of
           high-quality tires for every car. To ensure our customers get the best
           tires for their cars, we&apos;ve partnered with many great tire brands
-          in the Philippines. Tire2Go&apos;s list of tire brands in the
+          in the Philippines. Tyre2Go&apos;s list of tire brands in the
           Philippines include:
         </p>
 
@@ -236,21 +236,21 @@ const Page = async () => {
       <section className="bg-[#f5f5f5] py-10">
         <div className="px-60">
           <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
-            Enjoy the Best Tire Brands at Tire2Go
+            Enjoy the Best Tire Brands at Tyre2Go
           </h3>
           <p className="text-center mt-3 mb-5">
             Aside from searching for tires by your preferred tire brand, you may
-            also search tires by size or by car model here at Tire2Go:
+            also search tires by size or by car model here at Tyre2Go:
           </p>
           <TireSearch />
         </div>
       </section>
       <section className="py-10 max-w-7xl mx-auto">
         <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
-          How Tire2Go Helps You Find High-Quality Tires
+          How Tyre2Go Helps You Find High-Quality Tires
         </h3>
         <p className="text-center mt-3 mb-5">
-          Tire2Go has a pretty simple and straightforward process. All you have
+          Tyre2Go has a pretty simple and straightforward process. All you have
           to do is follow these steps:
         </p>
         <ArcTimeline

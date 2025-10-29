@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tire2Go - Tire and Mags Collection",
+  title: "Tyre2Go - Tire and Mags Collection",
   description:
     "A collection of 202 magazines and tire catalogs from the 20th century.",
   icons: {

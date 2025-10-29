@@ -18,7 +18,7 @@ const Page = async () => {
     <div className="min-h-screen bg-[#f5f5f5]">
       <div className="pt-40 px-24">
         <h3 className="text-black text-4xl font-bold tracking-tight text-center">
-          Tire2Go Frequently Asked Questions
+          Tyre2Go Frequently Asked Questions
         </h3>
         <Separator className="mt-5 mb-10 bg-primary rouned-lg !h-[5px]" />
         <Accordion type="single" collapsible className="my-4 w-full space-y-2">

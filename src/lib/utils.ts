@@ -62,3 +62,25 @@ export const formatCurrency = (value: number) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+export const backupTables = [
+  "users",
+  "staff",
+  "brands",
+  "products",
+  "inventory",
+  "tipsGuides",
+  "faqs",
+  "policies",
+  "promotions",
+  "feedback",
+  "ticket",
+  "cart",
+  "cartItem",
+  "systemLogs",
+  "order",
+  "orderItem",
+  "conversation",
+  "message",
+  "backupHistory",
+];

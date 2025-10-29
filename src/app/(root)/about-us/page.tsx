@@ -20,7 +20,7 @@ const Page = () => {
       <section className="mt-10 pb-20 grid lg:grid-cols-2 gap-10 grid-cols-1 px-20">
         <div className="">
           <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
-            What is Tire2Go?
+            What is Tyre2Go?
           </h3>
           <p className="mt-5" dangerouslySetInnerHTML={{ __html: HISTORY }} />
           <div className="grid mt-10 lg:grid-cols-2 grid-cols-1 gap-20">

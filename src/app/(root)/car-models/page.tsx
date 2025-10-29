@@ -22,7 +22,7 @@ const Page = () => {
           Browse Popular Tires For Your Car
         </h3>
         <p className="mt-1 text-lg text-muted-foreground">
-          At Tire2Go, we don’t just provide you tires by size; we also offer it
+          At Tyre2Go, we don’t just provide you tires by size; we also offer it
           based on car models. Here are some of our featured car models to find
           your tires:
         </p>
