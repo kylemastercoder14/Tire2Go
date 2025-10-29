@@ -21,6 +21,21 @@ export const ProductValidators = z.object({
   warranty: z.string().min(10, { message: "Warranty details are required." }),
   tireSize: z.string().min(1, { message: "Tire size is required." }),
   brandId: z.string().min(1, { message: "Brand is required." }),
+  // Additional fields for product sizes and compatibility
+  sizes: z.array(z.string()).optional(),
+  compatibilities: z
+    .array(
+      z.object({
+        make: z.string().min(1, { message: "Car make is required." }),
+        model: z.string().min(1, { message: "Car model is required." }),
+        year: z
+          .number()
+          .int({ message: "Year must be an integer." })
+          .min(1900, { message: "Year must be >= 1900." })
+          .max(2100, { message: "Year must be <= 2100." }),
+      })
+    )
+    .optional(),
 });
 
 export const InventoryValidators = z.object({

@@ -1,4 +1,15 @@
-import { Brands, Inventory, Order, OrderItem, Products } from "@prisma/client";
+import {
+  Brands,
+  Inventory,
+  Order,
+  OrderItem,
+  Products,
+  TireSize,
+  ProductSize,
+  ProductCompatibility,
+  CarModel,
+  CarMake,
+} from "@prisma/client";
 
 export interface ProductWithBrand extends Products {
   brand: Brands;
@@ -35,5 +46,12 @@ export type SearchByCar = {
 export interface OrderWithOrderItem extends Order {
   orderItem: (OrderItem & {
     product: Products & { brand: Brands };
+  })[];
+}
+
+export interface ProductWithRelations extends Products {
+  productSize: (ProductSize & { tireSize: TireSize })[];
+  productCompatibility: (ProductCompatibility & {
+    model: CarModel & { make: CarMake };
   })[];
 }

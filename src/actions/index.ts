@@ -22,6 +22,23 @@ import { sendMail } from "@/lib/nodemailer";
 import { OrderStatusEmailHTML } from "@/components/email-template/order-status";
 import { OrderRejectionEmailHTML } from "@/components/email-template/order-rejection";
 
+function parseTireSizeString(input: string):
+  | { width: number; ratio: number; diameter: number }
+  | null {
+  // Normalize string: uppercase, trim spaces
+  const cleaned = input.toUpperCase().trim().replace(/\s+/g, "");
+  // Accept formats like 205/50/R16, 205/50R16, 205/50/16
+  const match = cleaned.match(/^(\d{3})\/(\d{2})\/?R?(\d{2})/);
+  if (!match) return null;
+  const width = Number(match[1]);
+  const ratio = Number(match[2]);
+  const diameter = Number(match[3]);
+  if (Number.isNaN(width) || Number.isNaN(ratio) || Number.isNaN(diameter)) {
+    return null;
+  }
+  return { width, ratio, diameter };
+}
+
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
 
@@ -118,8 +135,68 @@ export const createProduct = async (
     }
 
     const product = await db.products.create({
-      data: parseValues,
+      data: {
+        name: parseValues.name,
+        description: parseValues.description,
+        price: parseValues.price,
+        isClearanceSale: parseValues.isClearanceSale ?? false,
+        discountedPrice: parseValues.discountedPrice,
+        images: parseValues.images,
+        inclusion: parseValues.inclusion,
+        warranty: parseValues.warranty,
+        tireSize: parseValues.tireSize,
+        brandId: parseValues.brandId,
+      },
     });
+
+    // Handle available sizes -> TireSize/ProductSize relations
+    if (parseValues.sizes && parseValues.sizes.length > 0) {
+      for (const sizeStr of parseValues.sizes) {
+        const parsed = parseTireSizeString(sizeStr);
+        if (!parsed) continue;
+        const { width, ratio, diameter } = parsed;
+        let tireSize = await db.tireSize.findFirst({
+          where: { width, ratio, diameter },
+        });
+        if (!tireSize) {
+          tireSize = await db.tireSize.create({
+            data: { width, ratio, diameter },
+          });
+        }
+        await db.productSize.create({
+          data: {
+            productId: product.id,
+            tireSizeId: tireSize.id,
+          },
+        });
+      }
+    }
+
+    // Handle compatibilities -> CarMake/CarModel/ProductCompatibility relations
+    if (parseValues.compatibilities && parseValues.compatibilities.length > 0) {
+      for (const comp of parseValues.compatibilities) {
+        const make = await db.carMake.upsert({
+          where: { name: comp.make.trim() },
+          update: {},
+          create: { name: comp.make.trim().toUpperCase() },
+        });
+        let model = await db.carModel.findFirst({
+          where: { name: comp.model.trim(), makeId: make.id },
+        });
+        if (!model) {
+          model = await db.carModel.create({
+            data: { name: comp.model.trim(), makeId: make.id },
+          });
+        }
+        await db.productCompatibility.create({
+          data: {
+            productId: product.id,
+            modelId: model.id,
+            year: comp.year,
+          },
+        });
+      }
+    }
     return { success: "Product created successfully", product };
   } catch (error) {
     console.error("Error creating product:", error);
@@ -153,8 +230,70 @@ export const updateProduct = async (
 
     const updatedProduct = await db.products.update({
       where: { id },
-      data: parseValues,
+      data: {
+        name: parseValues.name,
+        description: parseValues.description,
+        price: parseValues.price,
+        isClearanceSale: parseValues.isClearanceSale ?? false,
+        discountedPrice: parseValues.discountedPrice,
+        images: parseValues.images,
+        inclusion: parseValues.inclusion,
+        warranty: parseValues.warranty,
+        tireSize: parseValues.tireSize,
+        brandId: parseValues.brandId,
+      },
     });
+
+    // Replace sizes relations
+    await db.productSize.deleteMany({ where: { productId: id } });
+    if (parseValues.sizes && parseValues.sizes.length > 0) {
+      for (const sizeStr of parseValues.sizes) {
+        const parsed = parseTireSizeString(sizeStr);
+        if (!parsed) continue;
+        const { width, ratio, diameter } = parsed;
+        let tireSize = await db.tireSize.findFirst({
+          where: { width, ratio, diameter },
+        });
+        if (!tireSize) {
+          tireSize = await db.tireSize.create({
+            data: { width, ratio, diameter },
+          });
+        }
+        await db.productSize.create({
+          data: {
+            productId: id,
+            tireSizeId: tireSize.id,
+          },
+        });
+      }
+    }
+
+    // Replace compatibilities relations
+    await db.productCompatibility.deleteMany({ where: { productId: id } });
+    if (parseValues.compatibilities && parseValues.compatibilities.length > 0) {
+      for (const comp of parseValues.compatibilities) {
+        const make = await db.carMake.upsert({
+          where: { name: comp.make.trim() },
+          update: {},
+          create: { name: comp.make.trim().toUpperCase() },
+        });
+        let model = await db.carModel.findFirst({
+          where: { name: comp.model.trim(), makeId: make.id },
+        });
+        if (!model) {
+          model = await db.carModel.create({
+            data: { name: comp.model.trim(), makeId: make.id },
+          });
+        }
+        await db.productCompatibility.create({
+          data: {
+            productId: id,
+            modelId: model.id,
+            year: comp.year,
+          },
+        });
+      }
+    }
     return { success: "Product updated successfully", product: updatedProduct };
   } catch (error) {
     console.error("Error updating product:", error);

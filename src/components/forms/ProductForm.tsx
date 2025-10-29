@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -26,18 +26,26 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createProduct, updateProduct } from "@/actions";
-import { Brands, Products } from "@prisma/client";
+import { Brands } from "@prisma/client";
 import ImageUpload from "@/components/globals/ImageUpload";
 import { RichTextEditor } from "@/components/globals/RichTextEditor";
 import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { IconPlus, IconX } from "@tabler/icons-react";
+
+type CompatibilityInput = { make: string; model: string; year: number };
 
 const ProductForm = ({
   initialData,
   brands,
+  initialSizes = [],
+  initialCompatibilities = [],
 }: {
-  initialData: Products | null;
+  initialData: any | null;
   brands: Brands[];
+  initialSizes?: string[];
+  initialCompatibilities?: CompatibilityInput[];
 }) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof ProductValidators>>({
@@ -54,10 +62,20 @@ const ProductForm = ({
       warranty: initialData?.warranty || "",
       tireSize: initialData?.tireSize || "",
       brandId: initialData?.brandId || "",
+      sizes: initialSizes,
+      compatibilities: initialCompatibilities,
     },
   });
 
   const { isSubmitting } = form.formState;
+
+  const sizes = form.watch("sizes") || [];
+  const [sizeInput, setSizeInput] = React.useState<string>("");
+
+  const { fields: compatFields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "compatibilities",
+  });
 
   async function onSubmit(values: z.infer<typeof ProductValidators>) {
     try {
@@ -193,6 +211,147 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+          </div>
+
+          {/* Available Sizes */}
+          <div className="grid gap-2">
+            <FormLabel>Available Tire Sizes</FormLabel>
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="e.g. 205/50/R16"
+                value={sizeInput}
+                onChange={(e) => setSizeInput(e.target.value)}
+                disabled={isSubmitting}
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  const value = sizeInput.trim();
+                  if (!value) return;
+                  const next = [...sizes, value];
+                  form.setValue("sizes", next, { shouldValidate: true });
+                  setSizeInput("");
+                }}
+                disabled={isSubmitting}
+              >
+                <IconPlus className="size-4" />
+                Add size
+              </Button>
+            </div>
+            {sizes.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {sizes.map((s: string, idx: number) => (
+                  <Badge key={`${s}-${idx}`} className="pr-1">
+                    {s}
+                    <button
+                      type="button"
+                      className="ml-1 inline-flex items-center"
+                      onClick={() => {
+                        const next = sizes.filter((_: string, i: number) => i !== idx);
+                        form.setValue("sizes", next, { shouldValidate: true });
+                      }}
+                      aria-label={`Remove ${s}`}
+                      disabled={isSubmitting}
+                    >
+                      <IconX className="size-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Product Compatibility */}
+          <div className="grid gap-3">
+            <div className="flex items-center justify-between">
+              <FormLabel>Product Compatibility</FormLabel>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() =>
+                  append({ make: "", model: "", year: new Date().getFullYear() })
+                }
+                disabled={isSubmitting}
+              >
+                <IconPlus className="size-4" /> Add compatibility
+              </Button>
+            </div>
+            <div className="grid gap-3">
+              {compatFields.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Add car make, model, and year that this product fits.
+                </p>
+              ) : null}
+              {compatFields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid lg:grid-cols-12 grid-cols-1 gap-3 items-end"
+                >
+                  <div className="lg:col-span-4 col-span-1">
+                    <FormField
+                      control={form.control}
+                      name={`compatibilities.${index}.make` as const}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Car Make</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Toyota" {...field} disabled={isSubmitting} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="lg:col-span-4 col-span-1">
+                    <FormField
+                      control={form.control}
+                      name={`compatibilities.${index}.model` as const}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Car Model</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Vios" {...field} disabled={isSubmitting} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="lg:col-span-3 col-span-1">
+                    <FormField
+                      control={form.control}
+                      name={`compatibilities.${index}.year` as const}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Year</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="e.g. 2018"
+                              value={field.value as number}
+                              onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                              disabled={isSubmitting}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="lg:col-span-1 col-span-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => remove(index)}
+                      disabled={isSubmitting}
+                    >
+                      <IconX className="size-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <FormField

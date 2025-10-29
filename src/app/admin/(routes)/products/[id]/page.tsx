@@ -11,8 +11,12 @@ const Page = async (props: {
   const params = await props.params;
 
   const initialData = await db.products.findUnique({
-    where: {
-      id: params.id,
+    where: { id: params.id },
+    include: {
+      productSize: { include: { tireSize: true } },
+      productCompatibility: {
+        include: { model: { include: { make: true } } },
+      },
     },
   });
 
@@ -23,11 +27,31 @@ const Page = async (props: {
     ? "Update the details of an existing tire or mag product."
     : "Add a new tire or mag product to your catalog.";
 
+  // Derive initial sizes as string[]
+  const initialSizes = (initialData?.productSize || []).map((ps) => {
+    const { width, ratio, diameter } = ps.tireSize;
+    return `${width}/${ratio}/R${diameter}`;
+  });
+
+  // Derive initial compatibilities
+  const initialCompatibilities = (initialData?.productCompatibility || []).map(
+    (pc) => ({
+      make: pc.model.make.name,
+      model: pc.model.name,
+      year: pc.year,
+    })
+  );
+
   return (
     <div>
       <Heading title={title} description={description} />
       <div className="mt-5">
-        <ProductForm initialData={initialData} brands={brands} />
+        <ProductForm
+          initialData={initialData}
+          brands={brands}
+          initialSizes={initialSizes}
+          initialCompatibilities={initialCompatibilities}
+        />
       </div>
     </div>
   );
