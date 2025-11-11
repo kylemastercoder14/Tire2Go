@@ -35,14 +35,6 @@ const Page = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Email Address</Label>
-              <Input type="email" placeholder="Enter email address" />
-            </div>
-            <div className="space-y-2">
-              <Label>Mobile No.</Label>
-              <Input type="tel" placeholder="Enter mobile number" />
-            </div>
-            <div className="space-y-2">
               <Label>Message</Label>
               <Textarea placeholder="Enter your message..." />
             </div>

@@ -20,7 +20,11 @@ const periods: Period[] = [
   "Annually",
 ];
 
-const StatsDashboard = () => {
+interface StatsDashboardProps {
+  onDataChange?: (data: any[]) => void;
+}
+
+const StatsDashboard = ({ onDataChange }: StatsDashboardProps) => {
   const [period, setPeriod] = useState<Period>("Monthly");
   const [stats, setStats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,12 +36,13 @@ const StatsDashboard = () => {
       .then((data) => {
         setStats(data);
         setLoading(false);
+        onDataChange?.(data); // ✅ send stats to parent
       })
       .catch((err) => {
         console.error(err);
         setLoading(false);
       });
-  }, [period]);
+  }, [period, onDataChange]);
 
   return (
     <div>
@@ -47,10 +52,7 @@ const StatsDashboard = () => {
         </h3>
         <div className="flex items-center gap-2">
           <label className="mb-1 block font-semibold">Select Period:</label>
-          <Select
-            value={period}
-            onValueChange={(val) => setPeriod(val as Period)}
-          >
+          <Select value={period} onValueChange={(val) => setPeriod(val as Period)}>
             <SelectTrigger className="w-40">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
@@ -68,10 +70,7 @@ const StatsDashboard = () => {
       {loading ? (
         <div className="grid lg:grid-cols-4 grid-cols-1 gap-5">
           {Array.from({ length: 4 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="space-y-2 p-4 border rounded-lg shadow-sm"
-            >
+            <div key={idx} className="space-y-2 p-4 border rounded-lg shadow-sm">
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-4 w-1/2" />

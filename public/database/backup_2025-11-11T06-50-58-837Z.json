@@ -1,0 +1,1559 @@
+{
+  "users": [
+    {
+      "id": "154c8745-dc82-4534-8f10-b53bfe90c23d",
+      "authId": "user_32b5CJ8mPFyR5YpjfiaFc4yenWw",
+      "email": "rovawork.limkyleandre@gmail.com",
+      "password": "Kyleandrelim14@",
+      "firstName": "Kyle Andre",
+      "lastName": "Lim",
+      "mobileNumber": "09152479693",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-12T11:48:28.102Z",
+      "updatedAt": "2025-09-12T11:48:29.741Z"
+    },
+    {
+      "id": "4e119d1f-39ab-425a-8fb2-c394f140bb50",
+      "authId": "user_32b8Gr5atQRwpSk1WQ6cGtEqimV",
+      "email": "mariusorosco79@gmail.com",
+      "password": "Kyleandrelim14@",
+      "firstName": "Kyle Andre",
+      "lastName": "Lim",
+      "mobileNumber": "09152479693",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-12T11:57:43.474Z",
+      "updatedAt": "2025-09-12T11:57:45.820Z"
+    },
+    {
+      "id": "1f12342b-78fc-48bc-bf65-ef517bbdd142",
+      "authId": "user_32g8L6Jv8InJimQLZrruvFE37cT",
+      "email": "jeffreelingal00@gmail.com",
+      "password": "eruchtandaxan",
+      "firstName": "jeff",
+      "lastName": "lingal",
+      "mobileNumber": "09128321746247",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 138.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-14T06:19:23.880Z",
+      "updatedAt": "2025-09-14T06:20:02.461Z"
+    },
+    {
+      "id": "aaec14ce-51c9-4a4f-8502-68620999994e",
+      "authId": "user_32gNlQmThAjIk2UkPCv3541EPEd",
+      "email": "ricayvonne.junsay@tup.edu.ph",
+      "password": "0909.rixsy",
+      "firstName": "Rica Yvonne",
+      "lastName": "Junsay",
+      "mobileNumber": "09096065282",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-18T11:15:19.656Z",
+      "updatedAt": "2025-09-18T11:15:22.246Z"
+    },
+    {
+      "id": "87ba5d6e-8ea8-4de0-8da8-883b3d3b606e",
+      "authId": "user_32sN6u3Yuxt0qqYGrTZC6azFEZO",
+      "email": "thewikdevil022@gmail.com",
+      "password": "eruchtandaxan011",
+      "firstName": "albert",
+      "lastName": "Gomez",
+      "mobileNumber": "09669339001",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-18T14:17:01.769Z",
+      "updatedAt": "2025-09-18T14:19:13.437Z"
+    },
+    {
+      "id": "45bb9818-34e7-485f-9dc8-636f89fbf0b4",
+      "authId": "user_32u0UYlS4D0fmIGLovKShEjSqmI",
+      "email": "salvadorgab0902@gmail.com",
+      "password": "gabbi0902",
+      "firstName": "Mika",
+      "lastName": "Garcia",
+      "mobileNumber": "098366281",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-19T04:11:55.630Z",
+      "updatedAt": "2025-09-19T04:12:55.679Z"
+    },
+    {
+      "id": "d59da748-771e-481b-8e0f-4a54a589ea28",
+      "authId": "user_32u1WNnI6CERQyN9T0PlzBMmS2p",
+      "email": "bubblep255@gmail.com",
+      "password": "bubblep098",
+      "firstName": "Mika",
+      "lastName": "Garcia",
+      "mobileNumber": "374273727",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-19T04:19:12.484Z",
+      "updatedAt": "2025-09-19T04:21:22.207Z"
+    },
+    {
+      "id": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "authId": "user_32b4JwjRok59yw1Pz12ghOjSBAs",
+      "email": "kylemastercoder14@gmail.com",
+      "password": "Kyleandrelim14@",
+      "firstName": "Kyle Andre",
+      "lastName": "Lim",
+      "mobileNumber": "09152479693",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-09-12T11:17:14.119Z",
+      "updatedAt": "2025-10-01T12:13:09.041Z"
+    },
+    {
+      "id": "b6daacad-aef9-4a1a-8596-39928d6a27ec",
+      "authId": "user_33W7T4m1tmDPNA3UgOIkB74GI2v",
+      "email": "briancurba@gmail.com",
+      "password": "adrian070504",
+      "firstName": "brian",
+      "lastName": "curba",
+      "mobileNumber": "09954587914",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-10-02T16:03:37.586Z",
+      "updatedAt": "2025-10-02T16:03:40.216Z"
+    },
+    {
+      "id": "336442ea-d9ee-4f2f-acc6-3d36b98d4f68",
+      "authId": "user_33eYNkWVoP1JAZtKZGsY0ZeBhlU",
+      "email": "adrienfria2@gmail.com",
+      "password": "adrianpogi070504",
+      "firstName": "adrien",
+      "lastName": "fria",
+      "mobileNumber": "09067845362",
+      "ipAddress": "113.19.143.199",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-10-05T15:42:14.602Z",
+      "updatedAt": "2025-10-05T15:42:48.801Z"
+    },
+    {
+      "id": "caed262c-f9de-4734-932f-92fd130ecc43",
+      "authId": "user_33fbzgYjFV74uQbq4YmUlrG4P7M",
+      "email": "gamboamarjorie26@gmail.com",
+      "password": "Kyleandrelim14@",
+      "firstName": "Marjorie",
+      "lastName": "Gamboa",
+      "mobileNumber": "09152479693",
+      "ipAddress": "123.253.50.156",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-10-06T00:42:44.174Z",
+      "updatedAt": "2025-10-06T00:42:44.815Z"
+    },
+    {
+      "id": "908af9a9-9354-4a01-a35b-e7915588180b",
+      "authId": "user_33gEXEVAfeSMpmsJoGFguosv0ZG",
+      "email": "nurielvizmanosaguilar@gmail.com",
+      "password": "eruchtandaxan011",
+      "firstName": "kevin",
+      "lastName": "lingal",
+      "mobileNumber": "09669339001",
+      "ipAddress": "::1",
+      "userAgent": "Chrome 140.0.0.0 on Windows 10",
+      "deviceType": "desktop",
+      "isEmailVerified": true,
+      "role": "USER",
+      "createdAt": "2025-10-06T05:58:50.801Z",
+      "updatedAt": "2025-10-06T05:59:18.345Z"
+    }
+  ],
+  "staff": [
+    {
+      "id": "1a7ed1e2-4076-4c99-8f30-8e19397a196b",
+      "firstName": "Daniel",
+      "lastName": "Padilla",
+      "email": "danielpadilla@gmail.com",
+      "password": "Kyleandrelim14@",
+      "role": "Manager",
+      "isEmailVerified": false,
+      "isActive": true,
+      "createdAt": "2025-09-17T10:42:31.445Z",
+      "updatedAt": "2025-09-17T10:42:31.445Z"
+    },
+    {
+      "id": "84b47137-bc76-43dd-94d9-923a8fbe5d1f",
+      "firstName": "Enrique",
+      "lastName": "Gil",
+      "email": "enriquegil@gmail.com",
+      "password": "Kyleandrelim14@",
+      "role": "Secretary",
+      "isEmailVerified": false,
+      "isActive": true,
+      "createdAt": "2025-09-18T12:22:49.440Z",
+      "updatedAt": "2025-09-18T12:22:49.440Z"
+    },
+    {
+      "id": "a6c3d53c-aa1f-4195-ba87-e64f2aa494f1",
+      "firstName": "adrian",
+      "lastName": "hazano",
+      "email": "thewikdevil011@gmail.com",
+      "password": "eruchtadnaxan011",
+      "role": "Warehouse",
+      "isEmailVerified": false,
+      "isActive": true,
+      "createdAt": "2025-10-06T06:11:16.627Z",
+      "updatedAt": "2025-10-06T06:11:16.627Z"
+    }
+  ],
+  "brands": [
+    {
+      "id": "d9edb892-ecd0-42f8-b7ad-722468c4f5f1",
+      "name": "ARIVO",
+      "description": "Arivo is a new and growing tire brand that has become popular in the Philippines for offering affordable yet reliable tires. The brand provides a wide range of options for passenger cars, SUVs, and light trucks, giving Filipino drivers more choices for different road needs. Arivo tires are known for their good grip, stable handling, and comfortable rides, while still being budget-friendly. Many drivers choose Arivo because it balances quality, safety, and value, making it a practical choice for everyday city driving, highway travel, and even light off-road use.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759421938776_10-03-2025-00-18-58.webp",
+      "type": "Budget",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759421991468_10-03-2025-00-19-50.webp",
+      "createdAt": "2025-10-02T16:20:10.697Z",
+      "updatedAt": "2025-10-02T16:20:10.697Z"
+    },
+    {
+      "id": "0103c9a6-60e6-42fd-beb6-eedd74a8673d",
+      "name": "Comforser",
+      "description": "Comforser is a Chinese tire brand that has gained popularity in the Philippines for offering affordable and durable tires. It produces a wide range of tires for passenger cars, SUVs, pickups, and off-road vehicles. Known for their strong tread designs and dependable performance, Comforser tires are a good choice for drivers who need reliability without spending too much. Many Filipino drivers choose Comforser for its balance of comfort, safety, and toughness, especially for both city driving and rougher provincial roads.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422157910_10-03-2025-00-22-37.png",
+      "type": "Mid-Range",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422173267_10-03-2025-00-22-52.png",
+      "createdAt": "2025-10-02T16:23:10.084Z",
+      "updatedAt": "2025-10-02T16:23:10.084Z"
+    },
+    {
+      "id": "3b8ac53b-7a57-4d54-91d9-dbf0f1125a3f",
+      "name": "Giti",
+      "description": "Giti is a global tire brand from Singapore that is trusted in the Philippines for its quality, safety, and value. It offers a wide range of tires for cars, SUVs, and trucks, designed to handle both city roads and long-distance travel. Filipino drivers choose Giti because of its good grip in wet and dry conditions, fuel efficiency, and reliable durability. The brand is also recognized worldwide as an original equipment (OE) tire supplier for several car manufacturers, proving its strong reputation for performance and safety.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422216191_10-03-2025-00-23-35.png",
+      "type": "Mid-Range",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422245259_10-03-2025-00-24-04.png",
+      "createdAt": "2025-10-02T16:24:11.682Z",
+      "updatedAt": "2025-10-02T16:24:11.682Z"
+    },
+    {
+      "id": "b006f0f6-97b7-4575-8aeb-3bc08fcc8b12",
+      "name": "MONSTA",
+      "description": "Monsta is an Australian tire brand known for its rugged design, off-road strength, and stylish looks. In the Philippines, it is popular among SUV and 4x4 owners who want tires that can handle both city roads and tough terrains. Monsta tires stand out because of their aggressive tread patterns, strong durability, and sidewall designs that also add a sporty appearance to vehicles.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422273958_10-03-2025-00-24-33.png",
+      "type": "Premium",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422322462_10-03-2025-00-25-21.png",
+      "createdAt": "2025-10-02T16:25:29.314Z",
+      "updatedAt": "2025-10-02T16:25:29.314Z"
+    },
+    {
+      "id": "99217a33-c93e-4ee6-9eff-ecc0f6a00253",
+      "name": "DUNLOP",
+      "description": "\nDunlop is a well-known Japanese tire brand trusted by many drivers in the Philippines for its quality, durability, and performance. The brand is popular because it offers tires that fit a wide range of vehicles, from small passenger cars to SUVs and high-performance models. Many car manufacturers also choose Dunlop as original equipment (OE), proving its reputation for safety and reliability. Filipino drivers value Dunlop for its ability to deliver good grip on wet and dry roads, comfortable rides, fuel efficiency, and long tread life. Whether for everyday city driving or long highway trips, Dunlop has a tire designed to meet the needs of local roads.",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1758110173517_09-17-2025-19-56-13.png",
+      "type": "Premium",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1758110282783_09-17-2025-19-58-02.png",
+      "createdAt": "2025-09-17T11:58:25.921Z",
+      "updatedAt": "2025-10-02T16:20:59.680Z"
+    },
+    {
+      "id": "72ed163f-ca14-412c-9178-9cf7927e2c9b",
+      "name": "FALKEN",
+      "description": "Falken is a Japanese tire brand known for its performance, durability, and comfort. In the Philippines, it is trusted by drivers who want reliable tires for both city roads and long highway drives. Falken offers a range of products, from everyday passenger tires to high-performance and SUV tires, making it a flexible choice for Filipino drivers. Many appreciate Falken for its good grip in wet and dry conditions, quiet rides, and strong tread life, giving a balance of safety and performance.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759421524126_10-03-2025-00-12-03.png",
+      "type": "Premium",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759421683639_10-03-2025-00-14-43.png",
+      "createdAt": "2025-10-02T16:14:52.032Z",
+      "updatedAt": "2025-10-02T16:21:21.565Z"
+    },
+    {
+      "id": "07635b9d-5c84-4444-92d1-59cd1097eccd",
+      "name": "MICHELIN",
+      "description": "Michelin is a world-leading tire brand from France, trusted in the Philippines for its premium quality, safety, and long-lasting performance. Many Filipino drivers prefer Michelin because it offers excellent grip in all weather, fuel efficiency, and comfortable rides. The brand is also chosen as original equipment (OE) by top car manufacturers, proving its reputation for innovation and reliability. Whether for city driving, long highway trips, or SUVs on tougher roads, Michelin tires deliver performance that meets the needs of local drivers.",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757437352154_09-10-2025-01-02-31.png",
+      "type": "Premium",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757437358493_09-10-2025-01-02-37.webp",
+      "createdAt": "2025-09-09T17:02:44.836Z",
+      "updatedAt": "2025-10-02T16:21:39.100Z"
+    },
+    {
+      "id": "e33149f3-c9ca-4f11-8037-6350f976cdf8",
+      "name": "RADAR TYRES",
+      "description": "Radar Tyres is a global tire brand from Singapore, known for offering affordable, reliable, and stylish tires. In the Philippines, it has become popular with drivers looking for value and performance across cars, SUVs, and 4x4s. Radar stands out for its wide range of designs, dependable grip, and durable tread life, making it a practical choice for both daily driving and off-road adventures.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422368346_10-03-2025-00-26-07.png",
+      "type": "Mid-Range",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759422406049_10-03-2025-00-26-45.png",
+      "createdAt": "2025-10-02T16:26:50.196Z",
+      "updatedAt": "2025-10-02T16:26:50.196Z"
+    },
+    {
+      "id": "b8ab9d3b-0f76-4938-a56e-9eab9d7c47ee",
+      "name": "raiden",
+      "description": "Raiden is a tire brand designed for SUVs, pickups, and off-road vehicles, known in the Philippines for its rugged durability and aggressive styling. Popular among 4x4 and adventure drivers, Raiden tires are built to handle city roads, highways, and challenging terrains while still providing comfort and stability. With bold sidewall designs and strong tread patterns, Raiden is also favored for adding a sporty, tough look to vehicles.",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423124709_10-03-2025-00-38-44.jpg",
+      "type": "Budget",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423163928_10-03-2025-00-39-23.jpg",
+      "createdAt": "2025-10-02T16:39:52.199Z",
+      "updatedAt": "2025-10-02T16:39:52.199Z"
+    },
+    {
+      "id": "b4e362f5-3c3a-44ad-a1f8-810aa9197a73",
+      "name": "ROADCRUZA",
+      "description": "Roadcruza is a Chinese tire brand that has been gaining attention in the Philippines for its affordable pricing, stylish designs, and dependable performance. It produces a wide range of tires for cars, SUVs, pickups, and 4x4s, making it a flexible choice for Filipino drivers. Known for aggressive tread patterns, good grip, and durability, Roadcruza is especially popular among those who want rugged-looking tires for city and adventure driving.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423224782_10-03-2025-00-40-24.webp",
+      "type": "Budget",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423253216_10-03-2025-00-40-52.webp",
+      "createdAt": "2025-10-02T16:41:01.150Z",
+      "updatedAt": "2025-10-02T16:41:01.150Z"
+    },
+    {
+      "id": "6e5affe1-32a8-421d-bc21-315085dae2df",
+      "name": "ROADX",
+      "description": "RoadX is a modern tire brand known for offering affordable yet dependable tires for different types of vehicles. In the Philippines, it is chosen by drivers who want value, safety, and versatility without a high price tag. RoadX produces tires for cars, SUVs, and light trucks, delivering good traction, comfort, and durability for both city and highway use.",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423359698_10-03-2025-00-42-39.png",
+      "type": "Mid-Range",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423385115_10-03-2025-00-43-04.png",
+      "createdAt": "2025-10-02T16:43:13.332Z",
+      "updatedAt": "2025-10-02T16:43:13.332Z"
+    },
+    {
+      "id": "8332efb5-711c-4a06-a57a-9376e201b37f",
+      "name": "SAILUN",
+      "description": "Sailun is a Chinese tire brand that has built a strong reputation worldwide, including in the Philippines, for its affordable pricing and dependable quality. It offers a wide range of tires for cars, SUVs, and light trucks, making it a practical choice for Filipino drivers. Sailun tires are valued for their good performance on wet and dry roads, durability, and comfort, giving drivers a balance of safety and budget-friendly reliability.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423424758_10-03-2025-00-43-44.webp",
+      "type": "Budget",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423453310_10-03-2025-00-44-12.webp",
+      "createdAt": "2025-10-02T16:44:20.897Z",
+      "updatedAt": "2025-10-02T16:44:20.897Z"
+    },
+    {
+      "id": "f09f47ae-6dbd-4fcc-8cd4-581b8737be92",
+      "name": "SUMAXX",
+      "description": "Sumaxx is a budget-friendly tire brand that offers options for cars, SUVs, pickups, and 4x4s. In the Philippines, it is chosen by drivers who want affordable yet dependable tires for both city driving and outdoor adventures. Summax tires are known for their rugged tread designs, reliable grip, and versatile performance, making them a practical choice for everyday use and light off-road driving.\n",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423499651_10-03-2025-00-44-59.png",
+      "type": "Budget",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423504794_10-03-2025-00-45-04.png",
+      "createdAt": "2025-10-02T16:45:54.992Z",
+      "updatedAt": "2025-10-02T16:45:54.992Z"
+    },
+    {
+      "id": "cc6339dc-a183-4b52-b5cf-f2d1061a8f36",
+      "name": "TOYO TIRES",
+      "description": "Toyo Tires is a Japanese tire brand well-known in the Philippines for its durability, performance, and stylish designs, especially for SUVs, pickups, and 4x4s. Filipino drivers trust Toyo for its strong off-road capability, long tread life, and stable highway comfort. The brand is also popular for its Open Country series, which combines toughness and reliability for both city driving and outdoor adventures.",
+      "logo": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423662321_10-03-2025-00-47-41.webp",
+      "type": "Mid-Range",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759423666204_10-03-2025-00-47-45.webp",
+      "createdAt": "2025-10-02T16:48:19.557Z",
+      "updatedAt": "2025-10-02T16:48:19.557Z"
+    },
+    {
+      "id": "c060c887-7636-4769-8c6c-dd6a2926438c",
+      "name": "YOKOHAMA",
+      "description": "Yokohama is a Japanese tire brand trusted in the Philippines for its high quality, safety, and performance. Known for both everyday driving and motorsports, Yokohama offers tires for cars, SUVs, and trucks that balance grip, comfort, and durability. Filipino drivers value Yokohama for its advanced technology, fuel efficiency, and reliable traction, whether on city roads, highways, or off-road trails.",
+      "logo": "https://tyre2go.s3.ap-southeast-2.amazonaws.com/uploads/1761900211202_10-31-2025-16-43-30.png",
+      "type": "Mid-Range",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757437540957_09-10-2025-01-05-40.webp",
+      "createdAt": "2025-09-09T17:05:44.851Z",
+      "updatedAt": "2025-10-31T08:43:34.852Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "a7ce6e7d-c7a0-4f87-8022-83026be6cab2",
+      "name": "ADVAN Sport V107",
+      "promotionsId": null,
+      "description": "<p>The Yokohama Advan Sport V107 is a premium high-performance tire made for luxury and sports cars. It combines comfort, stability, and strong wet/dry performance, giving a refined and confident drive.</p><p></p><p></p>",
+      "price": 23729,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757514018138_09-10-2025-22-20-17.png",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757514021167_09-10-2025-22-20-20.webp",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757514022173_09-10-2025-22-20-21.webp"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>YOKOHAMA 4 days warranty</p>",
+      "tireSize": "255/40 R18 4PR",
+      "isClearanceSale": true,
+      "discountedPrice": 23530,
+      "createdAt": "2025-09-10T14:20:36.212Z",
+      "updatedAt": "2025-10-02T17:35:51.145Z",
+      "brandId": "c060c887-7636-4769-8c6c-dd6a2926438c"
+    },
+    {
+      "id": "4baa48d1-1338-4671-8a5f-858858b73771",
+      "name": "PREMIO ARZ 1",
+      "promotionsId": null,
+      "description": "<p>The Arivo Premio ARZ-1 is a passenger car tire made for everyday driving comfort and safety. It has a modern tread design that gives good grip on both wet and dry roads, helping reduce the risk of slipping. The tire is also built to be quiet and smooth, so rides feel more comfortable. With its durable rubber compound, the Premio ARZ-1 lasts longer and provides great value for money, making it a reliable choice for budget-conscious drivers.</p><p></p><p></p>",
+      "price": 3630,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759426111869_10-03-2025-01-28-31.png",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759426121337_10-03-2025-01-28-40.png"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>ARIVO 3 Days Warranty</p>",
+      "tireSize": "175/65/R15",
+      "isClearanceSale": true,
+      "discountedPrice": 3450,
+      "createdAt": "2025-10-02T17:29:04.396Z",
+      "updatedAt": "2025-10-02T17:38:38.778Z",
+      "brandId": "d9edb892-ecd0-42f8-b7ad-722468c4f5f1"
+    },
+    {
+      "id": "69d613af-b680-4e0b-8893-a1c7c5299211",
+      "name": "TERRAXMAX ARV PRO A/T",
+      "promotionsId": null,
+      "description": "<p>The Arivo TerraxMax ARV Pro A/T is an all-terrain tire made for SUVs and 4x4s. It gives strong grip on both highways and rough roads, making it great for city drives and off-road trips. Built with a tough design and reinforced sidewalls, it can handle dirt, gravel, and uneven terrain. It also provides comfort and stability, even on long drives.</p>",
+      "price": 7460,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759427291253_10-03-2025-01-48-10.webp",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759427298118_10-03-2025-01-48-17.png"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>ARIVO 3 Days Warranty</p>",
+      "tireSize": "265/70/R16",
+      "isClearanceSale": true,
+      "discountedPrice": 7260,
+      "createdAt": "2025-10-02T17:48:39.203Z",
+      "updatedAt": "2025-10-02T17:48:39.203Z",
+      "brandId": "d9edb892-ecd0-42f8-b7ad-722468c4f5f1"
+    },
+    {
+      "id": "438bca5b-99b1-4dca-8455-1106dd9c149f",
+      "name": "CF1000 A/T",
+      "promotionsId": null,
+      "description": "<p>The CF1000 A/T is an all-terrain tire made for SUVs and light trucks. It delivers strong traction on both paved roads and rough surfaces like dirt and gravel. With its durable build and reinforced tread, the CF1000 A/T is great for drivers who need versatility and toughness on different road conditions.</p>",
+      "price": 8370,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759427464974_10-03-2025-01-51-04.webp"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>Comforser 3 Days Warranty</p>",
+      "tireSize": "265/70/R17",
+      "isClearanceSale": true,
+      "discountedPrice": 8170,
+      "createdAt": "2025-10-02T17:51:21.358Z",
+      "updatedAt": "2025-10-02T17:51:21.358Z",
+      "brandId": "0103c9a6-60e6-42fd-beb6-eedd74a8673d"
+    },
+    {
+      "id": "26181e49-5454-415d-a39b-e993c8a55954",
+      "name": "CF1100 AT-S",
+      "promotionsId": null,
+      "description": "<p>The CF1100 AT-S is a special all-terrain tire designed for serious off-road use. It has a more aggressive tread pattern for better grip on mud, sand, and rocky terrain. At the same time, it still provides stable performance on highways, giving drivers a balance of off-road power and on-road comfort.</p>",
+      "price": 5430,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759427674079_10-03-2025-01-54-33.jpg"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>Comforser 3 Days Warranty</p>",
+      "tireSize": "205/55/R16",
+      "isClearanceSale": true,
+      "discountedPrice": 5230,
+      "createdAt": "2025-10-02T17:55:44.387Z",
+      "updatedAt": "2025-10-02T17:55:44.387Z",
+      "brandId": "0103c9a6-60e6-42fd-beb6-eedd74a8673d"
+    },
+    {
+      "id": "7556480c-290b-4ff7-8aa2-ac0fac92ba16",
+      "name": "ENASAVE EC300+",
+      "promotionsId": null,
+      "description": "<p>The Dunlop Enasave EC300+ is an eco-friendly tire that helps save fuel while still giving good grip on wet and dry roads. It offers stable handling and a comfortable ride, making it ideal for daily driving.</p>",
+      "price": 8858,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759427967738_10-03-2025-01-59-27.webp"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>Dunlop 4 Days Warranty</p>",
+      "tireSize": "185/65/R15",
+      "isClearanceSale": true,
+      "discountedPrice": 8658,
+      "createdAt": "2025-10-02T17:59:40.941Z",
+      "updatedAt": "2025-10-02T17:59:40.941Z",
+      "brandId": "99217a33-c93e-4ee6-9eff-ecc0f6a00253"
+    },
+    {
+      "id": "0c6c7ac5-034b-4419-ad61-7dca62d9795c",
+      "name": "SP Sport 2030 ",
+      "promotionsId": null,
+      "description": "<p>The Dunlop SP Sport 230 is a versatile passenger car tire made for everyday use. It provides a good balance of comfort, grip, and durability, ensuring safe driving on both wet and dry roads. With its smooth handling and reliable tread design, the SP Sport 230 is a practical choice for drivers who want dependable performance and ride comfort.</p>",
+      "price": 9799,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759428123945_10-03-2025-02-02-03.webp",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759428130842_10-03-2025-02-02-10.png"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>DUNLOP 4 Days Warranty</p>",
+      "tireSize": "175/55/R15",
+      "isClearanceSale": false,
+      "discountedPrice": 9699,
+      "createdAt": "2025-10-02T18:02:33.639Z",
+      "updatedAt": "2025-10-03T07:32:00.901Z",
+      "brandId": "99217a33-c93e-4ee6-9eff-ecc0f6a00253"
+    },
+    {
+      "id": "fe5b46f4-2c73-451d-bb08-500651449cd2",
+      "name": "ADVAN Neova AD09 ",
+      "promotionsId": null,
+      "description": "<p>The Yokohama Advan Neova AD09 is built for performance driving. It gives outstanding dry grip, quick cornering, and durability under high stress, making it a favorite for motorsports and car enthusiasts.</p>",
+      "price": 20710,
+      "images": [
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759675261959_10-05-2025-22-41-01.webp",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759675285443_10-05-2025-22-41-24.jpg",
+        "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759675291395_10-05-2025-22-41-30.png"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p></p>",
+      "warranty": "<p>YOKOHAMA 4 Days Warranty</p>",
+      "tireSize": "225/45/R18",
+      "isClearanceSale": false,
+      "discountedPrice": 0,
+      "createdAt": "2025-10-05T14:41:56.443Z",
+      "updatedAt": "2025-10-05T14:41:56.443Z",
+      "brandId": "c060c887-7636-4769-8c6c-dd6a2926438c"
+    },
+    {
+      "id": "c63dc46f-539d-410e-9d77-4b3dd81154ac",
+      "name": "ADVAN A052",
+      "promotionsId": null,
+      "description": "<p>The Yokohama Advan A052 is a track-inspired tire designed for sports cars and enthusiasts. It offers extreme grip, sharp handling, and stability, making it perfect for spirited driving and track days.</p>",
+      "price": 0,
+      "images": [
+        "https://tyre2go.s3.ap-southeast-2.amazonaws.com/uploads/1761878009718_10-31-2025-10-33-29.png",
+        "https://tyre2go.s3.ap-southeast-2.amazonaws.com/uploads/1761878011652_10-31-2025-10-33-31.webp",
+        "https://tyre2go.s3.ap-southeast-2.amazonaws.com/uploads/1761878012464_10-31-2025-10-33-31.webp"
+      ],
+      "inclusion": "<p>✔ <strong>INSTALLATION</strong></p><p>Inclusive of Mounting and Balancing,<br>Rubber Valve and Wheel Weights</p><p>✔ <strong>Manufacturer's Warranty</strong></p>",
+      "warranty": "<p>YOKOHAMA 3 Days Warranty</p>",
+      "tireSize": "205/50/R16",
+      "isClearanceSale": true,
+      "discountedPrice": 23130,
+      "createdAt": "2025-10-02T17:44:07.264Z",
+      "updatedAt": "2025-11-11T06:35:21.658Z",
+      "brandId": "c060c887-7636-4769-8c6c-dd6a2926438c"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "8f0a0f2e-87af-47c8-8e3c-077bd68bf428",
+      "quantity": 201,
+      "minStock": 200,
+      "maxStock": 400,
+      "sku": "ADVAN7U5704DJF",
+      "status": "IN_STOCK",
+      "lastRestocked": null,
+      "createdAt": "2025-09-11T00:31:03.799Z",
+      "updatedAt": "2025-10-06T06:13:12.043Z",
+      "productId": "a7ce6e7d-c7a0-4f87-8022-83026be6cab2"
+    }
+  ],
+  "tipsGuides": [
+    {
+      "id": "2f9a162e-e1a4-4e44-b1f3-b1329ee76aa5",
+      "title": "Tire Treadwear Rating: Why It Matters for Drivers in the Philippines",
+      "content": "<p>When buying new tires, most people focus on the brand or price alone. But one crucial factor often overlooked is the <strong>treadwear rating</strong>. In a country like the Philippines—where weather can be unpredictable and road conditions vary widely—understanding this number can help you save money and drive more safely.</p><h2>What is a Treadwear Rating?</h2><p>The <strong>treadwear rating</strong> is part of the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://www.tirerack.com/upgrade-garage/what-are-the-uniform-tire-quality-grade-utqg-standards?srsltid=AfmBOorcXFLHi2tPI5wUeRxgv7DBM2ywO8VdakN44aU8VWKiPNG4iOUZ\"><strong>Uniform Tire Quality Grading</strong></a><strong> (UTQG)</strong> system, found on the tire's sidewall along with the traction and temperature grades. It’s a number (e.g., 300, 400, 600) that indicates how long a tire is expected to last compared to a standard \"reference tire.\"</p><ul><li><p>For example, a tire with a <strong>treadwear rating of 400</strong> is expected to last <strong>4 times longer</strong> than a reference tire rated at 100.</p></li></ul><p><strong>Note:</strong> This isn’t a direct measure of kilometers—it’s more of a relative comparison under standardized test conditions.</p><h2>Why is This Important in the Philippines?</h2><ol><li><p><strong>Hot Climate</strong> - The Philippine heat affects how fast tires wear out. Hot roads, especially on highways, can cause the rubber to break down faster. Tires with higher treadwear ratings generally last longer under these conditions.</p></li></ol><ol start=\"2\"><li><p><strong>Mixed Road Conditions</strong> - From smooth expressways like NLEX and SLEX to rough provincial and barangay roads, Filipino drivers face all kinds of surfaces. For those who are always doing long drives, you definitely need to check higher treadwear rating tires. A tire with a stronger, longer-lasting tread can better withstand daily wear and tear.</p></li><li><p><strong>Rainy Season and Floods</strong> - When the rains come, proper tread depth is crucial to avoid hydroplaning. Worn-out tires become dangerous on wet roads. A tire that wears slowly is safer during the long rainy season.</p></li><li><p><strong>Cost-Efficiency</strong> - Tires with<a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://www.tires-easy.com/blog/treadwear/?srsltid=AfmBOor0LaDA79QnkY9uVsowL_tWYDVbGA7XorpWJK3t1_qH3-ECHi_K\"> higher treadwear ratings don’t wear out as quickly</a>—meaning <strong>you won't need to replace them as often</strong>. With the rising cost of goods, extending the life of your tires can make a big difference in your budget.</p></li></ol><h2>How to Choose Tires Based on Treadwear Rating</h2><ul><li><p><strong>Mostly City Driving?</strong> – A treadwear rating of 300–400 is usually sufficient.</p></li><li><p><strong>Long Drives or Provincial Roads?</strong> – Go for 500 and above for better durability.</p></li><li><p><strong>Commercial Use (Grab, delivery, etc.)?</strong> – Look for high treadwear ratings (600+) to get the most value.</p></li></ul><h2>One Important Note: Higher Isn’t Always Better</h2><p>Tires with very high treadwear ratings often use a <strong>harder rubber compound</strong>. While they last longer, they may provide <strong>less grip</strong>—especially on wet roads or sharp corners. That’s why you should also consider the <strong>traction and temperature ratings</strong> to find the right balance between durability and safety.</p><p>&nbsp;</p><hr><p>&nbsp;</p><h2>Final Thoughts</h2><p>In the Philippines—where we deal with everything from blazing sun to sudden floods, and from smooth highways to rough backroads—choosing the right tire isn't just about performance. It's about <strong>safety, savings, and peace of mind</strong>.</p><p>So next time you’re tire shopping, don’t just look at the brand or the price. Check the <strong>treadwear rating</strong> and make sure it fits your driving needs.</p><p>For all your tire needs, i-Tire2Go mo na ‘yan!</p>",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1757685559729_09-12-2025-21-59-19.jpg",
+      "category": "Tire Basics",
+      "createdAt": "2025-09-12T13:59:28.760Z",
+      "updatedAt": "2025-09-12T13:59:28.760Z"
+    }
+  ],
+  "faqs": [
+    {
+      "id": "7bda808b-d041-4f7c-8844-bc99bda187a1",
+      "question": "What is Tire2Go?",
+      "answer": "<p>Tire2Go is the evolution of 202 Mags and Tires, a business built from a passion for cars and a commitment to providing quality wheels and tires. What began three years ago as a small online marketplace post quickly gained the trust of customers through reliable products, affordable prices, and excellent service.<br><br>From those humble beginnings, Tire2Go grew from online selling to opening a physical store, serving more car owners with the same dedication and personal touch. Today, Tire2Go continues to be a trusted name in the community, driven by the belief that every car owner deserves access to dependable, affordable, and stylish wheels and tires.</p>",
+      "createdAt": "2025-09-12T22:48:43.377Z",
+      "updatedAt": "2025-09-12T22:48:43.377Z"
+    },
+    {
+      "id": "37d19ec7-c989-4060-a189-0ed2adb847f7",
+      "question": "What is our mission?",
+      "answer": "<p>Our mission at Tire2Go is to empower every car owner with access to dependable, high-quality, and stylish wheels and tires at prices that remain within reach. We are committed not only to providing products that ensure safety and performance but also to creating a customer experience built on trust, care, and expertise.</p>",
+      "createdAt": "2025-09-12T22:51:01.682Z",
+      "updatedAt": "2025-09-12T22:51:01.682Z"
+    },
+    {
+      "id": "0504127e-8694-40a8-ab1f-44217e88a4c6",
+      "question": "What is our vision?",
+      "answer": "<p>Our vision is to establish Tire2Go as the leading tire and wheel provider in the Philippines, recognized for our unwavering dedication to quality, value, and customer satisfaction. We aspire to expand beyond being just a store, evolving into a trusted partner for every driver—from daily commuters to car enthusiasts.</p><p><br></p>",
+      "createdAt": "2025-09-12T22:51:21.101Z",
+      "updatedAt": "2025-09-12T22:51:21.101Z"
+    },
+    {
+      "id": "cdfb71eb-0553-490b-bbc7-b9c2765960f4",
+      "question": "What is our core values?",
+      "answer": "<ul><li><p><strong>Quality First</strong> - We deliver only wheels and tires we would trust for our own vehicles, ensuring safety and durability on every ride.</p></li><li><p><strong>Customer-Centered - </strong>Every decision starts with the needs of our customers. We listen, guide, and provide solutions that truly fit.</p></li><li><p><strong>Integrity </strong>- We believe in honesty, transparency, and fair pricing—building trust through every interaction and transaction.</p></li><li><p><strong>Passion For Cars</strong> - Our love for cars drives us to continuously improve, innovate, and share our expertise with every car owner.</p></li><li><p><strong>Community Trust</strong> - We grow alongside our community by creating strong relationships built on respect, reliability, and service.</p></li></ul><p></p>",
+      "createdAt": "2025-09-12T22:53:32.289Z",
+      "updatedAt": "2025-09-12T22:53:32.289Z"
+    },
+    {
+      "id": "e7d9d1ad-5874-43e7-a53a-a2ffeeea4674",
+      "question": "How do I shop for tires in Tire2Go?",
+      "answer": "<ol><li><p><strong>Search for your tires</strong> - Using your tire size or vehicle make model you can search for tires from our wide range of legitimate sellers. If we have your size on stock, we will show you a list of best priced options. Select a tire like.</p></li><li><p><strong>Select your location &amp; installation site</strong> – Tire prices may vary per location and we will present different locations where you can have your tires professionally installed or delivered.</p></li><li><p><strong>Check out and pay online securely</strong> – We will secure this information and use this to contact you about your order and verify your identity at the installation center.</p></li><li><p><strong>Get your tires professionally installed</strong> – Arrive at the installation center 10 mins before your designated time, avoid the queue and have your tires installed all while experience a 5 start customer service. You also must settle the balance, if any. An official invoice will be issued to you.</p></li></ol><p></p>",
+      "createdAt": "2025-09-12T22:55:46.431Z",
+      "updatedAt": "2025-09-12T22:55:46.431Z"
+    },
+    {
+      "id": "46b60877-25fc-4649-9278-088b77c1734b",
+      "question": "How do I check my tire size?",
+      "answer": "<p>At the front side wall of the tire you should see the size broken down as per the diagram below. You can use this to search for your tires.</p><p></p><img src=\"https://res.cloudinary.com/dovvdfxru/image/upload/v1757717921/tab-size_wxnavo.webp\"><p></p>",
+      "createdAt": "2025-09-12T22:57:50.534Z",
+      "updatedAt": "2025-09-12T23:00:29.723Z"
+    },
+    {
+      "id": "698d3687-f25a-405f-b7fd-ee747b5c9474",
+      "question": "limit time of tires ",
+      "answer": "<p>gulongg</p><img src=\"data:image/jpeg;base64,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\"><p></p>",
+      "createdAt": "2025-09-14T06:26:38.515Z",
+      "updatedAt": "2025-09-14T06:26:38.515Z"
+    }
+  ],
+  "policies": [
+    {
+      "id": "cd9d5663-e0fb-4a6c-a9aa-d17bb2d3e1a7",
+      "type": "Privacy Policy",
+      "content": "<p>[Your App Name] (\"we,\" \"our,\" or \"us\") values your privacy. This Privacy Policy explains how we collect, use, disclose, and protect your information when you use our e-commerce application for tires and mags. By accessing or using our app, you agree to the terms of this Privacy Policy.</p><hr><h2>1. Information We Collect</h2><p>We may collect the following types of information:</p><ul><li><p><strong>Personal Information</strong>: Name, email address, phone number, billing and shipping address, and payment details.</p></li><li><p><strong>Account Information</strong>: Login credentials, order history, saved vehicles, and preferences.</p></li><li><p><strong>Device Information</strong>: IP address, browser type, operating system, and app usage data.</p></li><li><p><strong>Location Information</strong>: If enabled, approximate location to recommend nearby stores or services.</p></li><li><p><strong>Transaction Information</strong>: Details of purchases, payment method, invoices, and receipts.</p></li></ul><hr><h2>2. How We Use Your Information</h2><p>We use the collected information to:</p><ul><li><p>Process and deliver your orders.</p></li><li><p>Provide customer support and respond to inquiries.</p></li><li><p>Personalize your shopping experience (e.g., showing compatible tires/mags).</p></li><li><p>Improve our app performance, security, and features.</p></li><li><p>Send updates, promotions, and important notices (you can opt-out anytime).</p></li><li><p>Comply with legal obligations and prevent fraudulent activities.</p></li></ul><hr><h2>3. Sharing of Information</h2><p>We do not sell your personal data. However, we may share information with:</p><ul><li><p><strong>Service Providers</strong>: Payment gateways, delivery couriers, IT support, and marketing tools.</p></li><li><p><strong>Legal Authorities</strong>: When required by law or to protect our rights, property, and users.</p></li><li><p><strong>Business Transfers</strong>: In case of mergers, acquisitions, or restructuring.</p></li></ul><hr><h2>4. Data Security</h2><p>We implement reasonable technical and organizational measures to safeguard your information against unauthorized access, alteration, disclosure, or destruction. However, no electronic storage or transmission method is 100% secure.</p><hr><h2>5. Cookies and Tracking</h2><p>Our app may use cookies and similar technologies to improve user experience, track usage, and deliver personalized recommendations. You may disable cookies in your device or browser settings, but some features may not function properly.</p><hr><h2>6. Your Rights</h2><p>Depending on your location, you may have rights to:</p><ul><li><p>Access, update, or delete your personal data.</p></li><li><p>Withdraw consent for data processing.</p></li><li><p>Opt-out of marketing communications.</p></li><li><p>Request a copy of your stored data.</p></li></ul><hr><h2>7. Third-Party Links</h2><p>Our app may contain links to third-party websites or services. We are not responsible for the privacy practices or content of these external sites.</p><hr><h2>8. Children’s Privacy</h2><p>Our app is not intended for individuals under the age of 18. We do not knowingly collect data from minors.</p><hr><h2>9. Updates to This Policy</h2><p>We may update this Privacy Policy from time to time. Changes will be posted within the app with the updated effective date.</p><hr><h2>10. Contact Us</h2><p>For questions or concerns regarding this Privacy Policy, please contact us at:</p><p><strong>[Your Business Name]</strong><br>Email: [Your Support Email]<br>Phone: [Your Business Phone]</p>",
+      "createdAt": "2025-09-17T11:15:06.977Z",
+      "updatedAt": "2025-09-17T11:15:06.977Z"
+    },
+    {
+      "id": "5169a658-72a1-461c-8165-0ad511680c02",
+      "type": "Terms & Conditions",
+      "content": "<p>fjgfdnygfdg5tfdgfdhgfgh</p>",
+      "createdAt": "2025-09-18T12:24:59.414Z",
+      "updatedAt": "2025-09-18T12:24:59.414Z"
+    },
+    {
+      "id": "9e18b740-7eca-46d5-976f-f1c8c5562cb9",
+      "type": "Refund Policy",
+      "content": "<p><strong>Date Updated: Sept. 18, 2025</strong></p><p></p><ul><li><p>list 1</p></li><li><p>list 2</p></li></ul><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"facebook.com\">facebook.com</a></p><p></p>",
+      "createdAt": "2025-09-18T12:34:25.295Z",
+      "updatedAt": "2025-09-18T12:34:25.295Z"
+    }
+  ],
+  "promotions": [
+    {
+      "id": "ac38835d-aea4-4390-a362-9592a9c1962a",
+      "name": "BUY 3 TIRES, GET 1 FREE",
+      "description": "Bermonths Freemiums for every purchase of two(2) YOKOHAMA tires.",
+      "criteria": "<p>Buy 3 Tires Get 1 FREE for every purchase of ADVAN / GEOLANDAR Tires.&nbsp;</p><ul><li><p>Applicable to same size and tread pattern only.</p></li><li><p><strong>For ADVAN / GEOLANDAR Tires Only.&nbsp;</strong></p></li><li><p>Applicable for Single Cash Receipt Purchase only.&nbsp;</p></li></ul><p>Promo Period is from July 1 to September 30, 2023.<br><br>Per DTI Fair Trade Permit No. FTEB-171153 Series of 2023&nbsp;</p>",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759281780224_10-01-2025-09-22-59.jpeg",
+      "startDate": "2025-09-30T16:00:00.000Z",
+      "endDate": "2025-11-29T16:00:00.000Z",
+      "createdAt": "2025-10-01T01:23:11.859Z",
+      "updatedAt": "2025-10-01T01:23:11.859Z"
+    },
+    {
+      "id": "17bbb5de-dc6f-4369-ae38-e40da9ee3b7c",
+      "name": "FREE 1 DUNLOP UMBRELLA",
+      "description": "Buy 4 tires get a FREE Dunlop Umbrella All in one invoice • Any size Excluding TBR & MC",
+      "criteria": "<p>Buy 4 tires get a FREE Dunlop Umbrella</p><ul><li><p>All in one invoice</p></li><li><p>Any size Excluding TBR &amp; MC</p></li><li><p>Not valid in conjunction with other promos</p></li><li><p>Available in selected outlets with promo poster.</p></li></ul><p>AVAILABLE at All TireShakk Branches &amp; Dunlop Authorized Dealers</p><p>Per DTI FAIR TRADE Permit No. FTEB-196122 series of 2024</p>",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759282535282_10-01-2025-09-35-34.avif",
+      "startDate": "2025-06-30T16:00:00.000Z",
+      "endDate": "2025-10-29T16:00:00.000Z",
+      "createdAt": "2025-10-01T01:35:44.188Z",
+      "updatedAt": "2025-10-01T01:35:44.188Z"
+    },
+    {
+      "id": "a2ca8003-bc8b-440a-b895-a3fb46f3d96e",
+      "name": "ROLLIN'  TO KEEP YOU HYDRATED",
+      "description": "Get your Yokohama AquaFlask when you purchase two YOKOHAMA Tires.",
+      "criteria": "<p>Free Aqua Flask for every purchase of two(2) YOKOHAMA tires.</p><ul><li><p><strong>GEOLANDAR &amp; ADVAN</strong> tire sizes will receive a <strong>18oz Aqua Flask</strong>.</p></li><li><p><strong>Regular YOKOHAMA</strong> tire sizes will receive a <strong>14oz Aqua Flask</strong> except ADVAN, GEOLANDAR, RY55, COMMERCIAL Tires, TBS and On Sales Tires</p></li></ul><p>Promo Period is from October 15 to December 15 year of 2022.</p>",
+      "thumbnail": "https://erp-ncst.s3.us-east-1.amazonaws.com/uploads/1759286051081_10-01-2025-10-34-10.jpeg",
+      "startDate": "2022-10-14T16:00:00.000Z",
+      "endDate": "2022-12-14T16:00:00.000Z",
+      "createdAt": "2025-10-01T02:34:16.792Z",
+      "updatedAt": "2025-10-01T02:34:16.792Z"
+    }
+  ],
+  "feedback": [],
+  "ticket": [],
+  "cart": [],
+  "cartItem": [],
+  "systemLogs": [
+    {
+      "id": "36b5bdcc-c67d-4327-b1ae-d9f7c08a4f24",
+      "action": "restore",
+      "details": "Restore from restore_2025-11-11T05-01-28-167Z.json completed  successfully.",
+      "userId": null,
+      "ipAddress": null,
+      "userAgent": null,
+      "timestamp": "2025-11-11T05:01:28.175Z"
+    }
+  ],
+  "order": [
+    {
+      "id": "bfd4172c-7747-4730-971c-7278f7b4fe96",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 223520,
+      "discountedAmount": 22000,
+      "name": "Kyle Andre Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "09152479693",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "delivery",
+      "preferredDate": "2025-10-13T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-01T12:56:17.066Z",
+      "updatedAt": "2025-10-02T00:11:42.260Z",
+      "processingAt": "2025-10-01T23:46:58.841Z",
+      "shippedAt": "2025-10-01T23:56:08.678Z",
+      "completedAt": "2025-10-02T00:04:41.267Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "7f1c9ade-5100-4007-be51-7ccdef0d3921",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 40640,
+      "discountedAmount": 4000,
+      "name": "Kyle Andre Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "09152479693",
+      "status": "CANCELLED",
+      "paymentStatus": "FAILED",
+      "orderOption": "delivery",
+      "preferredDate": "2025-10-08T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-01T12:44:22.046Z",
+      "updatedAt": "2025-10-02T00:25:25.781Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": null,
+      "reasonCancelled": "There are no tires available yet.",
+      "cancelledAt": "2025-10-02T00:25:25.778Z",
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "26a1bfca-96cb-4017-b319-fcaedc32aea0",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 40640,
+      "discountedAmount": 4000,
+      "name": "Kyle Andre Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "09152479693",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-04T16:00:00.000Z",
+      "remarks": "Please make sure my item is safe",
+      "createdAt": "2025-10-01T12:38:42.178Z",
+      "updatedAt": "2025-10-02T00:32:10.050Z",
+      "processingAt": "2025-10-02T00:29:33.513Z",
+      "shippedAt": null,
+      "completedAt": "2025-10-02T00:32:10.046Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "19cf8a97-02af-4f73-a0bf-df82ab1e778e",
+      "userId": "908af9a9-9354-4a01-a35b-e7915588180b",
+      "totalAmount": 8658,
+      "discountedAmount": 200,
+      "name": "kevin lingal",
+      "email": "nurielvizmanosaguilar@gmail.com",
+      "phoneNumber": "871984717461",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-06T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-06T06:03:53.555Z",
+      "updatedAt": "2025-10-06T06:08:44.301Z",
+      "processingAt": "2025-10-06T06:05:25.571Z",
+      "shippedAt": null,
+      "completedAt": "2025-10-06T06:08:44.294Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "93a970c5-1461-4c16-95c5-d8e7e07dca86",
+      "userId": "1f12342b-78fc-48bc-bf65-ef517bbdd142",
+      "totalAmount": 8658,
+      "discountedAmount": 200,
+      "name": "adrian hahaha",
+      "email": "briancurba@gmail.com",
+      "phoneNumber": "09675432123",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-02T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-03T08:06:14.519Z",
+      "updatedAt": "2025-10-03T08:23:41.872Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": "2025-10-03T08:23:41.869Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "5011ae03-70f7-4f0a-b0d7-df57b3726782",
+      "userId": "b6daacad-aef9-4a1a-8596-39928d6a27ec",
+      "totalAmount": 23130,
+      "discountedAmount": 200,
+      "name": "brian  curba",
+      "email": "briancurba@gmail.com",
+      "phoneNumber": "09064892834",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-05T15:15:08.474Z",
+      "remarks": "",
+      "createdAt": "2025-10-05T15:15:08.475Z",
+      "updatedAt": "2025-10-05T15:28:09.791Z",
+      "processingAt": "2025-10-05T15:28:00.421Z",
+      "shippedAt": null,
+      "completedAt": "2025-10-05T15:28:09.782Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "8d6522e4-9415-4172-8099-2a7cdd708cb7",
+      "userId": "336442ea-d9ee-4f2f-acc6-3d36b98d4f68",
+      "totalAmount": 7260,
+      "discountedAmount": 200,
+      "name": "adrien fria",
+      "email": "adrienfria2@gmail.com",
+      "phoneNumber": "09875643123",
+      "status": "PENDING",
+      "paymentStatus": "PENDING",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-04T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-05T15:45:15.859Z",
+      "updatedAt": "2025-10-05T15:45:15.859Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": null,
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "6ee1f005-87f3-4b49-a6fa-ade5b1852c31",
+      "userId": "1f12342b-78fc-48bc-bf65-ef517bbdd142",
+      "totalAmount": 8658,
+      "discountedAmount": 200,
+      "name": "jeffree lingal",
+      "email": "jeffreelingal00@gmail.com",
+      "phoneNumber": "09669339001",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-06T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-05T16:04:20.564Z",
+      "updatedAt": "2025-10-05T16:08:15.549Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": "2025-10-05T16:08:15.546Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "71389ce5-3845-489e-b477-cc52ba655a62",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 17316,
+      "discountedAmount": 400,
+      "name": "Kyle Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "09755906889",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-30T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-29T09:19:58.959Z",
+      "updatedAt": "2025-10-29T09:21:07.617Z",
+      "processingAt": "2025-10-29T09:20:38.273Z",
+      "shippedAt": null,
+      "completedAt": "2025-10-29T09:21:07.615Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "ec174d9b-64ea-4b5c-b6f1-4d6fe19e7b25",
+      "userId": "1f12342b-78fc-48bc-bf65-ef517bbdd142",
+      "totalAmount": 8658,
+      "discountedAmount": 200,
+      "name": "hasmin Montero",
+      "email": "thewikdevil011@gmail.com",
+      "phoneNumber": "09669339001",
+      "status": "CANCELLED",
+      "paymentStatus": "FAILED",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-06T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-06T05:47:11.984Z",
+      "updatedAt": "2025-10-29T09:22:36.364Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": null,
+      "reasonCancelled": "adasd",
+      "cancelledAt": "2025-10-29T09:22:36.361Z",
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "0e7ce6f9-b7dc-4045-adcc-a31cb855514f",
+      "userId": "1f12342b-78fc-48bc-bf65-ef517bbdd142",
+      "totalAmount": 7260,
+      "discountedAmount": 200,
+      "name": "kevin hazano",
+      "email": "jeffreelingal00@gmail.com",
+      "phoneNumber": "09669339002",
+      "status": "COMPLETED",
+      "paymentStatus": "PAID",
+      "orderOption": "installation",
+      "preferredDate": "2025-10-06T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-05T19:22:45.268Z",
+      "updatedAt": "2025-10-05T19:25:48.339Z",
+      "processingAt": "2025-10-05T19:24:38.782Z",
+      "shippedAt": null,
+      "completedAt": "2025-10-05T19:25:48.336Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "43154c51-e21f-4ee5-bd17-27080944e2cf",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 23130,
+      "discountedAmount": 200,
+      "name": "Kyle Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "+639152479693",
+      "status": "PROCESSING",
+      "paymentStatus": "PENDING",
+      "orderOption": "delivery",
+      "preferredDate": "2025-11-02T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-31T10:23:13.898Z",
+      "updatedAt": "2025-10-31T11:43:51.670Z",
+      "processingAt": "2025-10-31T11:43:51.658Z",
+      "shippedAt": null,
+      "completedAt": null,
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "865426e5-ac58-4b88-ab37-3c12d8253231",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 25330,
+      "discountedAmount": 200,
+      "name": "Kyle Andre Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "+639123454354",
+      "status": "PENDING",
+      "paymentStatus": "PENDING",
+      "orderOption": "installation",
+      "preferredDate": "2025-11-18T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-11-11T04:52:25.553Z",
+      "updatedAt": "2025-11-11T04:52:25.553Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": null,
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "873bae69-9026-4a0f-8523-14dc90ac90da",
+      "userId": "1f12342b-78fc-48bc-bf65-ef517bbdd142",
+      "totalAmount": 3450,
+      "discountedAmount": 180,
+      "name": "cherry pai",
+      "email": "jeffreelingal022@gmail.com",
+      "phoneNumber": "09669339001",
+      "status": "COMPLETED",
+      "paymentStatus": "PENDING",
+      "orderOption": "delivery",
+      "preferredDate": "2025-10-06T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-10-05T20:21:56.821Z",
+      "updatedAt": "2025-10-06T05:44:59.161Z",
+      "processingAt": null,
+      "shippedAt": "2025-10-05T20:32:47.949Z",
+      "completedAt": "2025-10-06T05:44:59.158Z",
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    },
+    {
+      "id": "65ff7b4f-9055-40cd-b814-2a0f1cee071e",
+      "userId": "0781dffd-8613-4ad6-a5c8-1f96906335f4",
+      "totalAmount": 23130,
+      "discountedAmount": 200,
+      "name": "Kyle Lim",
+      "email": "kylemastercoder14@gmail.com",
+      "phoneNumber": "+639142735345",
+      "status": "PENDING",
+      "paymentStatus": "PENDING",
+      "orderOption": "delivery",
+      "preferredDate": "2025-11-13T16:00:00.000Z",
+      "remarks": "",
+      "createdAt": "2025-11-11T06:41:31.151Z",
+      "updatedAt": "2025-11-11T06:41:31.151Z",
+      "processingAt": null,
+      "shippedAt": null,
+      "completedAt": null,
+      "reasonCancelled": null,
+      "cancelledAt": null,
+      "isArchived": false,
+      "archivedAt": null
+    }
+  ],
+  "orderItem": [
+    {
+      "id": "a46311bc-04de-4ba5-98b3-21c1577d902f",
+      "orderId": "26a1bfca-96cb-4017-b319-fcaedc32aea0",
+      "productId": "a7ce6e7d-c7a0-4f87-8022-83026be6cab2",
+      "quantity": 2,
+      "price": 22320,
+      "createdAt": "2025-10-01T12:38:42.544Z",
+      "updatedAt": "2025-10-01T12:38:42.544Z"
+    },
+    {
+      "id": "1dfd3626-a7b9-4df6-9955-8ed7aeb07c88",
+      "orderId": "7f1c9ade-5100-4007-be51-7ccdef0d3921",
+      "productId": "a7ce6e7d-c7a0-4f87-8022-83026be6cab2",
+      "quantity": 2,
+      "price": 22320,
+      "createdAt": "2025-10-01T12:44:23.257Z",
+      "updatedAt": "2025-10-01T12:44:23.257Z"
+    },
+    {
+      "id": "1370cbff-2906-4f16-a312-3bcdd1216c34",
+      "orderId": "bfd4172c-7747-4730-971c-7278f7b4fe96",
+      "productId": "a7ce6e7d-c7a0-4f87-8022-83026be6cab2",
+      "quantity": 11,
+      "price": 22320,
+      "createdAt": "2025-10-01T12:56:17.798Z",
+      "updatedAt": "2025-10-01T12:56:17.798Z"
+    },
+    {
+      "id": "c8e7e197-8441-40ee-b21c-70ac3efb9aa7",
+      "orderId": "93a970c5-1461-4c16-95c5-d8e7e07dca86",
+      "productId": "7556480c-290b-4ff7-8aa2-ac0fac92ba16",
+      "quantity": 1,
+      "price": 8858,
+      "createdAt": "2025-10-03T08:06:15.081Z",
+      "updatedAt": "2025-10-03T08:06:15.081Z"
+    },
+    {
+      "id": "c35decef-75f8-4149-a8a7-ca5a0ed3ec5f",
+      "orderId": "5011ae03-70f7-4f0a-b0d7-df57b3726782",
+      "productId": "c63dc46f-539d-410e-9d77-4b3dd81154ac",
+      "quantity": 1,
+      "price": 23330,
+      "createdAt": "2025-10-05T15:15:08.494Z",
+      "updatedAt": "2025-10-05T15:15:08.494Z"
+    },
+    {
+      "id": "e49d918f-d5c1-4ad9-abf2-33eaae64dc59",
+      "orderId": "8d6522e4-9415-4172-8099-2a7cdd708cb7",
+      "productId": "69d613af-b680-4e0b-8893-a1c7c5299211",
+      "quantity": 1,
+      "price": 7460,
+      "createdAt": "2025-10-05T15:45:15.867Z",
+      "updatedAt": "2025-10-05T15:45:15.867Z"
+    },
+    {
+      "id": "acaf088d-b7a0-4e7c-b3d6-3b4d588f86ab",
+      "orderId": "6ee1f005-87f3-4b49-a6fa-ade5b1852c31",
+      "productId": "7556480c-290b-4ff7-8aa2-ac0fac92ba16",
+      "quantity": 1,
+      "price": 8858,
+      "createdAt": "2025-10-05T16:04:21.019Z",
+      "updatedAt": "2025-10-05T16:04:21.019Z"
+    },
+    {
+      "id": "657447b4-6b73-48d2-93ff-96eeb78d8716",
+      "orderId": "0e7ce6f9-b7dc-4045-adcc-a31cb855514f",
+      "productId": "69d613af-b680-4e0b-8893-a1c7c5299211",
+      "quantity": 1,
+      "price": 7460,
+      "createdAt": "2025-10-05T19:22:45.739Z",
+      "updatedAt": "2025-10-05T19:22:45.739Z"
+    },
+    {
+      "id": "d0be927c-2081-424e-9bb8-9efbe7d778a4",
+      "orderId": "873bae69-9026-4a0f-8523-14dc90ac90da",
+      "productId": "4baa48d1-1338-4671-8a5f-858858b73771",
+      "quantity": 1,
+      "price": 3630,
+      "createdAt": "2025-10-05T20:21:57.309Z",
+      "updatedAt": "2025-10-05T20:21:57.309Z"
+    },
+    {
+      "id": "53b791b0-bd78-4188-838f-80d3613d1800",
+      "orderId": "ec174d9b-64ea-4b5c-b6f1-4d6fe19e7b25",
+      "productId": "7556480c-290b-4ff7-8aa2-ac0fac92ba16",
+      "quantity": 1,
+      "price": 8858,
+      "createdAt": "2025-10-06T05:47:12.545Z",
+      "updatedAt": "2025-10-06T05:47:12.545Z"
+    },
+    {
+      "id": "326d1a5d-9320-4282-b83f-6340b660e58c",
+      "orderId": "19cf8a97-02af-4f73-a0bf-df82ab1e778e",
+      "productId": "7556480c-290b-4ff7-8aa2-ac0fac92ba16",
+      "quantity": 1,
+      "price": 8858,
+      "createdAt": "2025-10-06T06:03:54.248Z",
+      "updatedAt": "2025-10-06T06:03:54.248Z"
+    },
+    {
+      "id": "47bf9ba9-d2b9-40b8-811a-d11d889a7538",
+      "orderId": "71389ce5-3845-489e-b477-cc52ba655a62",
+      "productId": "7556480c-290b-4ff7-8aa2-ac0fac92ba16",
+      "quantity": 2,
+      "price": 8858,
+      "createdAt": "2025-10-29T09:19:59.560Z",
+      "updatedAt": "2025-10-29T09:19:59.560Z"
+    },
+    {
+      "id": "41ce1db7-2fbf-4baf-937c-ea9bdb1535a4",
+      "orderId": "43154c51-e21f-4ee5-bd17-27080944e2cf",
+      "productId": "c63dc46f-539d-410e-9d77-4b3dd81154ac",
+      "quantity": 1,
+      "price": 23330,
+      "createdAt": "2025-10-31T10:23:14.353Z",
+      "updatedAt": "2025-10-31T10:23:14.353Z"
+    },
+    {
+      "id": "61b175d8-6788-4e2b-8e70-9aad474d28ff",
+      "orderId": "865426e5-ac58-4b88-ab37-3c12d8253231",
+      "productId": "c63dc46f-539d-410e-9d77-4b3dd81154ac",
+      "quantity": 1,
+      "price": 25530,
+      "createdAt": "2025-11-11T04:52:25.621Z",
+      "updatedAt": "2025-11-11T04:52:25.621Z"
+    },
+    {
+      "id": "4bf6d980-b4be-4fdb-912a-697b073cd5b5",
+      "orderId": "65ff7b4f-9055-40cd-b814-2a0f1cee071e",
+      "productId": "c63dc46f-539d-410e-9d77-4b3dd81154ac",
+      "quantity": 1,
+      "price": 23330,
+      "createdAt": "2025-11-11T06:41:31.635Z",
+      "updatedAt": "2025-11-11T06:41:31.635Z"
+    }
+  ],
+  "conversation": [
+    {
+      "id": "cmgebfkoi0001vylg65asw01f",
+      "userId": "user_32b4JwjRok59yw1Pz12ghOjSBAs",
+      "status": "OPEN",
+      "createdAt": "2025-10-05T23:10:56.368Z",
+      "updatedAt": "2025-10-05T23:44:57.747Z"
+    },
+    {
+      "id": "cmgeepnm90003l504hwld4xp8",
+      "userId": "user_33fbzgYjFV74uQbq4YmUlrG4P7M",
+      "status": "OPEN",
+      "createdAt": "2025-10-06T00:42:45.585Z",
+      "updatedAt": "2025-10-06T00:42:45.585Z"
+    },
+    {
+      "id": "cmgejf53m0001ne00amd11oyx",
+      "userId": "user_32g8L6Jv8InJimQLZrruvFE37cT",
+      "status": "OPEN",
+      "createdAt": "2025-10-06T02:54:33.102Z",
+      "updatedAt": "2025-10-06T05:55:44.047Z"
+    },
+    {
+      "id": "cmgeq0xsn000dnelc8j2ev7dj",
+      "userId": "user_33gEXEVAfeSMpmsJoGFguosv0ZG",
+      "status": "OPEN",
+      "createdAt": "2025-10-06T05:59:27.768Z",
+      "updatedAt": "2025-10-06T05:59:27.768Z"
+    }
+  ],
+  "message": [
+    {
+      "id": "cmgeby1zr0001vyy4crks3ebk",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "how much is your burger?",
+      "createdAt": "2025-10-05T23:25:18.615Z"
+    },
+    {
+      "id": "cmgeby2cw0003vyy4yiaztjvv",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "I’m sorry, that’s beyond my scope. I’ll forward your concern to a real Tire2Go staff member who can assist you further.",
+      "createdAt": "2025-10-05T23:25:19.089Z"
+    },
+    {
+      "id": "cmgec89lc0005vyy4jfb2kbm0",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": "user_32b4JwjRok59yw1Pz12ghOjSBAs",
+      "content": "paki-antay lamang ng aming response.",
+      "createdAt": "2025-10-05T23:33:14.792Z"
+    },
+    {
+      "id": "cmgec8acw0007vyy4l6pvstb5",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": "user_32b4JwjRok59yw1Pz12ghOjSBAs",
+      "content": "paki-antay lamang ng aming response.",
+      "createdAt": "2025-10-05T23:33:15.787Z"
+    },
+    {
+      "id": "cmgecnbgm0009vyy4h5qc4c1a",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": "user_32b4JwjRok59yw1Pz12ghOjSBAs",
+      "content": "hindi kami nag ooffer ng burger boss, gulong po ang binebenta namin",
+      "createdAt": "2025-10-05T23:44:57.059Z"
+    },
+    {
+      "id": "cmged6sg4000bvyy4y7wq5h6x",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "ganun ba? sorry po",
+      "createdAt": "2025-10-06T00:00:05.764Z"
+    },
+    {
+      "id": "cmged6std000dvyy4g93tl16j",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Walang anuman po! Okay lang po 'yan. Nandito po ako para tulungan kayo sa lahat ng tungkol sa gulong at mags.\n\nMay maipaglilingkod po ba ako sa inyo para sa sasakyan ninyo? Para makapagsimula, pwede ko po bang malaman ang **make, model, at year** ng sasakyan ninyo?",
+      "createdAt": "2025-10-06T00:00:06.242Z"
+    },
+    {
+      "id": "cmged7ds7000fvyy4dg6pa0os",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "can you tell me more about your business?",
+      "createdAt": "2025-10-06T00:00:33.416Z"
+    },
+    {
+      "id": "cmged7dyr000hvyy4qxedm4xn",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Of course! I'd be happy to share more about us.\n\nWelcome to **Tire2Go**! We're more than just a tire shop; we're a business built from a genuine **passion for cars**. Our mission is to be your trusted partner in keeping your vehicle safe, stylish, and performing at its best.\n\nHere’s a little more about what we stand for:\n\n### Our Core Values\n*   **Quality & Affordability:** We believe everyone deserves safe and reliable tires without breaking the bank. We source high-quality tires and mags and offer them at competitive prices. We even have great promos, like our popular ***Buy 3 tires, Get 1 Free*** deal on select items!\n*   **Customer-Centered Care:** Your safety and satisfaction are our top priorities. We're here to provide honest advice and guide you to the best choice for your specific driving needs.\n*   **Enthusiasm & Expertise:** We love what we do! Our team is knowledgeable and always ready to share tips on everything from choosing the right tire to proper maintenance.\n\n### What We Offer\n1.  **A Wide Selection of Tires:**\n    *   All-Season Tires\n    *   Performance Tires\n    *   Off-Road / All-Terrain Tires\n    *   Fuel-Efficient Tires\n2.  **Stylish Mags (Wheels):** A curated collection to enhance your vehicle's appearance.\n3.  **Expert Services:**\n    *   **Onsite Installation:** Visit our shop, and our skilled technicians will handle the mounting, balancing, and installation for you.\n    *   **Convenient Delivery:** We can deliver your order right to your doorstep via **Lalamove** (delivery fee shouldered by the customer).\n\nIn short, Tire2Go is your one-stop shop for quality tires and mags, backed by a team that truly cares about you and your car.\n\nHow can I help you and your vehicle today? Just let me know your car's **make, model, and year**, and we can find the perfect fit",
+      "createdAt": "2025-10-06T00:00:33.652Z"
+    },
+    {
+      "id": "cmgeepzhe0005l504gd68mjrw",
+      "conversationId": "cmgeepnm90003l504hwld4xp8",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "hello",
+      "createdAt": "2025-10-06T00:43:00.961Z"
+    },
+    {
+      "id": "cmgeepzhm0007l5047vd7toiu",
+      "conversationId": "cmgeepnm90003l504hwld4xp8",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hello there! Welcome to **Tire2Go**, where our passion for cars drives everything we do. I'm your friendly AI assistant, and I'd be happy to help you find the perfect tires and mags for your ride!\n\nTo get started, could you please provide me with your vehicle's details?\n\n*   **Make** (e.g., Toyota, Honda, Ford)\n*   **Model** (e.g., Vios, Civic, Ranger)\n*   **Year** (e.g., 2019)\n*   **Tire Size**\n\nIf you're not sure about the tire size, you can easily find it on the sidewall of your current tires. It will look something like this: `205/55R16`.\n\nOnce I have this information, I can give you the best recommendations. Looking forward to helping you out",
+      "createdAt": "2025-10-06T00:43:00.971Z"
+    },
+    {
+      "id": "cmgejkztv0001nerkvmlg65g9",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "ano ang tagalog ng tires?",
+      "createdAt": "2025-10-06T02:59:06.202Z"
+    },
+    {
+      "id": "cmgejl06x0003nerk86ar3lfq",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "I’m sorry, that’s beyond my scope. I’ll forward your concern to a real Tire2Go staff member who can assist you further.",
+      "createdAt": "2025-10-06T02:59:06.682Z"
+    },
+    {
+      "id": "cmgek2m3g0001neho2lxwa8q2",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "How much is the lowest tires?",
+      "createdAt": "2025-10-06T03:12:47.630Z"
+    },
+    {
+      "id": "cmgek2mfi0003neho27nj8d0n",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hello! Thanks for reaching out to Tire2Go. We'd love to help you find the most affordable tires for your ride!\n\nTo give you an accurate price, I need a little more information about your vehicle. Tire prices vary greatly depending on the size.\n\nCould you please provide the following details?\n\n*   **Make** (e.g., Toyota)\n*   **Model** (e.g., Vios)\n*   **Year** (e.g., 2019)\n*   **Tire Size**\n\n*If you're not sure about the tire size, you can easily find it on the sidewall of your current tires. It's a series of numbers and letters that looks something like this: `205/55R16`.*\n\nOnce I have these details, I can check our inventory for the best budget-friendly options and see if any of our promos, like the ***Buy 3, Get 1 Free*** offer on select brands, apply to your size",
+      "createdAt": "2025-10-06T03:12:48.655Z"
+    },
+    {
+      "id": "cmgekep360001nexoxlp2mu0o",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "HAHAH",
+      "createdAt": "2025-10-06T03:22:11.966Z"
+    },
+    {
+      "id": "cmgekepfj0003nexoxyuqg708",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Haha! Glad to see you're in a good mood today! 😊\n\nHow can I help you find the perfect tires or mags for your ride?\n\nTo get started, just let me know your vehicle's **make, model, and year**, and we'll find the best options for you",
+      "createdAt": "2025-10-06T03:22:12.415Z"
+    },
+    {
+      "id": "cmgem6thr0001ne5sdxf1d8n5",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "magkano tires?",
+      "createdAt": "2025-10-06T04:12:03.612Z"
+    },
+    {
+      "id": "cmgem6tud0003ne5s9ypvhzh2",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hello! Salamat sa pagtatanong sa Tire2Go!\n\nPara mabigyan kita ng tamang presyo, kailangan ko munang malaman ang detalye ng sasakyan mo. Iba-iba kasi ang presyo depende sa sukat ng gulong.\n\nPaki-provide lang po ang mga sumusunod:\n\n*   **Make** (e.g., Toyota, Honda, Mitsubishi)\n*   **Model** (e.g., Vios, Civic, Montero)\n*   **Year** (e.g., 2021)\n*   **Tire Size** (Sukat ng Gulong)\n\n*Kung hindi mo sigurado ang tire size, madali lang itong makita sa **gilid (sidewall) ng kasalukuyan mong gulong**. Hanapin mo lang ang numero na ganito ang format: `205/55R16`.*\n\nKapag nakuha ko na ang mga detalyeng ito, hahanapin ko para sa'yo ang pinaka-sulit na options at titingnan ko rin kung may available na promo tulad ng aming ***Buy 3, Get 1 Free*** sa mga piling brand",
+      "createdAt": "2025-10-06T04:12:04.118Z"
+    },
+    {
+      "id": "cmgemcyhz0005ne5stnn3ehz0",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": "user_32g8L6Jv8InJimQLZrruvFE37cT",
+      "content": "reply to",
+      "createdAt": "2025-10-06T04:16:49.867Z"
+    },
+    {
+      "id": "cmgemdz5t0007ne5se0i8ias7",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "yown nagana ka naman pala",
+      "createdAt": "2025-10-06T04:17:37.601Z"
+    },
+    {
+      "id": "cmgemdzid0009ne5s0cz3u24k",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hehe, of course! I'm always here and ready to assist you with all your tire and mag needs. 🚗\n\nLet's find the perfect fit for your car!\n\nJust let me know the following details, and I'll pull up the best options and promos for you:\n\n*   **Make** (e.g., Toyota, Honda)\n*   **Model** (e.g., Vios, Civic)\n*   **Year** (e.g., 2021)\n*   **Tire Size** (You can find this on the side of your current tire, like `185/60R15`)\n\nLooking forward to helping you out",
+      "createdAt": "2025-10-06T04:17:38.053Z"
+    },
+    {
+      "id": "cmgemekky000bne5swifg6qkq",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "tell me more about your business",
+      "createdAt": "2025-10-06T04:18:05.362Z"
+    },
+    {
+      "id": "cmgemekr5000dne5slosa38eq",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Of course! I'd be happy to share more about Tire2Go. We're more than just a tire shop!\n\nTire2Go was born from a genuine **passion for cars**. We're not just selling products; we're a trusted, customer-centered business dedicated to helping fellow car enthusiasts keep their rides safe, stylish, and performing at their best.\n\n### Here’s what we’re all about:\n\n*   **Quality & Affordability**\n    We believe that top-notch quality shouldn't break the bank. We carefully select and offer a wide range of reputable tire and mag brands to fit every need and budget. Our goal is to give you the best value for your money.\n\n*   **Honest, Expert Guidance**\n    Your safety and satisfaction are our top priorities. We guide you with honesty and clarity, explaining your options so you can make an informed decision. Whether you need *all-season tires* for daily driving, *performance tires* for a sportier feel, or *off-road tires* for adventure, we're here to help.\n\n*   **Customer-Centered Service**\n    We treat every customer like a part of our community. We offer:\n    *   **Onsite Installation:** Get your new tires and mags fitted professionally right here at our shop.\n    *   **Convenient Delivery:** If you can't make it to us, we can have your items delivered via **Lalamove**.\n    *   **Great Promos:** We love giving back to our customers with deals like our popular ***Buy 3, Get 1 Free*** promo on select tire models!\n\nIn short, Tire2Go is your reliable partner on the road. We combine our love for cars with a deep commitment to providing you with the best products, service, and care.\n\nIs there anything specific you'd like to know? I'm ready to help you find the perfect set of wheels for your ride",
+      "createdAt": "2025-10-06T04:18:05.585Z"
+    },
+    {
+      "id": "cmgemhkfn0001new8x02c4np6",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "hello",
+      "createdAt": "2025-10-06T04:20:24.926Z"
+    },
+    {
+      "id": "cmgemhkrl0003new8xueg6azx",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hello there! Welcome to Tire2Go. It's great to hear from you!\n\nHow can I help you find the perfect tires or mags for your ride today?\n\nTo get started, please tell me your vehicle's:\n*   **Make** (e.g., Toyota, Honda)\n*   **Model** (e.g., Vios, Civic)\n*   **Year** (e.g., 2020)\n*   **Tire Size** (like `185/60R15`, which you can find on the side of your current tires)\n\nI'm ready to find the best options and deals for you",
+      "createdAt": "2025-10-06T04:20:25.569Z"
+    },
+    {
+      "id": "cmgemogmy0001ne54376rkgyo",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "any suggestion tires?",
+      "createdAt": "2025-10-06T04:25:46.595Z"
+    },
+    {
+      "id": "cmgemogz90003ne54vnblp709",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Of course! I'd be happy to give you some great tire suggestions. To recommend the perfect fit, I need to know a little bit about your vehicle and your driving habits.\n\nCould you please provide the following details?\n\n1.  **Your Vehicle Information:**\n    *   **Make** (e.g., Toyota, Mitsubishi)\n    *   **Model** (e.g., Fortuner, Montero Sport)\n    *   **Year** (e.g., 2022)\n    *   **Tire Size** (You can find this on the sidewall of your current tires, it looks like `265/60R18`)\n\n2.  **Your Driving Needs:**\n    *   What's your typical driving like? Is it mostly for **city driving**, **long highway trips**, or do you enjoy **off-road adventures**?\n    *   What's most important to you in a tire? Are you looking for **comfort and quietness**, **sporty performance**, **fuel efficiency**, or the **most budget-friendly option**?\n\nOnce I have this information, I can give you tailored recommendations from top brands and let you know if any of our special promos, like the ***Buy 3, Get 1 Free*** offer, apply",
+      "createdAt": "2025-10-06T04:25:47.253Z"
+    },
+    {
+      "id": "cmgemp2n80005ne54pdeloeil",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": "user_32g8L6Jv8InJimQLZrruvFE37cT",
+      "content": "Gulong ni batman",
+      "createdAt": "2025-10-06T04:26:15.333Z"
+    },
+    {
+      "id": "cmgepg7z90001nelcms9etz8i",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "any tirres you want to give?",
+      "createdAt": "2025-10-06T05:43:21.186Z"
+    },
+    {
+      "id": "cmgepg8hk0003nelcu27x6kkx",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Haha, that's a great question!\n\nWhile I can't physically hand you tires through the screen, I can definitely **give you our best deals and recommendations**!\n\nIn fact, we have an awesome ***Buy 3, Get 1 Free*** promo on select tire brands. That's like getting one tire for free!\n\nTo check which tires are part of this amazing offer and to find the perfect set for your car, I just need a little information from you:\n\n*   **Make** of your vehicle (e.g., Toyota, Honda)\n*   **Model** (e.g., Vios, Civic)\n*   **Year** (e.g., 2021)\n*   **Tire Size** (You can find this on the side of your current tire, like `185/60R15`)\n\nLet me know these details, and I'll find the best options we can \"give\" you! 😉",
+      "createdAt": "2025-10-06T05:43:21.848Z"
+    },
+    {
+      "id": "cmgepgvog0005nelcon05ox2g",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": "user_32g8L6Jv8InJimQLZrruvFE37cT",
+      "content": "gulong ni super man",
+      "createdAt": "2025-10-06T05:43:51.646Z"
+    },
+    {
+      "id": "cmgeptz2i0007nelc0k3dlhhl",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "what brand available?",
+      "createdAt": "2025-10-06T05:54:02.826Z"
+    },
+    {
+      "id": "cmgeptzi80009nelct96tm1bj",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "That's a great question! At Tire2Go, we pride ourselves on offering a wide selection of top-quality brands to fit every budget and driving style.\n\nHere are some of the popular and trusted brands we carry:\n\n*   **Premium Brands:**\n    *   Michelin\n    *   Bridgestone\n    *   Goodyear\n    *   Yokohama\n\n*   **Quality Mid-Range & Value Brands:**\n    *   Falken\n    *   Kumho\n    *   GT Radial\n    *   Hankook\n    *   Westlake\n    *   Sailun\n\n...and many more!\n\nThe availability of a specific brand and model really depends on the **tire size** your vehicle needs.\n\nTo give you the most accurate information on what's in stock for you, could you please tell me:\n\n1.  Your vehicle's **Make**, **Model**, and **Year**?\n2.  Your **Tire Size**? (You can find it on the side of your current tires, e.g., `205/55R16`)\n\nOnce I have these details, I can tell you exactly which of these great brands are available for your car and help you find the perfect match. I can also check which ones are included in our ***Buy 3, Get 1 Free*** promo",
+      "createdAt": "2025-10-06T05:54:03.392Z"
+    },
+    {
+      "id": "cmgepw4rp000bnelczrev4c4h",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": "user_32g8L6Jv8InJimQLZrruvFE37cT",
+      "content": "yokohama",
+      "createdAt": "2025-10-06T05:55:43.266Z"
+    },
+    {
+      "id": "cmh4fmb780001nevkyoidyxpk",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "hello",
+      "createdAt": "2025-10-24T05:50:09.712Z"
+    },
+    {
+      "id": "cmh4fmbj60003nevkx4rhfghu",
+      "conversationId": "cmgejf53m0001ne00amd11oyx",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hello there! Welcome back to Tire2Go.\n\nHow can I help you find the perfect tires or mags for your car today?\n\nTo get started, I just need a little information about your vehicle. Could you please tell me the:\n\n*   **Make** (e.g., Toyota, Honda)\n*   **Model** (e.g., Vios, Civic)\n*   **Year** (e.g., 2021)\n*   **Tire Size** (You can find this on the side of your current tire, it looks like `185/60R15`)\n\nOnce I have these details, I can show you the best options and any available promos we have",
+      "createdAt": "2025-10-24T05:50:10.147Z"
+    },
+    {
+      "id": "cmhu3br3l0001jp04p27calbh",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "CUSTOMER",
+      "senderId": null,
+      "content": "hello",
+      "createdAt": "2025-11-11T04:48:02.288Z"
+    },
+    {
+      "id": "cmhu3br3u0003jp04dbtf54t1",
+      "conversationId": "cmgebfkoi0001vylg65asw01f",
+      "senderType": "SYSTEM",
+      "senderId": null,
+      "content": "Hello po! Welcome to **Tyre2Go**, your trusted partner for tires and mags. I'm here to help you find exactly what you need for your ride.\n\nTo get started, could you please tell me the **make, model, and year** of your vehicle?\n\nIf you also happen to know your tire size, that would be fantastic! You can find it on the sidewall of your current tires—it will look something like `205/55R16`.\n\nLooking forward to assisting you",
+      "createdAt": "2025-11-11T04:48:02.299Z"
+    }
+  ],
+  "backupHistory": [
+    {
+      "id": "cmhbu5z5i0000vy281onv9fz5",
+      "action": "backup",
+      "filename": "backup_2025-10-29T10-11-35-354Z.json",
+      "status": "success",
+      "createdAt": "2025-10-29T10:11:45.078Z"
+    },
+    {
+      "id": "cmhu3skv40000jy042dng1gn1",
+      "action": "backup",
+      "filename": "backup_2025-11-11T05-01-07-024Z.json",
+      "status": "failed",
+      "createdAt": "2025-11-11T05:01:07.361Z"
+    },
+    {
+      "id": "cmhu3t0x80001jy040gxan9n5",
+      "action": "restore",
+      "filename": "restore_2025-11-11T05-01-28-167Z.json",
+      "status": "success",
+      "createdAt": "2025-11-11T05:01:28.170Z"
+    }
+  ]
+}
