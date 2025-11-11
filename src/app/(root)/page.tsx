@@ -5,8 +5,17 @@ import BrandsCollection from "@/components/globals/BrandsCollection";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import HeroCarousel from '@/components/globals/HeroCarousel';
+import { getTireSizesForSearch, getCarDataForSearch } from "@/actions";
 
-const Page = () => {
+const Page = async () => {
+  // Fetch tire search data from database
+  const [tireSizesResult, carDataResult] = await Promise.all([
+    getTireSizesForSearch(),
+    getCarDataForSearch(),
+  ]);
+
+  const searchBySize = tireSizesResult.data || {};
+  const searchByCar = carDataResult.data || [];
   return (
     <div className="min-h-screen">
       <div className="bg-hero w-full flex flex-col items-start justify-end py-20 h-[80vh]">
@@ -18,7 +27,7 @@ const Page = () => {
         </div>
         <div className="flex w-full px-40 items-start justify-between">
           <HeroCarousel />
-          <TireSearch />
+          <TireSearch searchBySize={searchBySize} searchByCar={searchByCar} />
         </div>
       </div>
       <section className="pt-10 bg-[#f5f5f5] pb-10">

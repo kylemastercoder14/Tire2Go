@@ -11,7 +11,7 @@ export const BrandValidators = z.object({
 export const ProductValidators = z.object({
   name: z.string().min(2, { message: "Name is required." }),
   description: z.string().min(10, { message: "Description is required." }),
-  price: z.number().min(0, { message: "Price must be at least 0." }),
+  price: z.number().min(0, { message: "Price must be at least 0." }).optional(),
   isClearanceSale: z.boolean().optional(),
   discountedPrice: z.number().optional(),
   images: z
@@ -19,8 +19,27 @@ export const ProductValidators = z.object({
     .min(1, { message: "At least one image is required." }),
   inclusion: z.string().min(10, { message: "Inclusion details are required." }),
   warranty: z.string().min(10, { message: "Warranty details are required." }),
-  tireSize: z.string().min(1, { message: "Tire size is required." }),
+  tireSize: z.string().min(1, { message: "Tire size is required." }).optional(),
   brandId: z.string().min(1, { message: "Brand is required." }),
+  tireSizeIds: z.array(z.string()).optional(),
+  tireSizePricing: z
+    .array(
+      z.object({
+        tireSizeId: z.string().min(1, { message: "Tire size is required." }),
+        price: z.number().min(0, { message: "Price must be at least 0." }),
+        isClearanceSale: z.boolean().optional(),
+        discountedPrice: z.number().optional(),
+      })
+    )
+    .optional(),
+  compatibilities: z
+    .array(
+      z.object({
+        modelId: z.string().min(1, { message: "Car model is required." }),
+        year: z.number().min(1900).max(2100, { message: "Invalid year." }),
+      })
+    )
+    .optional(),
 });
 
 export const InventoryValidators = z.object({
@@ -70,4 +89,19 @@ export const PromotionValidators = z.object({
   thumbnail: z.string().min(10, { message: "Thumbnail is required." }),
   startDate: z.date(),
   endDate: z.date(),
+});
+
+export const CarMakeValidators = z.object({
+  name: z.string().min(2, { message: "Name is required." }),
+});
+
+export const CarModelValidators = z.object({
+  name: z.string().min(2, { message: "Name is required." }),
+  makeId: z.string().min(1, { message: "Car make is required." }),
+});
+
+export const TireSizeValidators = z.object({
+  width: z.number().min(1, { message: "Width must be at least 1." }),
+  ratio: z.number().optional(),
+  diameter: z.number().optional(),
 });

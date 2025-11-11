@@ -14,9 +14,35 @@ const Page = async (props: {
     where: {
       id: params.id,
     },
+    include: {
+      productSize: {
+        include: {
+          tireSize: true,
+        },
+      },
+      productCompatibility: {
+        include: {
+          model: {
+            include: {
+              make: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   const brands = await db.brands.findMany({ orderBy: { name: "asc" } });
+  const tireSizes = await db.tireSize.findMany({
+    orderBy: [{ width: "asc" }, { ratio: "asc" }, { diameter: "asc" }],
+  });
+  const carMakes = await db.carMake.findMany({ orderBy: { name: "asc" } });
+  const carModels = await db.carModel.findMany({
+    orderBy: { name: "asc" },
+    include: {
+      make: true,
+    },
+  });
 
   const title = initialData ? "Edit Product" : "Create New Product";
   const description = initialData
@@ -27,7 +53,13 @@ const Page = async (props: {
     <div>
       <Heading title={title} description={description} />
       <div className="mt-5">
-        <ProductForm initialData={initialData} brands={brands} />
+        <ProductForm
+          initialData={initialData}
+          brands={brands}
+          tireSizes={tireSizes}
+          carMakes={carMakes}
+          carModels={carModels}
+        />
       </div>
     </div>
   );

@@ -1,7 +1,21 @@
-import { Brands, Inventory, Order, OrderItem, Products } from "@prisma/client";
+import {
+  Brands,
+  Inventory,
+  Order,
+  OrderItem,
+  Products,
+  ProductSize,
+  TireSize,
+  CarMake,
+  CarModel,
+  ProductCompatibility,
+} from "@prisma/client";
 
 export interface ProductWithBrand extends Products {
   brand: Brands;
+  productSize?: (ProductSize & {
+    tireSize: TireSize;
+  })[];
 }
 
 export interface BrandWithProducts extends Brands {
@@ -36,4 +50,19 @@ export interface OrderWithOrderItem extends Order {
   orderItem: (OrderItem & {
     product: Products & { brand: Brands };
   })[];
+}
+
+export interface ProductWithRelations extends Products {
+  productSize: (ProductSize & {
+    tireSize: TireSize;
+  })[];
+  productCompatibility: (ProductCompatibility & {
+    model: CarModel & {
+      make: CarMake;
+    };
+  })[];
+}
+
+export interface ProductSizeWithPricing extends ProductSize {
+  tireSize: TireSize;
 }

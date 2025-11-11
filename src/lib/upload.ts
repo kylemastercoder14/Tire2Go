@@ -14,7 +14,7 @@ export async function upload(
       params: {
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
       },
-      region: "us-east-1",
+      region: "ap-southeast-2",
     });
 
     const file_key = `uploads/${Date.now().toString()}_${file.name.replace(
@@ -42,7 +42,7 @@ export async function upload(
 
     console.log("Successfully uploaded to S3:", file_key);
 
-    const url = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.us-east-1.amazonaws.com/${file_key}`;
+    const url = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/${file_key}`;
     return { url };
   } catch (error) {
     console.error("Error uploading to S3:", error);
@@ -64,7 +64,7 @@ export async function uploadFile(
       params: {
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
       },
-      region: "us-east-1",
+      region: "ap-southeast-2",
     });
 
     const file_key = `ecr/${Date.now().toString()}_${file.name.replace(
@@ -92,7 +92,7 @@ export async function uploadFile(
 
     console.log("Successfully uploaded to S3:", file_key);
 
-    const url = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.us-east-1.amazonaws.com/${file_key}`;
+    const url = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/${file_key}`;
     return { url };
   } catch (error) {
     console.error("Error uploading to S3:", error);
@@ -117,7 +117,7 @@ export async function deleteImage(
     });
 
     const s3 = new AWS.S3({
-      region: "us-east-1",
+      region: "ap-southeast-2",
     });
 
     const params = {
@@ -146,11 +146,11 @@ export async function deleteFromS3(fullUrl: string) {
       params: {
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
       },
-      region: "us-east-1",
+      region: "ap-southeast-2",
     });
 
     // Extract the key from the full URL
-    const bucketUrl = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.us-east-1.amazonaws.com/`;
+    const bucketUrl = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/`;
     if (!fullUrl.startsWith(bucketUrl)) {
       throw new Error("Invalid S3 URL. URL does not match bucket.");
     }

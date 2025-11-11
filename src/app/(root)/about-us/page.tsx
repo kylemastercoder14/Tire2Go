@@ -38,7 +38,9 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className="bg-primary h-[500px]"></div>
+        <div className="relative w-full h-[500px]">
+          <Image src="/shop.jpg" alt='Tyre2Go' fill className='object-contain' />
+        </div>
       </section>
       <section>
         <h3 className="text-primary text-4xl font-bold tracking-tight text-center">

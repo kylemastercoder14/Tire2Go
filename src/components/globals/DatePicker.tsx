@@ -29,6 +29,7 @@ export interface DatePickerProps {
   disabled?: boolean;
   showDescription?: boolean;
   descriptionText?: string; // 🆕 dynamic description template
+  fromDate?: Date; // Minimum selectable date
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
@@ -39,13 +40,29 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   disabled = false,
   showDescription = true,
   descriptionText = "Your post will be published on {date}.", // default
+  fromDate,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [month, setMonth] = React.useState<Date | undefined>(value);
+
+  // Set initial month to value, fromDate, or current date (whichever is latest)
+  const initialMonth = React.useMemo(() => {
+    if (value) return value;
+    if (fromDate) return fromDate;
+    return new Date();
+  }, [value, fromDate]);
+
+  const [month, setMonth] = React.useState<Date | undefined>(initialMonth);
 
   const finalDescription = value
     ? descriptionText.replace("{date}", formatDate(value))
     : "No date selected yet.";
+
+  // Update month when fromDate changes and no value is set
+  React.useEffect(() => {
+    if (!value && fromDate) {
+      setMonth(fromDate);
+    }
+  }, [value, fromDate]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -87,6 +104,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 onChange?.(date);
                 setOpen(false);
               }}
+              fromDate={fromDate}
             />
           </PopoverContent>
         </Popover>

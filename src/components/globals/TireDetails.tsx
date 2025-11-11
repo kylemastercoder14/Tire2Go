@@ -16,25 +16,77 @@ import { IconShare, IconShoppingCart } from "@tabler/icons-react";
 import { Separator } from "@/components/ui/separator";
 import useCart from '@/hooks/use-cart';
 import { useRouter } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 const TireDetails = ({ data }: { data: ProductWithBrand }) => {
   const router = useRouter();
   const { addItem } = useCart();
 
+  // Get available tire sizes with pricing
+  const tireSizeOptions = data.productSize || [];
+
+  // State for selected tire size
+  const [selectedTireSizeId, setSelectedTireSizeId] = React.useState<string>("");
+
+  // Set initial selected tire size when data loads
+  React.useEffect(() => {
+    if (tireSizeOptions.length > 0 && !selectedTireSizeId) {
+      setSelectedTireSizeId(tireSizeOptions[0].id);
+    }
+  }, [tireSizeOptions, selectedTireSizeId]);
+
+  // Get selected tire size data
+  const selectedTireSize = tireSizeOptions.find(
+    (ts) => ts.id === selectedTireSizeId
+  );
+
+  // Calculate price and discounted price based on selected tire size
+  const displayPrice = selectedTireSize
+    ? selectedTireSize.price
+    : data.price;
+  const displayDiscountedPrice = selectedTireSize
+    ? selectedTireSize.isClearanceSale && selectedTireSize.discountedPrice
+      ? selectedTireSize.discountedPrice
+      : null
+    : data.discountedPrice;
+
+  // Format tire size display
+  const formatTireSize = (ts: typeof tireSizeOptions[0]) => {
+    const tireSize = ts.tireSize;
+    if (tireSize.ratio && tireSize.diameter) {
+      return `${tireSize.width}/${tireSize.ratio} R${tireSize.diameter}`;
+    } else if (tireSize.diameter) {
+      return `${tireSize.width} R${tireSize.diameter}`;
+    } else {
+      return `${tireSize.width}`;
+    }
+  };
+
   const handleAddToCart = () => {
+    const tireSizeDisplay = selectedTireSize
+      ? formatTireSize(selectedTireSize)
+      : data.tireSize || "";
+
     addItem({
       id: data.id,
       name: data.name,
-      unitPrice: data.price,
-      discountedPrice: data.discountedPrice ?? 0,
+      unitPrice: displayPrice,
+      discountedPrice: displayDiscountedPrice ?? 0,
       quantity: 1,
       image: data.images[0],
       brand: data.brand.name,
-      tireSize: data.tireSize,
-    })
+      tireSize: tireSizeDisplay,
+    });
 
     router.push('/cart');
-  }
+  };
   return (
     <div>
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
@@ -83,7 +135,13 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-xl">{data.name}</h3>
-              <p className="font-bold text-lg">{data.tireSize}</p>
+              {tireSizeOptions.length > 0 && selectedTireSize ? (
+                <p className="font-bold text-lg">
+                  {formatTireSize(selectedTireSize)}
+                </p>
+              ) : (
+                <p className="font-bold text-lg">{data.tireSize}</p>
+              )}
             </div>
             <Button
               variant="outline"
@@ -93,21 +151,91 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
               Share
             </Button>
           </div>
-          <div className="bg-gray-200 w-full mt-3 px-2 py-1">
-            <div className="flex items-center gap-2">
-              {data.discountedPrice && (
-                <p className="font-bold text-3xl text-primary">
-                  ₱{data.discountedPrice.toLocaleString()}
+
+          {/* Tire Size Selection */}
+          {tireSizeOptions.length > 0 && (
+            <div className="mt-3">
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                Select Tire Size
+              </label>
+              <Select
+                value={selectedTireSizeId}
+                onValueChange={setSelectedTireSizeId}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a tire size">
+                    {selectedTireSize && (
+                      <div className="flex items-center justify-between w-full">
+                        <span>{formatTireSize(selectedTireSize)}</span>
+                        {selectedTireSize.isClearanceSale && (
+                          <Badge variant="destructive" className="text-xs ml-2">
+                            SALE
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {tireSizeOptions.map((ts) => (
+                    <SelectItem key={ts.id} value={ts.id}>
+                      <div className="flex items-center justify-between w-full gap-4">
+                        <span>{formatTireSize(ts)}</span>
+                        <div className="flex items-center gap-2">
+                          {ts.isClearanceSale && (
+                            <Badge variant="destructive" className="text-xs">
+                              SALE
+                            </Badge>
+                          )}
+                          <div className="flex items-center gap-2">
+                            {ts.isClearanceSale && ts.discountedPrice ? (
+                              <>
+                                <span className="text-sm font-semibold text-primary">
+                                  ₱{ts.discountedPrice.toLocaleString()}
+                                </span>
+                                <span className="text-xs line-through text-muted-foreground">
+                                  ₱{ts.price.toLocaleString()}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-sm font-semibold">
+                                ₱{ts.price.toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedTireSize?.isClearanceSale && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  This tire size is on clearance sale!
                 </p>
               )}
-              <p className="font-medium mt-2 line-through text-muted-foreground text-lg">
-                ₱{data.price.toLocaleString()}
+            </div>
+          )}
+
+          <div className="bg-gray-200 w-full mt-3 px-2 py-1">
+            <div className="flex items-center gap-2">
+              {displayDiscountedPrice && displayDiscountedPrice < displayPrice && (
+                <p className="font-bold text-3xl text-primary">
+                  ₱{displayDiscountedPrice.toLocaleString()}
+                </p>
+              )}
+              <p className={`font-medium mt-2 ${
+                displayDiscountedPrice && displayDiscountedPrice < displayPrice
+                  ? "line-through text-muted-foreground text-lg"
+                  : "text-3xl text-primary font-bold"
+              }`}>
+                ₱{displayPrice.toLocaleString()}
               </p>
             </div>
           </div>
-          {data.discountedPrice !== null && (
+          {displayDiscountedPrice !== null && displayDiscountedPrice < displayPrice && (
             <p className="text-green-900 font-bold mt-3">
-              SAVE ₱{(data.price - data.discountedPrice).toLocaleString()}!
+              SAVE ₱{(displayPrice - displayDiscountedPrice).toLocaleString()}!
             </p>
           )}
           <Separator className="my-3 !h-[2px]" />

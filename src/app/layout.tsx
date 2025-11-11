@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     "A collection of 202 magazines and tire catalogs from the 20th century.",
   icons: {
-    icon: "/favicon.png",
+    icon: "/logo.png",
   },
 };
 

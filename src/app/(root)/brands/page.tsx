@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import Image from "next/image";
 import Link from "next/link";
 import TireSearch from "@/components/globals/TireSearch";
+import { getTireSizesForSearch, getCarDataForSearch } from "@/actions";
 import { ArcTimeline, ArcTimelineItem } from "@/components/globals/ArcTimeline";
 import {
   Calendar,
@@ -97,32 +98,37 @@ const TIMELINE: ArcTimelineItem[] = [
 ];
 
 const Page = async () => {
-  const premiumBrands = await db.brands.findMany({
-    where: {
-      type: "Premium",
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  const [premiumBrands, midBrands, budgetBrands, tireSizesResult, carDataResult] = await Promise.all([
+    db.brands.findMany({
+      where: {
+        type: "Premium",
+      },
+      orderBy: {
+        name: "asc",
+      },
+    }),
+    db.brands.findMany({
+      where: {
+        type: "Mid-Range",
+      },
+      orderBy: {
+        name: "asc",
+      },
+    }),
+    db.brands.findMany({
+      where: {
+        type: "Budget",
+      },
+      orderBy: {
+        name: "asc",
+      },
+    }),
+    getTireSizesForSearch(),
+    getCarDataForSearch(),
+  ]);
 
-  const midBrands = await db.brands.findMany({
-    where: {
-      type: "Mid-Range",
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  const budgetBrands = await db.brands.findMany({
-    where: {
-      type: "Budget",
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  const searchBySize = tireSizesResult.data || {};
+  const searchByCar = carDataResult.data || [];
   return (
     <div className="min-h-screen">
       <div className="w-full pt-30 h-[20vh] flex items-center justify-center bg-cover bg-center"
@@ -242,7 +248,7 @@ const Page = async () => {
             Aside from searching for tires by your preferred tire brand, you may
             also search tires by size or by car model here at Tyre2Go:
           </p>
-          <TireSearch />
+          <TireSearch searchBySize={searchBySize} searchByCar={searchByCar} />
         </div>
       </section>
       <section className="py-10 max-w-7xl mx-auto">

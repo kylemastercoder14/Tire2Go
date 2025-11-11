@@ -1,13 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import FilterSidebar from "@/components/globals/FilterSidebar";
+import SearchResults from "../tire-search/_components/search-results";
 import db from "@/lib/db";
-import SortOptions from "@/components/globals/SortOptions";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { IconHandClick } from "@tabler/icons-react";
+import { getTireSizesForSearch, getCarDataForSearch } from "@/actions";
 
-const Page = async () => {
+interface PageProps {
+  searchParams: Promise<{
+    brand?: string;
+    model?: string;
+    year?: string;
+    width?: string;
+    ratio?: string;
+    diameter?: string;
+    brandIds?: string;
+  }>;
+}
+
+const Page = async ({ searchParams }: PageProps) => {
+  const params = await searchParams;
+  const { brand, model, year, width, ratio, diameter, brandIds } = params;
+
+  // Fetch search data for FilterSidebar
+  const [tireSizesResult, carDataResult] = await Promise.all([
+    getTireSizesForSearch(),
+    getCarDataForSearch(),
+  ]);
+
+  const searchBySize = tireSizesResult.data || {};
+  const searchByCar = carDataResult.data || [];
+
+  // Parse brandIds filter
+  const brandIdsArray = brandIds ? brandIds.split(",").filter(Boolean) : [];
+
   const brands = await db.brands.findMany({
     orderBy: {
       name: "asc",
@@ -17,17 +43,185 @@ const Page = async () => {
     },
   });
 
-  const products = await db.products.findMany({
-    where: {
-      isClearanceSale: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      brand: true,
-    },
-  });
+  let products = [];
+
+  // Search by tire size (supports partial searches: width only, width+ratio, or all three)
+  if (width) {
+    const widthNum = parseInt(width, 10);
+    const ratioNum = ratio ? parseInt(ratio, 10) : null;
+    const diameterNum = diameter ? parseInt(diameter, 10) : null;
+
+    // Build where clause for tire size search
+    const tireSizeWhere: any = { width: widthNum };
+    if (ratioNum !== null) tireSizeWhere.ratio = ratioNum;
+    if (diameterNum !== null) tireSizeWhere.diameter = diameterNum;
+
+    // Find tire sizes matching the search criteria
+    const tireSizes = await db.tireSize.findMany({
+      where: tireSizeWhere,
+    });
+
+    if (tireSizes.length > 0) {
+      const tireSizeIds = tireSizes.map((ts) => ts.id);
+
+      // Find products that have any of these tire sizes AND are on clearance sale
+      const productSizes = await db.productSize.findMany({
+        where: {
+          tireSizeId: {
+            in: tireSizeIds,
+          },
+          isClearanceSale: true, // Only clearance sale sizes
+        },
+        include: {
+          product: {
+            include: {
+              brand: true,
+              productSize: {
+                include: {
+                  tireSize: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Get unique products and filter by brand if needed
+      const productMap = new Map();
+      productSizes.forEach((ps) => {
+        if (
+          ps.product &&
+          (!brandIdsArray.length ||
+            brandIdsArray.includes(ps.product.brandId))
+        ) {
+          if (!productMap.has(ps.productId)) {
+            productMap.set(ps.productId, ps.product);
+          }
+        }
+      });
+
+      products = Array.from(productMap.values());
+    }
+  }
+  // Search by car (supports brand+model only or brand+model+year)
+  else if (brand && model) {
+    // Find the car make
+    const carMake = await db.carMake.findFirst({
+      where: {
+        name: brand,
+      },
+    });
+
+    if (carMake) {
+      // Find the car model
+      const carModel = await db.carModel.findFirst({
+        where: {
+          name: model,
+          makeId: carMake.id,
+        },
+      });
+
+      if (carModel) {
+        // Build where clause for compatibility search
+        const compatibilityWhere: any = { modelId: carModel.id };
+        if (year) {
+          const yearNum = parseInt(year, 10);
+          compatibilityWhere.year = yearNum;
+        }
+
+        // Find products with matching compatibility
+        const compatibilities = await db.productCompatibility.findMany({
+          where: compatibilityWhere,
+          include: {
+            product: {
+              include: {
+                brand: true,
+                productSize: {
+                  include: {
+                    tireSize: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Get unique products that have clearance sale (product level OR productSize level)
+        // and filter by brand if needed
+        const productMap = new Map();
+        compatibilities.forEach((comp) => {
+          if (
+            comp.product &&
+            (!brandIdsArray.length ||
+              brandIdsArray.includes(comp.product.brandId))
+          ) {
+            // Check if product has clearance sale
+            const hasProductClearance = comp.product.isClearanceSale;
+            const hasProductSizeClearance =
+              comp.product.productSize?.some((ps) => ps.isClearanceSale) ||
+              false;
+
+            if (hasProductClearance || hasProductSizeClearance) {
+              if (!productMap.has(comp.productId)) {
+                productMap.set(comp.productId, comp.product);
+              }
+            }
+          }
+        });
+
+        products = Array.from(productMap.values());
+      }
+    }
+  }
+  // No search params - show all clearance sale products
+  else {
+    // Get products with clearance sale at product level OR at productSize level
+    const allProducts = await db.products.findMany({
+      where: brandIdsArray.length > 0
+        ? {
+            brandId: {
+              in: brandIdsArray,
+            },
+          }
+        : undefined,
+      orderBy: { createdAt: "desc" },
+      include: {
+        brand: true,
+        productSize: {
+          include: {
+            tireSize: true,
+          },
+        },
+      },
+    });
+
+    // Filter products that have clearance sale
+    products = allProducts.filter((product) => {
+      const hasProductClearance = product.isClearanceSale;
+      const hasProductSizeClearance =
+        product.productSize?.some((ps) => ps.isClearanceSale) || false;
+      return hasProductClearance || hasProductSizeClearance;
+    });
+  }
+
+  // Build search criteria display text
+  let searchCriteria = "Clearance Sale Products";
+  if (width) {
+    if (ratio && diameter) {
+      searchCriteria = `Clearance Sale: ${width}/${ratio} R${diameter}`;
+    } else if (ratio) {
+      searchCriteria = `Clearance Sale: ${width}/${ratio}`;
+    } else {
+      searchCriteria = `Clearance Sale: ${width}`;
+    }
+  } else if (brand && model) {
+    if (year) {
+      searchCriteria = `Clearance Sale: ${brand} ${model} ${year}`;
+    } else {
+      searchCriteria = `Clearance Sale: ${brand} ${model}`;
+    }
+  }
+
   return (
     <div className="min-h-screen">
       <div className="w-full relative h-[59.7vh] mt-30 bg-[#ab0000]">
@@ -37,87 +231,15 @@ const Page = async () => {
           className="size-full object-contain"
         />
       </div>
-      <section className="px-24 pt-10 grid lg:grid-cols-10 grid-cols-1 gap-10">
+      <section className="pt-5 px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-10">
         <div className="lg:col-span-2 p-5">
-          <FilterSidebar brands={brands} />
+          <FilterSidebar
+            brands={brands}
+            searchBySize={searchBySize}
+            searchByCar={searchByCar}
+          />
         </div>
-        <div className="lg:col-span-8 p-5">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold tracking-tight">Featured Tires</h3>
-            <SortOptions />
-          </div>
-          <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
-            {products.map((product) => {
-              return (
-                <div
-                  key={product.id}
-                  className="border border-primary shadow rounded-md"
-                >
-                  <div className="relative w-full h-60">
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="object-contain size-full"
-                    />
-                    <div className="absolute top-2 right-2 size-15">
-                      <img
-                        src={product.brand.logo}
-                        alt={product.brand.name}
-                        className="object-contain size-full"
-                      />
-                    </div>
-                    {/* make it center */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 size-20">
-                      <img
-                        src="/logo.png"
-                        alt={"logo"}
-                        className="object-contain size-full opacity-30"
-                      />
-                    </div>
-                  </div>
-                  <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
-                    <h2 className="font-bold text-sm">CLEARANCE SALE</h2>
-                  </div>
-                  <div className="px-2 py-1">
-                    <h4 className="font-bold text-lg">{product.name}</h4>
-                    <p className="font-bold text-sm">{product.tireSize}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <p className="line-through text-muted-foreground text-sm font-medium">
-                        ₱{product.price.toLocaleString()}
-                      </p>
-                      <p className="text-primary font-bold text-lg">
-                        ₱
-                        {product.discountedPrice !== null &&
-                        product.discountedPrice !== undefined
-                          ? product.discountedPrice.toLocaleString()
-                          : ""}{" "}
-                        <span className="font-medium text-base">per tire</span>
-                      </p>
-                    </div>
-                    <div
-                      className="my-3 text-sm prose prose-sm max-w-none
-                        prose-headings:font-bold
-                        prose-headings:text-muted-foreground
-                        prose-a:text-primary prose-a:underline
-                        prose-ul:list-disc prose-ol:list-decimal
-                        prose-li:marker:text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: product.inclusion }}
-                    />
-                    <Link
-                      href={`/tire/${product.id}`}
-                      className={`w-full mb-2 ${buttonVariants({
-                        variant: "default",
-                      })}`}
-                    >
-                      <IconHandClick className="size-4" />
-                      View Tire Details
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <SearchResults products={products as any} />
       </section>
     </div>
   );

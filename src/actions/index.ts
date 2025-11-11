@@ -11,6 +11,9 @@ import {
   PromotionValidators,
   StaffValidators,
   TipsGuidesValidators,
+  CarMakeValidators,
+  CarModelValidators,
+  TireSizeValidators,
 } from "@/validators";
 import db from "@/lib/db";
 import { InventoryResponse, OrderWithOrderItem } from "@/types";
@@ -117,9 +120,53 @@ export const createProduct = async (
       return { error: "Product with this name already exists" };
     }
 
+    // Extract tireSizeIds, tireSizePricing, and compatibilities before creating product
+    const { tireSizeIds, tireSizePricing, compatibilities, ...productData } =
+      parseValues;
+
     const product = await db.products.create({
-      data: parseValues,
+      data: {
+        ...productData,
+        price: productData.price ?? 0, // Default to 0 if undefined
+        tireSize: productData.tireSize ?? "", // Default to empty string if undefined
+      },
     });
+
+    // Create ProductSize relationships with pricing if tireSizePricing is provided
+    if (tireSizePricing && tireSizePricing.length > 0) {
+      await db.productSize.createMany({
+        data: tireSizePricing.map((pricing) => ({
+          productId: product.id,
+          tireSizeId: pricing.tireSizeId,
+          price: pricing.price,
+          isClearanceSale: pricing.isClearanceSale || false,
+          discountedPrice: pricing.discountedPrice,
+        })),
+      });
+    } else if (tireSizeIds && tireSizeIds.length > 0) {
+      // Fallback to old behavior if tireSizePricing is not provided
+      await db.productSize.createMany({
+        data: tireSizeIds.map((tireSizeId) => ({
+          productId: product.id,
+          tireSizeId,
+          price: productData.price, // Use main product price
+          isClearanceSale: productData.isClearanceSale || false,
+          discountedPrice: productData.discountedPrice,
+        })),
+      });
+    }
+
+    // Create ProductCompatibility relationships if compatibilities are provided
+    if (compatibilities && compatibilities.length > 0) {
+      await db.productCompatibility.createMany({
+        data: compatibilities.map((compat) => ({
+          productId: product.id,
+          modelId: compat.modelId,
+          year: compat.year,
+        })),
+      });
+    }
+
     return { success: "Product created successfully", product };
   } catch (error) {
     console.error("Error creating product:", error);
@@ -151,10 +198,66 @@ export const updateProduct = async (
       }
     }
 
+    // Extract tireSizeIds, tireSizePricing, and compatibilities before updating product
+    const { tireSizeIds, tireSizePricing, compatibilities, ...productData } =
+      parseValues;
+
     const updatedProduct = await db.products.update({
       where: { id },
-      data: parseValues,
+      data: {
+        ...productData,
+        price: productData.price ?? 0, // Default to 0 if undefined
+        tireSize: productData.tireSize ?? "", // Default to empty string if undefined
+      },
     });
+
+    // Update ProductSize relationships
+    // Delete existing ProductSize records
+    await db.productSize.deleteMany({
+      where: { productId: id },
+    });
+
+    // Create new ProductSize records with pricing if tireSizePricing is provided
+    if (tireSizePricing && tireSizePricing.length > 0) {
+      await db.productSize.createMany({
+        data: tireSizePricing.map((pricing) => ({
+          productId: id,
+          tireSizeId: pricing.tireSizeId,
+          price: pricing.price,
+          isClearanceSale: pricing.isClearanceSale || false,
+          discountedPrice: pricing.discountedPrice,
+        })),
+      });
+    } else if (tireSizeIds && tireSizeIds.length > 0) {
+      // Fallback to old behavior if tireSizePricing is not provided
+      await db.productSize.createMany({
+        data: tireSizeIds.map((tireSizeId) => ({
+          productId: id,
+          tireSizeId,
+          price: productData.price, // Use main product price
+          isClearanceSale: productData.isClearanceSale || false,
+          discountedPrice: productData.discountedPrice,
+        })),
+      });
+    }
+
+    // Update ProductCompatibility relationships
+    // Delete existing ProductCompatibility records
+    await db.productCompatibility.deleteMany({
+      where: { productId: id },
+    });
+
+    // Create new ProductCompatibility records if compatibilities are provided
+    if (compatibilities && compatibilities.length > 0) {
+      await db.productCompatibility.createMany({
+        data: compatibilities.map((compat) => ({
+          productId: id,
+          modelId: compat.modelId,
+          year: compat.year,
+        })),
+      });
+    }
+
     return { success: "Product updated successfully", product: updatedProduct };
   } catch (error) {
     console.error("Error updating product:", error);
@@ -747,6 +850,24 @@ export const deletePolicy = async (id: string) => {
   }
 };
 
+export const getPolicyByType = async (type: string) => {
+  try {
+    const policy = await db.policies.findFirst({
+      where: { type },
+      orderBy: { updatedAt: "desc" }, // Get the most recent one if multiple exist
+    });
+
+    if (!policy) {
+      return { error: "Policy not found" };
+    }
+
+    return { success: "Policy fetched successfully", data: policy };
+  } catch (error) {
+    console.error("Error fetching policy:", error);
+    return { error: "Failed to fetch policy" };
+  }
+};
+
 export const createPromotion = async (
   values: z.infer<typeof PromotionValidators>
 ) => {
@@ -1009,6 +1130,99 @@ export const deleteOrder = async (id: string) => {
   }
 };
 
+// Archive orders manually (for admin use)
+export const archiveOrdersManually = async () => {
+  try {
+    // Import the function dynamically to avoid circular dependencies
+    const cronModule = await import("@/lib/cron");
+    if (typeof cronModule.archiveOldOrders === "function") {
+      await cronModule.archiveOldOrders();
+      return { success: "Orders archived successfully" };
+    } else {
+      return { error: "Archive function not available" };
+    }
+  } catch (error) {
+    console.error("Error manually archiving orders:", error);
+    return { error: "Failed to archive orders" };
+  }
+};
+
+// Get archived orders count
+export const getArchivedOrdersCount = async () => {
+  try {
+    const count = await db.order.count({
+      where: {
+        isArchived: true,
+      },
+    });
+
+    return { success: true, count };
+  } catch (error) {
+    console.error("Error getting archived orders count:", error);
+    return { error: "Failed to get archived orders count" };
+  }
+};
+
+// Get orders that will be archived soon (within 7 days)
+export const getOrdersToArchiveSoon = async () => {
+  try {
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const orders = await db.order.count({
+      where: {
+        isArchived: false,
+        createdAt: {
+          gte: thirtyDaysAgo,
+          lt: sevenDaysFromNow,
+        },
+      },
+    });
+
+    return { success: true, count: orders };
+  } catch (error) {
+    console.error("Error getting orders to archive soon:", error);
+    return { error: "Failed to get orders to archive soon" };
+  }
+};
+
+// Get order by ID and email for tracking (public access)
+export const getOrderForTracking = async (orderId: string, email: string) => {
+  try {
+    const order = await db.order.findFirst({
+      where: {
+        id: orderId,
+        email: email.toLowerCase().trim(),
+      },
+      include: {
+        orderItem: {
+          include: {
+            product: {
+              include: {
+                brand: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      return {
+        error: "Order not found. Please check your order ID and email.",
+      };
+    }
+
+    return { success: "Order found", data: order };
+  } catch (error) {
+    console.error("Error fetching order for tracking:", error);
+    return { error: "Failed to fetch order. Please try again." };
+  }
+};
+
 export async function rejectOrder(orderId: string, reason: string) {
   try {
     const order = await db.order.update({
@@ -1059,5 +1273,381 @@ export const sendOrderRejectionEmail = async (
   } catch (error) {
     console.error("Error sending product status email:", error);
     return { message: "An error occurred. Please try again." };
+  }
+};
+
+// CarMake CRUD
+export const createCarMake = async (
+  values: z.infer<typeof CarMakeValidators>
+) => {
+  const parseValues = CarMakeValidators.parse(values);
+
+  try {
+    const existingCarMake = await db.carMake.findFirst({
+      where: { name: parseValues.name },
+    });
+
+    if (existingCarMake) {
+      return { error: "Car make with this name already exists" };
+    }
+
+    const carMake = await db.carMake.create({
+      data: parseValues,
+    });
+
+    return { success: "Car make created successfully", carMake };
+  } catch (error) {
+    console.error("Error creating car make:", error);
+    return { error: "Failed to create car make" };
+  }
+};
+
+export const updateCarMake = async (
+  id: string,
+  values: z.infer<typeof CarMakeValidators>
+) => {
+  const parseValues = CarMakeValidators.parse(values);
+
+  try {
+    const existingCarMake = await db.carMake.findFirst({
+      where: { id },
+    });
+
+    if (!existingCarMake) {
+      return { error: "Car make not found" };
+    }
+
+    if (existingCarMake.name !== parseValues.name) {
+      const duplicateCarMake = await db.carMake.findFirst({
+        where: { name: parseValues.name },
+      });
+
+      if (duplicateCarMake) {
+        return { error: "Another car make with this name already exists" };
+      }
+    }
+
+    const updatedCarMake = await db.carMake.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return {
+      success: "Car make updated successfully",
+      carMake: updatedCarMake,
+    };
+  } catch (error) {
+    console.error("Error updating car make:", error);
+    return { error: "Failed to update car make" };
+  }
+};
+
+export const deleteCarMake = async (id: string) => {
+  try {
+    const existingCarMake = await db.carMake.findFirst({
+      where: { id },
+    });
+
+    if (!existingCarMake) {
+      return { error: "Car make not found" };
+    }
+
+    await db.carMake.delete({
+      where: { id },
+    });
+
+    return { success: "Car make deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting car make:", error);
+    return { error: "Failed to delete car make" };
+  }
+};
+
+// CarModel CRUD
+export const createCarModel = async (
+  values: z.infer<typeof CarModelValidators>
+) => {
+  const parseValues = CarModelValidators.parse(values);
+
+  try {
+    const existingCarModel = await db.carModel.findFirst({
+      where: {
+        name: parseValues.name,
+        makeId: parseValues.makeId,
+      },
+    });
+
+    if (existingCarModel) {
+      return { error: "Car model with this name already exists for this make" };
+    }
+
+    const carModel = await db.carModel.create({
+      data: parseValues,
+    });
+
+    return { success: "Car model created successfully", carModel };
+  } catch (error) {
+    console.error("Error creating car model:", error);
+    return { error: "Failed to create car model" };
+  }
+};
+
+export const updateCarModel = async (
+  id: string,
+  values: z.infer<typeof CarModelValidators>
+) => {
+  const parseValues = CarModelValidators.parse(values);
+  try {
+    const existingCarModel = await db.carModel.findFirst({
+      where: { id },
+    });
+
+    if (!existingCarModel) {
+      return { error: "Car model not found" };
+    }
+
+    if (
+      existingCarModel.name !== parseValues.name ||
+      existingCarModel.makeId !== parseValues.makeId
+    ) {
+      const duplicateCarModel = await db.carModel.findFirst({
+        where: {
+          name: parseValues.name,
+          makeId: parseValues.makeId,
+        },
+      });
+
+      if (duplicateCarModel) {
+        return {
+          error:
+            "Another car model with this name already exists for this make",
+        };
+      }
+    }
+
+    const updatedCarModel = await db.carModel.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return {
+      success: "Car model updated successfully",
+      carModel: updatedCarModel,
+    };
+  } catch (error) {
+    console.error("Error updating car model:", error);
+    return { error: "Failed to update car model" };
+  }
+};
+
+export const deleteCarModel = async (id: string) => {
+  try {
+    const existingCarModel = await db.carModel.findFirst({
+      where: { id },
+    });
+
+    if (!existingCarModel) {
+      return { error: "Car model not found" };
+    }
+
+    await db.carModel.delete({
+      where: { id },
+    });
+
+    return { success: "Car model deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting car model:", error);
+    return { error: "Failed to delete car model" };
+  }
+};
+
+// TireSize CRUD
+export const createTireSize = async (
+  values: z.infer<typeof TireSizeValidators>
+) => {
+  const parseValues = TireSizeValidators.parse(values);
+
+  try {
+    const existingTireSize = await db.tireSize.findFirst({
+      where: {
+        width: parseValues.width,
+        ratio: parseValues.ratio,
+        diameter: parseValues.diameter,
+      },
+    });
+
+    if (existingTireSize) {
+      return {
+        error: "Tire size with these specifications already exists",
+      };
+    }
+
+    const tireSize = await db.tireSize.create({
+      data: parseValues,
+    });
+
+    return { success: "Tire size created successfully", tireSize };
+  } catch (error) {
+    console.error("Error creating tire size:", error);
+    return { error: "Failed to create tire size" };
+  }
+};
+
+export const updateTireSize = async (
+  id: string,
+  values: z.infer<typeof TireSizeValidators>
+) => {
+  const parseValues = TireSizeValidators.parse(values);
+  try {
+    const existingTireSize = await db.tireSize.findFirst({
+      where: { id },
+    });
+
+    if (!existingTireSize) {
+      return { error: "Tire size not found" };
+    }
+
+    const duplicateTireSize = await db.tireSize.findFirst({
+      where: {
+        width: parseValues.width,
+        ratio: parseValues.ratio,
+        diameter: parseValues.diameter,
+        id: { not: id },
+      },
+    });
+
+    if (duplicateTireSize) {
+      return {
+        error: "Another tire size with these specifications already exists",
+      };
+    }
+
+    const updatedTireSize = await db.tireSize.update({
+      where: { id },
+      data: parseValues,
+    });
+
+    return {
+      success: "Tire size updated successfully",
+      tireSize: updatedTireSize,
+    };
+  } catch (error) {
+    console.error("Error updating tire size:", error);
+    return { error: "Failed to update tire size" };
+  }
+};
+
+export const deleteTireSize = async (id: string) => {
+  try {
+    const existingTireSize = await db.tireSize.findFirst({
+      where: { id },
+    });
+
+    if (!existingTireSize) {
+      return { error: "Tire size not found" };
+    }
+
+    await db.tireSize.delete({
+      where: { id },
+    });
+
+    return { success: "Tire size deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting tire size:", error);
+    return { error: "Failed to delete tire size" };
+  }
+};
+
+// Get tire sizes for search (formatted as SEARCH_BY_SIZE structure)
+export const getTireSizesForSearch = async () => {
+  try {
+    const tireSizes = await db.tireSize.findMany({
+      orderBy: [{ width: "asc" }, { ratio: "asc" }, { diameter: "asc" }],
+    });
+
+    // Transform to SEARCH_BY_SIZE format: { width: { ratio: [diameters] } }
+    const searchBySize: { [key: string]: { [key: string]: number[] } } = {};
+
+    tireSizes.forEach((ts) => {
+      const width = ts.width.toString();
+
+      if (!searchBySize[width]) {
+        searchBySize[width] = {};
+      }
+
+      if (ts.ratio !== null && ts.ratio !== undefined) {
+        const ratio = ts.ratio.toString();
+        if (!searchBySize[width][ratio]) {
+          searchBySize[width][ratio] = [];
+        }
+
+        if (ts.diameter !== null && ts.diameter !== undefined) {
+          if (!searchBySize[width][ratio].includes(ts.diameter)) {
+            searchBySize[width][ratio].push(ts.diameter);
+          }
+        }
+      }
+    });
+
+    // Sort diameters in each ratio
+    Object.keys(searchBySize).forEach((width) => {
+      Object.keys(searchBySize[width]).forEach((ratio) => {
+        searchBySize[width][ratio].sort((a, b) => a - b);
+      });
+    });
+
+    return { success: "Tire sizes fetched", data: searchBySize };
+  } catch (error) {
+    console.error("Error fetching tire sizes for search:", error);
+    return { error: "Failed to fetch tire sizes" };
+  }
+};
+
+// Get car makes, models, and years for search (formatted as SEARCH_BY_CAR structure)
+export const getCarDataForSearch = async () => {
+  try {
+    const carMakes = await db.carMake.findMany({
+      include: {
+        models: {
+          include: {
+            compatibilities: true,
+          },
+          orderBy: { name: "asc" },
+        },
+      },
+      orderBy: { name: "asc" },
+    });
+
+    // Transform to SEARCH_BY_CAR format: [{ make: string, models: { model: [years] } }]
+    const searchByCar = carMakes.map((make) => {
+      const modelsMap: { [key: string]: number[] } = {};
+
+      make.models.forEach((model) => {
+        // Get unique years from product compatibilities for this model
+        const years = new Set<number>();
+
+        model.compatibilities.forEach((compat) => {
+          if (compat.year) {
+            years.add(compat.year);
+          }
+        });
+
+        // Include ALL models, even if they don't have years yet
+        // This allows users to see all available models for each brand
+        modelsMap[model.name] = Array.from(years).sort((a, b) => a - b);
+      });
+
+      return {
+        make: make.name,
+        models: modelsMap,
+      };
+    });
+
+    // Show all makes, even if they don't have models with years yet
+    // This allows users to see all available car makes
+    return { success: "Car data fetched", data: searchByCar };
+  } catch (error) {
+    console.error("Error fetching car data for search:", error);
+    return { error: "Failed to fetch car data" };
   }
 };

@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
       "www.carlogos.org",
       "www.giti.com.ph",
       "falken-tires-website-storage.s3.amazonaws.com",
+      "tyre2go.s3.ap-southeast-2.amazonaws.com",
     ],
   },
   eslint: {

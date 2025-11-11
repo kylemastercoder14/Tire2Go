@@ -10,20 +10,26 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { SEARCH_BY_CAR, SEARCH_BY_SIZE } from "@/constants";
 import {
   IconCarFilled,
   IconCircleCheckFilled,
   IconWheel,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { SearchBySize, SearchByCar } from "@/types";
 
 const TABS = [
   { id: "size", label: "Search by size", icon: IconWheel },
   { id: "car", label: "Search by car", icon: IconCarFilled },
 ];
 
-const TireSearch = ({ className }: { className?: string }) => {
+interface TireSearchProps {
+  className?: string;
+  searchBySize: SearchBySize;
+  searchByCar: SearchByCar[];
+}
+
+const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = React.useState<"size" | "car">("size");
   const [isOpen, setIsOpen] = React.useState<{
@@ -46,41 +52,131 @@ const TireSearch = ({ className }: { className?: string }) => {
   const [selectedYear, setSelectedYear] = React.useState("");
   const [searchCarInput, setSearchCarInput] = React.useState("");
 
+  // Refs to prevent multiple redirects
+  const redirectedRef = React.useRef<string>("");
+
+  // Loading states for each filter step
+  const [isLoadingWidth, setIsLoadingWidth] = React.useState(false);
+  const [isLoadingAspect, setIsLoadingAspect] = React.useState(false);
+  const [isLoadingRim, setIsLoadingRim] = React.useState(false);
+  const [isLoadingBrand, setIsLoadingBrand] = React.useState(false);
+  const [isLoadingModel, setIsLoadingModel] = React.useState(false);
+  const [isLoadingYear, setIsLoadingYear] = React.useState(false);
+
   // --- DERIVED OPTIONS FOR SIZE ---
-  const widthOptions = Object.keys(SEARCH_BY_SIZE);
+  const widthOptions = Object.keys(searchBySize);
   const aspectOptions =
-    selectedWidth && SEARCH_BY_SIZE[selectedWidth]
-      ? Object.keys(SEARCH_BY_SIZE[selectedWidth])
+    selectedWidth && searchBySize[selectedWidth]
+      ? Object.keys(searchBySize[selectedWidth])
       : [];
   const rimOptions =
     selectedWidth &&
     selectedAspect &&
-    SEARCH_BY_SIZE[selectedWidth][selectedAspect]
-      ? SEARCH_BY_SIZE[selectedWidth][selectedAspect]
+    searchBySize[selectedWidth] &&
+    searchBySize[selectedWidth][selectedAspect]
+      ? searchBySize[selectedWidth][selectedAspect]
       : [];
 
   // --- DERIVED OPTIONS FOR CAR ---
-  const brandOptions = SEARCH_BY_CAR.map((b) => b.make);
+  const brandOptions = searchByCar.map((b) => b.make);
   const modelOptions =
     selectedBrand !== ""
-      ? SEARCH_BY_CAR.find((b) => b.make === selectedBrand)?.models || {}
+      ? searchByCar.find((b) => b.make === selectedBrand)?.models || {}
       : {};
   const yearOptions =
     selectedModel !== "" ? modelOptions[selectedModel] || [] : [];
 
-  const handleSearch = () => {
+
+  // Auto-redirect when width is selected (if no ratio/diameter available or when selected)
+  React.useEffect(() => {
     if (isOpen.key === "size") {
-      if (selectedWidth && selectedAspect && selectedRim) {
-        const query = `/tire-search?width=${selectedWidth}&ratio=${selectedAspect}&diameter=${selectedRim}`;
-        router.push(query);
+      // Check if there are any aspect ratios available for this width
+      const hasAspectRatios = aspectOptions.length > 0;
+
+      let redirectQuery = "";
+
+      if (selectedWidth && !hasAspectRatios) {
+        // No ratio available, redirect with just width
+        setIsLoadingWidth(true);
+        redirectQuery = `/tire-search?width=${selectedWidth}`;
+      } else if (selectedAspect) {
+        setIsLoadingAspect(true);
+        // Check if there are diameters for this aspect ratio
+        const hasDiameters = rimOptions.length > 0;
+
+        if (!hasDiameters) {
+          // No diameter available, redirect with width and ratio
+          redirectQuery = `/tire-search?width=${selectedWidth}&ratio=${selectedAspect}`;
+        } else if (selectedRim) {
+          setIsLoadingRim(true);
+          // All three selected, redirect
+          redirectQuery = `/tire-search?width=${selectedWidth}&ratio=${selectedAspect}&diameter=${selectedRim}`;
+        }
       }
-    } else if (isOpen.key === "car") {
-      if (selectedBrand && selectedModel && selectedYear) {
-        const query = `/tire-search?brand=${selectedBrand}&model=${selectedModel}&year=${selectedYear}`;
-        router.push(query);
+
+      // Only redirect if we have a query and haven't already redirected for this combination
+      if (redirectQuery && redirectedRef.current !== redirectQuery) {
+        redirectedRef.current = redirectQuery;
+        router.push(redirectQuery);
+        // Reset loading states after a delay
+        setTimeout(() => {
+          setIsLoadingWidth(false);
+          setIsLoadingAspect(false);
+          setIsLoadingRim(false);
+        }, 1000);
+      } else if (!redirectQuery) {
+        // Reset loading if no redirect needed
+        if (!selectedWidth) setIsLoadingWidth(false);
+        if (!selectedAspect) setIsLoadingAspect(false);
+        if (!selectedRim) setIsLoadingRim(false);
       }
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedWidth, selectedAspect, selectedRim, isOpen.key, aspectOptions.length, rimOptions.length]);
+
+  // Auto-redirect for car search when model is selected and has no years
+  React.useEffect(() => {
+    if (isOpen.key === "car") {
+      if (selectedBrand && selectedModel) {
+        // Check if this model has any years available
+        const modelData = searchByCar.find((b) => b.make === selectedBrand);
+        const years = modelData?.models[selectedModel] || [];
+
+        let redirectQuery = "";
+
+        if (years.length === 0) {
+          // No years available, redirect with just brand and model
+          setIsLoadingModel(true);
+          redirectQuery = `/tire-search?brand=${selectedBrand}&model=${selectedModel}`;
+        } else if (selectedYear) {
+          setIsLoadingYear(true);
+          // Year selected, redirect
+          redirectQuery = `/tire-search?brand=${selectedBrand}&model=${selectedModel}&year=${selectedYear}`;
+        }
+
+        // Only redirect if we have a query and haven't already redirected for this combination
+        if (redirectQuery && redirectedRef.current !== redirectQuery) {
+          redirectedRef.current = redirectQuery;
+          router.push(redirectQuery);
+          // Reset loading states after a delay
+          setTimeout(() => {
+            setIsLoadingBrand(false);
+            setIsLoadingModel(false);
+            setIsLoadingYear(false);
+          }, 1000);
+        } else if (!redirectQuery) {
+          // Reset loading if no redirect needed
+          if (!selectedModel) setIsLoadingModel(false);
+          if (!selectedYear) setIsLoadingYear(false);
+        }
+      } else if (selectedBrand) {
+        setIsLoadingBrand(true);
+        // Brand selected, show loading briefly
+        setTimeout(() => setIsLoadingBrand(false), 500);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBrand, selectedModel, selectedYear, isOpen.key]);
 
   // --- HELPERS FOR FILTERING ---
   const filterList = (list: string[], search: string) => {
@@ -111,10 +207,22 @@ const TireSearch = ({ className }: { className?: string }) => {
                 </h3>
                 {/* Steps preview */}
                 {[
-                  { label: "Width", value: selectedWidth },
-                  { label: "Ratio", value: selectedAspect },
-                  { label: "Diameter", value: selectedRim },
-                ].map(({ label, value }) => (
+                  {
+                    label: "Width",
+                    value: selectedWidth,
+                    loading: isLoadingWidth
+                  },
+                  {
+                    label: "Ratio",
+                    value: selectedAspect,
+                    loading: isLoadingAspect
+                  },
+                  {
+                    label: "Diameter",
+                    value: selectedRim,
+                    loading: isLoadingRim
+                  },
+                ].map(({ label, value, loading }) => (
                   <div
                     key={label}
                     className="flex items-center justify-between mb-5 last:mb-0"
@@ -123,7 +231,15 @@ const TireSearch = ({ className }: { className?: string }) => {
                     {value ? (
                       <div className="bg-[#e8f5e5] rounded-full py-1 px-2 gap-1 flex items-center">
                         <span className="text-[#2e7d32] text-sm">{value}</span>
-                        <IconCircleCheckFilled className="text-[#2e7d32] size-4" />
+                        {loading ? (
+                          <Loader className="text-[#2e7d32] size-4 animate-spin" />
+                        ) : (
+                          <IconCircleCheckFilled className="text-[#2e7d32] size-4" />
+                        )}
+                      </div>
+                    ) : loading ? (
+                      <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
+                        <Loader className="text-red-500 size-4 animate-spin" />
                       </div>
                     ) : (
                       <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
@@ -143,6 +259,9 @@ const TireSearch = ({ className }: { className?: string }) => {
                     setSelectedWidth("");
                     setSelectedAspect("");
                     setSelectedRim("");
+                    setIsLoadingWidth(false);
+                    setIsLoadingAspect(false);
+                    setIsLoadingRim(false);
                   }}
                 >
                   <ChevronLeft className="size-7" />
@@ -195,7 +314,11 @@ const TireSearch = ({ className }: { className?: string }) => {
                       <OptionItem
                         key={item}
                         label={item}
-                        onClick={() => setSelectedWidth(item)}
+                        loading={isLoadingWidth}
+                        onClick={() => {
+                          setIsLoadingWidth(true);
+                          setSelectedWidth(item);
+                        }}
                       />
                     ))}
 
@@ -205,7 +328,11 @@ const TireSearch = ({ className }: { className?: string }) => {
                       <OptionItem
                         key={item}
                         label={item}
-                        onClick={() => setSelectedAspect(item)}
+                        loading={isLoadingAspect}
+                        onClick={() => {
+                          setIsLoadingAspect(true);
+                          setSelectedAspect(item);
+                        }}
                       />
                     ))}
 
@@ -217,22 +344,16 @@ const TireSearch = ({ className }: { className?: string }) => {
                         <OptionItem
                           key={item}
                           label={item}
-                          onClick={() => setSelectedRim(item)}
+                          loading={isLoadingRim}
+                          onClick={() => {
+                            setIsLoadingRim(true);
+                            setSelectedRim(item);
+                          }}
                         />
                       )
                     )}
                 </div>
 
-                {/* Final search */}
-                {selectedWidth && selectedAspect && selectedRim && (
-                  <Button
-                    variant="secondary"
-                    className="mt-6"
-                    onClick={handleSearch}
-                  >
-                    Search
-                  </Button>
-                )}
               </div>
             </div>
           )}
@@ -246,10 +367,22 @@ const TireSearch = ({ className }: { className?: string }) => {
                   About your Car
                 </h3>
                 {[
-                  { label: "Brand", value: selectedBrand },
-                  { label: "Model", value: selectedModel },
-                  { label: "Year", value: selectedYear },
-                ].map(({ label, value }) => (
+                  {
+                    label: "Brand",
+                    value: selectedBrand,
+                    loading: isLoadingBrand
+                  },
+                  {
+                    label: "Model",
+                    value: selectedModel,
+                    loading: isLoadingModel
+                  },
+                  {
+                    label: "Year",
+                    value: selectedYear,
+                    loading: isLoadingYear
+                  },
+                ].map(({ label, value, loading }) => (
                   <div
                     key={label}
                     className="flex items-center justify-between mb-5 last:mb-0"
@@ -258,7 +391,15 @@ const TireSearch = ({ className }: { className?: string }) => {
                     {value ? (
                       <div className="bg-[#e8f5e5] rounded-full py-1 px-2 gap-1 flex items-center">
                         <span className="text-[#2e7d32] text-sm">{value}</span>
-                        <IconCircleCheckFilled className="text-[#2e7d32] size-4" />
+                        {loading ? (
+                          <Loader className="text-[#2e7d32] size-4 animate-spin" />
+                        ) : (
+                          <IconCircleCheckFilled className="text-[#2e7d32] size-4" />
+                        )}
+                      </div>
+                    ) : loading ? (
+                      <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
+                        <Loader className="text-red-500 size-4 animate-spin" />
                       </div>
                     ) : (
                       <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
@@ -278,6 +419,9 @@ const TireSearch = ({ className }: { className?: string }) => {
                     setSelectedBrand("");
                     setSelectedModel("");
                     setSelectedYear("");
+                    setIsLoadingBrand(false);
+                    setIsLoadingModel(false);
+                    setIsLoadingYear(false);
                   }}
                 >
                   <ChevronLeft className="size-7" />
@@ -328,7 +472,11 @@ const TireSearch = ({ className }: { className?: string }) => {
                       <OptionItem
                         key={item}
                         label={item}
-                        onClick={() => setSelectedBrand(item)}
+                        loading={isLoadingBrand}
+                        onClick={() => {
+                          setIsLoadingBrand(true);
+                          setSelectedBrand(item);
+                        }}
                       />
                     ))}
 
@@ -339,30 +487,32 @@ const TireSearch = ({ className }: { className?: string }) => {
                         <OptionItem
                           key={item}
                           label={item}
-                          onClick={() => setSelectedModel(item)}
+                          loading={isLoadingModel}
+                          onClick={() => {
+                            setIsLoadingModel(true);
+                            setSelectedModel(item);
+                          }}
                         />
                       )
                     )}
 
                   {selectedModel !== "" &&
                     selectedYear === "" &&
+                    yearOptions.length > 0 &&
                     filterList(yearOptions.map(String), searchCarInput).map(
                       (item) => (
                         <OptionItem
                           key={item}
                           label={item}
-                          onClick={() => setSelectedYear(item)}
+                          loading={isLoadingYear}
+                          onClick={() => {
+                            setIsLoadingYear(true);
+                            setSelectedYear(item);
+                          }}
                         />
                       )
                     )}
                 </div>
-
-                {/* Final search */}
-                {selectedBrand && selectedModel && selectedYear && (
-                  <Button className="mt-6" onClick={handleSearch}>
-                    Search
-                  </Button>
-                )}
               </div>
             </div>
           )}
@@ -414,7 +564,13 @@ const TireSearch = ({ className }: { className?: string }) => {
                   exit={{ x: 50, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="w-full cursor-pointer flex items-center justify-between"
-                  onClick={() => setIsOpen({ toggle: true, key: "size" })}
+                  onClick={() => {
+                    redirectedRef.current = "";
+                    setIsLoadingWidth(false);
+                    setIsLoadingAspect(false);
+                    setIsLoadingRim(false);
+                    setIsOpen({ toggle: true, key: "size" });
+                  }}
                 >
                   <CardItem label="Dimension" img="/tire.svg" />
                 </motion.div>
@@ -427,7 +583,13 @@ const TireSearch = ({ className }: { className?: string }) => {
                   exit={{ x: -50, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="w-full cursor-pointer flex items-center justify-between"
-                  onClick={() => setIsOpen({ toggle: true, key: "car" })}
+                  onClick={() => {
+                    redirectedRef.current = "";
+                    setIsLoadingBrand(false);
+                    setIsLoadingModel(false);
+                    setIsLoadingYear(false);
+                    setIsOpen({ toggle: true, key: "car" });
+                  }}
                 >
                   <CardItem label="Car" img="/car.svg" />
                 </motion.div>
@@ -446,16 +608,24 @@ export default TireSearch;
 const OptionItem = ({
   label,
   onClick,
+  loading,
 }: {
   label: string;
   onClick: () => void;
+  loading?: boolean;
 }) => (
   <div
-    className="flex rounded-2xl cursor-pointer items-center justify-between hover:bg-zinc-200/50 px-3 py-2"
+    className={`flex rounded-2xl cursor-pointer items-center justify-between hover:bg-zinc-200/50 px-3 py-2 ${
+      loading ? "opacity-70 pointer-events-none" : ""
+    }`}
     onClick={onClick}
   >
     <span className="text-white">{label}</span>
-    <ChevronRight className="size-5 text-white" />
+    {loading ? (
+      <Loader className="size-5 text-white animate-spin" />
+    ) : (
+      <ChevronRight className="size-5 text-white" />
+    )}
   </div>
 );
 

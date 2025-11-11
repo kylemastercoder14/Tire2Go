@@ -8,19 +8,38 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import Link from "next/link";
 import { DatePicker } from "@/components/globals/DatePicker";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { PolicyModal } from "@/components/globals/PolicyModal";
 
 const Page = () => {
   const router = useRouter();
 
   const { items, setPreferredSchedule, preferredSchedule, setCustomerDetails } =
     useCart();
+
+  // Set minimum date to the later of: January 1, 2025 or today's date
+  // This ensures we don't allow dates before 2025, but also disable past dates
+  const minDate = React.useMemo(() => {
+    const january2025 = new Date(2025, 0, 1);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day
+
+    // Return the later date (so we never allow dates before 2025, and also never allow past dates)
+    return today > january2025 ? today : january2025;
+  }, []);
+
+  // Validate and clear date if it's before the minimum date
+  React.useEffect(() => {
+    if (preferredSchedule && preferredSchedule < minDate) {
+      setPreferredSchedule(null);
+      toast.error("Pickup date must be today or later (2025 and onwards). Please select a new date.");
+    }
+  }, [preferredSchedule, minDate, setPreferredSchedule]);
 
   const [details, setDetails] = React.useState({
     firstName: "",
@@ -30,6 +49,36 @@ const Page = () => {
     remarks: "",
     acceptedTerms: false,
   });
+
+  // Handle phone number input - only numbers, max 10 digits
+  const handlePhoneChange = (value: string) => {
+    // Remove all non-numeric characters
+    const numericValue = value.replace(/\D/g, "");
+
+    // Limit to 10 digits
+    const limitedValue = numericValue.slice(0, 10);
+
+    setDetails({ ...details, phone: limitedValue });
+  };
+
+  // Format phone number for display: (+63) XXXXXXXXXX
+  const formatPhoneNumber = (phone: string) => {
+    if (!phone) return "";
+    return `(+63) ${phone}`;
+  };
+
+  // Validate email format
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Email validation state
+  const [emailError, setEmailError] = React.useState<string>("");
+
+  // Policy modal states
+  const [isTermsOpen, setIsTermsOpen] = React.useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = React.useState(false);
 
   if (items.length === 0) {
     return (
@@ -64,7 +113,27 @@ const Page = () => {
       return;
     }
 
-    setCustomerDetails(details); // save to store
+    // Validate email format
+    if (!isValidEmail(details.email)) {
+      setEmailError("Please enter a valid email address (e.g., johndoe@gmail.com)");
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    setEmailError(""); // Clear error if valid
+
+    // Validate phone number length
+    if (details.phone.length !== 10) {
+      toast.error("Phone number must be exactly 10 digits.");
+      return;
+    }
+
+    // Save phone number with +63 prefix
+    const customerDetailsWithPhone = {
+      ...details,
+      phone: `+63${details.phone}`, // Add +63 prefix when saving
+    };
+
+    setCustomerDetails(customerDetailsWithPhone); // save to store
     router.push("/checkout-review");
   };
 
@@ -137,12 +206,13 @@ const Page = () => {
                     onChange={(date?: Date) =>
                       setPreferredSchedule(date ?? null)
                     }
+                    fromDate={minDate}
                     descriptionText={
                       preferredSchedule
                         ? `Your tires are scheduled for delivery/installation on ${formatDate(
                             preferredSchedule
                           )}.`
-                        : "Select your preferred date for tire delivery or installation."
+                        : "Select your preferred date for tire delivery or installation (today or later, 2025 and onwards)."
                     }
                   />
                 </div>
@@ -189,26 +259,54 @@ const Page = () => {
                       </Label>
                       <Input
                         value={details.email}
-                        onChange={(e) =>
-                          setDetails({ ...details, email: e.target.value })
-                        }
+                        onChange={(e) => {
+                          const emailValue = e.target.value;
+                          setDetails({ ...details, email: emailValue });
+                          // Clear error on input if email becomes valid
+                          if (emailError && isValidEmail(emailValue)) {
+                            setEmailError("");
+                          }
+                        }}
+                        onBlur={() => {
+                          // Validate on blur if email is filled
+                          if (details.email && !isValidEmail(details.email)) {
+                            setEmailError("Please enter a valid email address (e.g., johndoe@gmail.com)");
+                          } else {
+                            setEmailError("");
+                          }
+                        }}
                         type="email"
                         required
-                        placeholder="Enter your email address"
+                        placeholder="johndoe@gmail.com"
+                        className={emailError ? "border-destructive" : ""}
                       />
+                      {emailError && (
+                        <p className="text-sm text-destructive">{emailError}</p>
+                      )}
                     </div>
                     <div className="space-y-1.5">
                       <Label>
                         Phone <span className="text-destructive">*</span>
                       </Label>
-                      <Input
-                        value={details.phone}
-                        onChange={(e) =>
-                          setDetails({ ...details, phone: e.target.value })
-                        }
-                        required
-                        placeholder="Enter your phone number"
-                      />
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                          (+63)
+                        </div>
+                        <Input
+                          value={details.phone}
+                          onChange={(e) => handlePhoneChange(e.target.value)}
+                          required
+                          placeholder="9123456789"
+                          className="pl-16"
+                          type="tel"
+                          maxLength={10}
+                          inputMode="numeric"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {details.phone ? formatPhoneNumber(details.phone) : "(+63) 9XXXXXXXXX"}
+                        {details.phone && ` (${details.phone.length}/10 digits)`}
+                      </p>
                     </div>
                   </div>
 
@@ -234,13 +332,21 @@ const Page = () => {
                       <Label>Accept terms and conditions</Label>
                       <p className="text-muted-foreground text-sm">
                         By checking this box, you agree to the{" "}
-                        <Link className="underline text-primary" href="#">
+                        <button
+                          type="button"
+                          onClick={() => setIsTermsOpen(true)}
+                          className="underline text-primary hover:text-primary/80"
+                        >
                           terms
-                        </Link>{" "}
+                        </button>{" "}
                         and{" "}
-                        <Link className="underline text-primary" href="#">
+                        <button
+                          type="button"
+                          onClick={() => setIsPrivacyOpen(true)}
+                          className="underline text-primary hover:text-primary/80"
+                        >
                           privacy policy
-                        </Link>
+                        </button>
                         .
                       </p>
                     </div>
@@ -342,6 +448,18 @@ const Page = () => {
           </div>
         </div>
       </section>
+
+      {/* Policy Modals */}
+      <PolicyModal
+        type="Terms and Conditions"
+        open={isTermsOpen}
+        onOpenChange={setIsTermsOpen}
+      />
+      <PolicyModal
+        type="Privacy Policy"
+        open={isPrivacyOpen}
+        onOpenChange={setIsPrivacyOpen}
+      />
     </div>
   );
 };

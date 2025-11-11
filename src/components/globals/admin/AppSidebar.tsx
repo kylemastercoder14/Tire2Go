@@ -4,12 +4,14 @@ import * as React from "react";
 import {
   IconBadgeTm,
   IconBox,
+  IconCar,
   IconCircleDotFilled,
   IconDashboard,
   IconDatabase,
   IconFileText,
   IconHelpCircle,
   IconScale,
+  IconSitemap,
   IconTag,
   IconUserCog,
   IconUsersGroup,
@@ -50,6 +52,16 @@ const data = {
     {
       title: "Product Catalog",
       url: "/admin/products",
+      icon: IconSitemap,
+    },
+    {
+      title: "Car Management",
+      url: "/admin/car-management",
+      icon: IconCar,
+    },
+    {
+      title: "Tire Sizes",
+      url: "/admin/tire-sizes",
       icon: IconWheel,
     },
     {

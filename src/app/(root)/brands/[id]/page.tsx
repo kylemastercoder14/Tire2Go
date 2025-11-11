@@ -14,6 +14,7 @@ import { IconChecks, IconHandClick } from "@tabler/icons-react";
 import TireSearch from "@/components/globals/TireSearch";
 import { buttonVariants } from "@/components/ui/button";
 import { showTireBrandBanner } from "@/lib/show-brand-banner";
+import { getTireSizesForSearch, getCarDataForSearch } from "@/actions";
 
 const Page = async (props: {
   params: Promise<{
@@ -22,23 +23,29 @@ const Page = async (props: {
 }) => {
   const params = await props.params;
 
-  const initialData = await db.brands.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+  const [initialData, products, tireSizesResult, carDataResult] = await Promise.all([
+    db.brands.findUnique({
+      where: {
+        id: params.id,
+      },
+    }),
+    db.products.findMany({
+      where: {
+        brandId: params.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        brand: true,
+      },
+    }),
+    getTireSizesForSearch(),
+    getCarDataForSearch(),
+  ]);
 
-  const products = await db.products.findMany({
-    where: {
-      brandId: params.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      brand: true,
-    },
-  });
+  const searchBySize = tireSizesResult.data || {};
+  const searchByCar = carDataResult.data || [];
 
   if (!initialData) {
     return (
@@ -120,7 +127,7 @@ const Page = async (props: {
               </h3>
             </div>
           </div>
-          <TireSearch className="!max-w-7xl mt-10" />
+          <TireSearch className="!max-w-7xl mt-10" searchBySize={searchBySize} searchByCar={searchByCar} />
           <h3 className="font-bold mt-10 text-center text-gray-500 text-2xl">
             Featured Tires
           </h3>

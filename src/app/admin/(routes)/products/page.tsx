@@ -14,6 +14,11 @@ const Page = async () => {
     },
     include: {
       brand: true,
+      productSize: {
+        include: {
+          tireSize: true,
+        },
+      },
     }
   });
   return (
