@@ -28,11 +28,11 @@ export function ProductChart({ orders }: ProductChartProps) {
   const chartData = React.useMemo(() => {
     const productMap: Record<string, { soldCount: number; fill: string }> = {};
     const colors = [
-      "var(--chart-1)",
-      "var(--chart-2)",
-      "var(--chart-3)",
-      "var(--chart-4)",
-      "var(--chart-5)",
+      "#ffd700",
+      "#556b2f",
+      "#8b4513",
+      "#9932cc",
+      "#8b0000",
     ];
 
     let colorIndex = 0;

@@ -13,15 +13,15 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 const periods: Period[] = [
-  "weekly",
-  "monthly",
-  "quarterly",
-  "semiAnnual",
-  "annual",
+  "Weekly",
+  "Monthly",
+  "Quarterly",
+  "Semi Anually",
+  "Annually",
 ];
 
 const StatsDashboard = () => {
-  const [period, setPeriod] = useState<Period>("monthly");
+  const [period, setPeriod] = useState<Period>("Monthly");
   const [stats, setStats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +57,7 @@ const StatsDashboard = () => {
             <SelectContent>
               {periods.map((p) => (
                 <SelectItem key={p} value={p}>
-                  {p.charAt(0).toUpperCase() + p.slice(1)}
+                  {p}
                 </SelectItem>
               ))}
             </SelectContent>

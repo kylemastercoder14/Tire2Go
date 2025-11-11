@@ -1,18 +1,18 @@
 import db from "@/lib/db";
 
 export type Period =
-  | "weekly"
-  | "monthly"
-  | "quarterly"
-  | "semiAnnual"
-  | "annual";
+  | "Weekly"
+  | "Monthly"
+  | "Quarterly"
+  | "Semi Anually"
+  | "Annually";
 
 const getPeriodDates = (period: Period) => {
   const now = new Date();
   let currentStart: Date, currentEnd: Date, lastStart: Date, lastEnd: Date;
 
   switch (period) {
-    case "weekly": {
+    case "Weekly": {
       const dayOfWeek = now.getDay();
       currentStart = new Date(now);
       currentStart.setDate(now.getDate() - dayOfWeek);
@@ -26,7 +26,7 @@ const getPeriodDates = (period: Period) => {
       lastEnd.setDate(currentEnd.getDate() - 7);
       break;
     }
-    case "monthly": {
+    case "Monthly": {
       currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
       currentEnd = new Date(
         now.getFullYear(),
@@ -41,7 +41,7 @@ const getPeriodDates = (period: Period) => {
       lastEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
       break;
     }
-    case "quarterly": {
+    case "Quarterly": {
       const quarter = Math.floor(now.getMonth() / 3);
       currentStart = new Date(now.getFullYear(), quarter * 3, 1);
       currentEnd = new Date(
@@ -57,7 +57,7 @@ const getPeriodDates = (period: Period) => {
       lastEnd = new Date(now.getFullYear(), quarter * 3, 0, 23, 59, 59, 999);
       break;
     }
-    case "semiAnnual": {
+    case "Semi Anually": {
       const half = now.getMonth() < 6 ? 0 : 6;
       currentStart = new Date(now.getFullYear(), half, 1);
       currentEnd = new Date(now.getFullYear(), half + 6, 0, 23, 59, 59, 999);
@@ -65,7 +65,7 @@ const getPeriodDates = (period: Period) => {
       lastEnd = new Date(now.getFullYear(), half, 0, 23, 59, 59, 999);
       break;
     }
-    case "annual": {
+    case "Annually": {
       currentStart = new Date(now.getFullYear(), 0, 1);
       currentEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
       lastStart = new Date(now.getFullYear() - 1, 0, 1);
@@ -144,7 +144,7 @@ export const getStatsByPeriod = async (period: Period) => {
       data: `₱${revenueThis.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       percentage: revenueStats.percentage,
       trend: revenueStats.trend,
-      description: `Compared to last ${period}`,
+      description: `Compared to last ${period.toLowerCase()}`,
       recommendation:
         revenueStats.trend === "up"
           ? "Revenue is growing! Keep it up."
@@ -155,7 +155,7 @@ export const getStatsByPeriod = async (period: Period) => {
       data: `${customersThis}`,
       percentage: customerStats.percentage,
       trend: customerStats.trend,
-      description: `Compared to last ${period}`,
+      description: `Compared to last ${period.toLowerCase()}`,
       recommendation:
         customerStats.trend === "up"
           ? "New customers are coming in! Good job."
@@ -166,7 +166,7 @@ export const getStatsByPeriod = async (period: Period) => {
       data: `${tiresThis}`,
       percentage: tiresStats.percentage,
       trend: tiresStats.trend,
-      description: `Compared to last ${period}`,
+      description: `Compared to last ${period.toLowerCase()}`,
       recommendation:
         tiresStats.trend === "up"
           ? "Sales are improving! Consider upselling."
@@ -177,7 +177,7 @@ export const getStatsByPeriod = async (period: Period) => {
       data: `${inventoryThis.toFixed(1)}%`,
       percentage: inventoryStats.percentage,
       trend: inventoryStats.trend,
-      description: `Compared to last ${period}`,
+      description: `Compared to last ${period.toLowerCase()}`,
       recommendation:
         inventoryStats.trend === "up"
           ? "Inventory is moving well."
