@@ -3,11 +3,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { backupTables } from "@/lib/utils";
-import { useUser } from "@/hooks/use-user";
 
 export async function POST(req: NextRequest) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { userId } = await useUser();
+  // const { userId } = await useUser();
   const fileName = `restore_${new Date()
     .toISOString()
     .replace(/[:.]/g, "-")}.json`;
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
       data: {
         action: "restore",
         details: `Restore from ${fileName} completed  successfully.`,
-        userId: userId ?? null, // optional if user context available
+        // userId: userId ?? null, // optional if user context available
       },
     });
 

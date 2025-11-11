@@ -251,6 +251,7 @@ model CartItem {
 model SystemLogs {
   id        String   @id @default(uuid())
   action    String
+  details String?
   userId    String?
   ipAddress String?
   userAgent String?
