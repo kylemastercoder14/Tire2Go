@@ -74,11 +74,11 @@ const data = {
       url: "/admin/customers",
       icon: IconUsersGroup,
     },
-    {
-      title: "Staff Management",
-      url: "/admin/staff-management",
-      icon: IconUserCog,
-    },
+    // {
+    //   title: "Staff Management",
+    //   url: "/admin/staff-management",
+    //   icon: IconUserCog,
+    // },
     {
       title: "Orders",
       url: "/admin/orders",
