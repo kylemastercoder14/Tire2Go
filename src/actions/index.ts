@@ -275,6 +275,28 @@ export const deleteProduct = async (id: string) => {
       return { error: "Product not found" };
     }
 
+    // Delete dependent records first to avoid FK constraint violations
+    await db.productSize.deleteMany({
+      where: { productId: id },
+    });
+
+    await db.productCompatibility.deleteMany({
+      where: { productId: id },
+    });
+
+    await db.inventory.deleteMany({
+      where: { productId: id },
+    });
+
+    await db.cartItem.deleteMany({
+      where: { productId: id },
+    });
+
+    await db.orderItem.deleteMany({
+      where: { productId: id },
+    });
+
+    // Finally delete the product itself
     await db.products.delete({
       where: { id },
     });

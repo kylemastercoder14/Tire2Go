@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React from "react";
@@ -158,11 +159,11 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
                 />
               </div>
             </div>
-            {hasClearanceSale && (
-              <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
-                <h2 className="font-bold text-sm">CLEARANCE SALE</h2>
-              </div>
-            )}
+            <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
+              <h2 className="font-bold text-sm">
+                {product.isClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}
+              </h2>
+            </div>
             <div className="px-2 py-1">
               <h4 className="font-bold text-lg">{product.name}</h4>
               {uniqueTireSizes.length > 0 ? (
@@ -177,9 +178,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
                   </p>
                 </div>
               ) : (
-                <p className="font-bold text-sm">
-                  {product.tireSize || "N/A"}
-                </p>
+                <p className="font-bold text-sm">{product.tireSize || "N/A"}</p>
               )}
               <div className="flex items-center gap-2 mt-2">
                 <p className="text-primary font-bold text-lg">
@@ -214,5 +213,3 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
 };
 
 export default ProductGrid;
-
-

@@ -33,10 +33,13 @@ const Page = async (props: {
   });
 
   const brands = await db.brands.findMany({ orderBy: { name: "asc" } });
+
   const tireSizes = await db.tireSize.findMany({
     orderBy: [{ width: "asc" }, { ratio: "asc" }, { diameter: "asc" }],
   });
+
   const carMakes = await db.carMake.findMany({ orderBy: { name: "asc" } });
+
   const carModels = await db.carModel.findMany({
     orderBy: { name: "asc" },
     include: {

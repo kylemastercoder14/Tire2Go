@@ -19,7 +19,7 @@ export const ProductValidators = z.object({
     .min(1, { message: "At least one image is required." }),
   inclusion: z.string().min(10, { message: "Inclusion details are required." }),
   warranty: z.string().min(10, { message: "Warranty details are required." }),
-  tireSize: z.string().min(1, { message: "Tire size is required." }).optional(),
+  tireSize: z.string().optional(),
   brandId: z.string().min(1, { message: "Brand is required." }),
   tireSizeIds: z.array(z.string()).optional(),
   tireSizePricing: z

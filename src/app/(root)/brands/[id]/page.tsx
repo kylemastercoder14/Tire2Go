@@ -23,26 +23,27 @@ const Page = async (props: {
 }) => {
   const params = await props.params;
 
-  const [initialData, products, tireSizesResult, carDataResult] = await Promise.all([
-    db.brands.findUnique({
-      where: {
-        id: params.id,
-      },
-    }),
-    db.products.findMany({
-      where: {
-        brandId: params.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        brand: true,
-      },
-    }),
-    getTireSizesForSearch(),
-    getCarDataForSearch(),
-  ]);
+  const [initialData, products, tireSizesResult, carDataResult] =
+    await Promise.all([
+      db.brands.findUnique({
+        where: {
+          id: params.id,
+        },
+      }),
+      db.products.findMany({
+        where: {
+          brandId: params.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          brand: true,
+        },
+      }),
+      getTireSizesForSearch(),
+      getCarDataForSearch(),
+    ]);
 
   const searchBySize = tireSizesResult.data || {};
   const searchByCar = carDataResult.data || [];
@@ -127,7 +128,11 @@ const Page = async (props: {
               </h3>
             </div>
           </div>
-          <TireSearch className="!max-w-7xl mt-10" searchBySize={searchBySize} searchByCar={searchByCar} />
+          <TireSearch
+            className="!max-w-7xl mt-10"
+            searchBySize={searchBySize}
+            searchByCar={searchByCar}
+          />
           <h3 className="font-bold mt-10 text-center text-gray-500 text-2xl">
             Featured Tires
           </h3>
@@ -176,7 +181,7 @@ const Page = async (props: {
                       </div>
                     </div>
                     <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
-                      <h2 className="font-bold text-sm">CLEARANCE SALE</h2>
+                      <h2 className="font-bold text-sm">{product.isClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}</h2>
                     </div>
                     <div className="px-2 py-1">
                       <h4 className="font-bold text-lg">{product.name}</h4>
