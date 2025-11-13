@@ -161,7 +161,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             </div>
             <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
               <h2 className="font-bold text-sm">
-                {product.isClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}
+                {hasClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}
               </h2>
             </div>
             <div className="px-2 py-1">

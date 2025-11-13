@@ -39,6 +39,11 @@ const Page = async (props: {
         },
         include: {
           brand: true,
+          productSize: {
+            include: {
+              tireSize: true,
+            },
+          },
         },
       }),
       getTireSizesForSearch(),
@@ -153,6 +158,55 @@ const Page = async (props: {
           ) : (
             <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
               {products.map((product) => {
+                // Calculate price range from productSize
+                const productSizes = product.productSize || [];
+                let priceRange = null;
+                let hasClearanceSale = false;
+
+                if (productSizes.length > 0) {
+                  const prices = productSizes.map((ps) => {
+                    const effectivePrice =
+                      ps.isClearanceSale &&
+                      ps.discountedPrice &&
+                      ps.discountedPrice < ps.price
+                        ? ps.discountedPrice
+                        : ps.price;
+                    if (ps.isClearanceSale) hasClearanceSale = true;
+                    return effectivePrice;
+                  });
+
+                  const minPrice = Math.min(...prices);
+                  const maxPrice = Math.max(...prices);
+
+                  if (minPrice === maxPrice) {
+                    priceRange = `₱${minPrice.toLocaleString()}`;
+                  } else {
+                    priceRange = `₱${minPrice.toLocaleString()} - ₱${maxPrice.toLocaleString()}`;
+                  }
+                } else {
+                  // Fallback to product price
+                  const effectivePrice =
+                    product.isClearanceSale &&
+                    product.discountedPrice &&
+                    product.discountedPrice < (product.price || 0)
+                      ? product.discountedPrice
+                      : product.price || 0;
+                  priceRange = `₱${effectivePrice.toLocaleString()}`;
+                  hasClearanceSale = product.isClearanceSale || false;
+                }
+
+                // Get available tire sizes
+                const tireSizes = productSizes.map((ps) => {
+                  const ts = ps.tireSize;
+                  if (ts.ratio && ts.diameter) {
+                    return `${ts.width}/${ts.ratio} R${ts.diameter}`;
+                  } else if (ts.diameter) {
+                    return `${ts.width} R${ts.diameter}`;
+                  } else {
+                    return `${ts.width}`;
+                  }
+                });
+                const uniqueTireSizes = [...new Set(tireSizes)].sort();
                 return (
                   <div
                     key={product.id}
@@ -181,34 +235,36 @@ const Page = async (props: {
                       </div>
                     </div>
                     <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
-                      <h2 className="font-bold text-sm">{product.isClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}</h2>
+                      <h2 className="font-bold text-sm">
+                        {hasClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}
+                      </h2>
                     </div>
                     <div className="px-2 py-1">
                       <h4 className="font-bold text-lg">{product.name}</h4>
-                      <p className="font-bold text-sm">{product.tireSize}</p>
-                      <p className="flex items-center gap-2 mt-2">
-                        {product.discountedPrice &&
-                        product.discountedPrice > 0 ? (
-                          <>
-                            <p className="line-through text-muted-foreground text-sm font-medium">
-                              ₱{product.price.toLocaleString()}
-                            </p>
-                            <p className="text-primary font-bold text-lg">
-                              ₱{product.discountedPrice.toLocaleString()}{" "}
-                              <span className="font-medium text-base">
-                                per tire
-                              </span>
-                            </p>
-                          </>
-                        ) : (
-                          <p className="text-primary font-bold text-lg">
-                            ₱{product.price.toLocaleString()}{" "}
-                            <span className="font-medium text-base">
-                              per tire
-                            </span>
+                      {uniqueTireSizes.length > 0 ? (
+                        <div className="mt-1">
+                          <p className="text-xs text-muted-foreground">
+                            Available Sizes:
                           </p>
-                        )}
-                      </p>
+                          <p className="font-semibold text-sm">
+                            {uniqueTireSizes.slice(0, 3).join(", ")}
+                            {uniqueTireSizes.length > 3 &&
+                              ` +${uniqueTireSizes.length - 3} more`}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="font-bold text-sm">
+                          {product.tireSize || "N/A"}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 mt-2">
+                        <p className="text-primary font-bold text-lg">
+                          {priceRange}{" "}
+                          <span className="font-medium text-base">
+                            per tire
+                          </span>
+                        </p>
+                      </div>
                       <div
                         className="my-3 text-sm prose prose-sm max-w-none
 								  prose-headings:font-bold
