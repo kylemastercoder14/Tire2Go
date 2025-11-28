@@ -87,6 +87,7 @@ const Page = async ({ searchParams }: PageProps) => {
       });
 
       // Get unique products and filter by brand if needed
+      // Only include products that have clearance sale (product level OR productSize level)
       const productMap = new Map();
       productSizes.forEach((ps) => {
         if (
@@ -94,8 +95,16 @@ const Page = async ({ searchParams }: PageProps) => {
           (!brandIdsArray.length ||
             brandIdsArray.includes(ps.product.brandId))
         ) {
-          if (!productMap.has(ps.productId)) {
-            productMap.set(ps.productId, ps.product);
+          // Check if product has clearance sale at product level or any productSize level (must be explicitly true)
+          const hasProductClearance = ps.product.isClearanceSale === true;
+          const hasProductSizeClearance =
+            ps.product.productSize?.some((psItem) => psItem.isClearanceSale === true) ||
+            false;
+
+          if (hasProductClearance || hasProductSizeClearance) {
+            if (!productMap.has(ps.productId)) {
+              productMap.set(ps.productId, ps.product);
+            }
           }
         }
       });
@@ -155,10 +164,10 @@ const Page = async ({ searchParams }: PageProps) => {
             (!brandIdsArray.length ||
               brandIdsArray.includes(comp.product.brandId))
           ) {
-            // Check if product has clearance sale
-            const hasProductClearance = comp.product.isClearanceSale;
+            // Check if product has clearance sale (must be explicitly true)
+            const hasProductClearance = comp.product.isClearanceSale === true;
             const hasProductSizeClearance =
-              comp.product.productSize?.some((ps) => ps.isClearanceSale) ||
+              comp.product.productSize?.some((ps) => ps.isClearanceSale === true) ||
               false;
 
             if (hasProductClearance || hasProductSizeClearance) {
@@ -175,7 +184,8 @@ const Page = async ({ searchParams }: PageProps) => {
   }
   // No search params - show all clearance sale products
   else {
-    // Get products with clearance sale at product level OR at productSize level
+    // Get all products first, then filter for clearance sale
+    // We need to fetch all to check both product level and productSize level clearance sale
     const allProducts = await db.products.findMany({
       where: brandIdsArray.length > 0
         ? {
@@ -183,7 +193,7 @@ const Page = async ({ searchParams }: PageProps) => {
               in: brandIdsArray,
             },
           }
-        : undefined,
+        : {},
       orderBy: { createdAt: "desc" },
       include: {
         brand: true,
@@ -196,13 +206,44 @@ const Page = async ({ searchParams }: PageProps) => {
     });
 
     // Filter products that have clearance sale
+    // Only include products where:
+    // 1. Product level has isClearanceSale === true, OR
+    // 2. At least one productSize has isClearanceSale === true
     products = allProducts.filter((product) => {
-      const hasProductClearance = product.isClearanceSale;
-      const hasProductSizeClearance =
-        product.productSize?.some((ps) => ps.isClearanceSale) || false;
-      return hasProductClearance || hasProductSizeClearance;
+      // Check product level clearance sale (must be explicitly true)
+      if (product.isClearanceSale === true) {
+        return true;
+      }
+
+      // Check if at least one productSize has clearance sale (must be explicitly true)
+      if (product.productSize && product.productSize.length > 0) {
+        return product.productSize.some((ps) => ps.isClearanceSale === true);
+      }
+
+      // No clearance sale found
+      return false;
     });
   }
+
+  // Final verification: Double-check that all products have clearance sale
+  // This ensures no "REGULAR PRICE" products slip through
+  products = products.filter((product: any) => {
+    // Check product level clearance sale (if true, product is on clearance sale)
+    if (product.isClearanceSale === true) {
+      return true;
+    }
+
+    // Check if at least one productSize has clearance sale
+    if (product.productSize && product.productSize.length > 0) {
+      const hasClearanceSale = product.productSize.some(
+        (ps: any) => ps.isClearanceSale === true
+      );
+      return hasClearanceSale;
+    }
+
+    // No clearance sale found - exclude this product
+    return false;
+  });
 
   // Build search criteria display text
   let searchCriteria = "Clearance Sale Products";

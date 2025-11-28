@@ -13,10 +13,21 @@ const Page = async () => {
     },
   });
 
-  // Fetch car models data
+  // Fetch car models data - include years field and compatibilities for fallback
   const carModelsData = await db.carModel.findMany({
-    include: {
+    select: {
+      id: true,
+      name: true,
+      makeId: true,
+      years: true,
+      createdAt: true,
+      updatedAt: true,
       make: true,
+      compatibilities: {
+        select: {
+          year: true,
+        },
+      },
     },
   });
 

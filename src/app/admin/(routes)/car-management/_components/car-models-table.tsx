@@ -9,6 +9,8 @@ import Heading from '@/components/globals/Heading';
 
 type CarModelWithMake = CarModel & {
   make: CarMake;
+  years?: number[];
+  compatibilities: Array<{ year: number | null }>;
 };
 
 interface CarModelsTableProps {

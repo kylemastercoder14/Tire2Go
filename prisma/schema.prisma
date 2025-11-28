@@ -88,8 +88,8 @@ model TireSize {
   ratio    Int? // aspect ratio, e.g., 30
   diameter Int? // rim diameter, e.g., 13
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   products ProductSize[]
 }
@@ -106,28 +106,29 @@ model ProductSize {
   isClearanceSale Boolean @default(false)
   discountedPrice Float?
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CarMake {
-  id     String     @id @default(uuid())
-  name   String     @unique // e.g., "MITSUBISHI", "TOYOTA"
+  id   String @id @default(uuid())
+  name String @unique // e.g., "MITSUBISHI", "TOYOTA"
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   models CarModel[]
 }
 
 model CarModel {
-  id              String                 @id @default(uuid())
-  name            String // e.g., "LANCER", "VIOS"
-  makeId          String
-  make            CarMake                @relation(fields: [makeId], references: [id])
+  id     String  @id @default(uuid())
+  name   String // e.g., "LANCER", "VIOS"
+  makeId String
+  make   CarMake @relation(fields: [makeId], references: [id])
+  years  Int[]   @default([]) // Array of years of manufacture (e.g., [2015, 2016, 2017, ..., 2025])
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   compatibilities ProductCompatibility[]
 }
@@ -140,8 +141,8 @@ model ProductCompatibility {
   modelId String
   model   CarModel @relation(fields: [modelId], references: [id])
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   year Int // Year of the car this tire is compatible with
 }
@@ -251,7 +252,7 @@ model CartItem {
 model SystemLogs {
   id        String   @id @default(uuid())
   action    String
-  details String?
+  details   String?
   userId    String?
   ipAddress String?
   userAgent String?
@@ -283,8 +284,8 @@ model Order {
   reasonCancelled String?
   cancelledAt     DateTime?
 
-  isArchived      Boolean   @default(false)
-  archivedAt      DateTime?
+  isArchived Boolean   @default(false)
+  archivedAt DateTime?
 
   user      Users       @relation(fields: [userId], references: [id])
   orderItem OrderItem[]

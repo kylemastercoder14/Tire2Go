@@ -98,10 +98,16 @@ export const CarMakeValidators = z.object({
 export const CarModelValidators = z.object({
   name: z.string().min(2, { message: "Name is required." }),
   makeId: z.string().min(1, { message: "Car make is required." }),
+  years: z.array(z.number().min(1900).max(2100)).optional(),
 });
 
 export const TireSizeValidators = z.object({
   width: z.number().min(1, { message: "Width must be at least 1." }),
   ratio: z.number().optional(),
   diameter: z.number().optional(),
+});
+
+export const FeedbackValidators = z.object({
+  rating: z.number().min(1, { message: "Rating is required." }).max(5, { message: "Rating must be between 1 and 5." }),
+  comment: z.string().optional(),
 });

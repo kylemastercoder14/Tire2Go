@@ -42,7 +42,13 @@ const Page = async (props: {
 
   const carModels = await db.carModel.findMany({
     orderBy: { name: "asc" },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      makeId: true,
+      years: true,
+      createdAt: true,
+      updatedAt: true,
       make: true,
     },
   });

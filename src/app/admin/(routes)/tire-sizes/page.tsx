@@ -7,11 +7,9 @@ import CreateTireSizeButton from "./_components/create-button";
 
 const Page = async () => {
   const data = await db.tireSize.findMany({
-    orderBy: [
-      { width: "asc" },
-      { ratio: "asc" },
-      { diameter: "asc" }
-    ],
+    orderBy: {
+      createdAt: "desc"
+    }
   });
 
   return (

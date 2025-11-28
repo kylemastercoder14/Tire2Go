@@ -82,7 +82,7 @@ export const columns: ColumnDef<BackupHistory>[] = [
     },
     cell: ({ row }) => {
       const status = row.original.status
-      return <Badge className="ml-3.5 capitalize">{status}</Badge>;
+      return <Badge className={`ml-3.5 capitalize ${status === "success" ? "bg-green-700" : ""}`}>{status}</Badge>;
     },
   },
   {

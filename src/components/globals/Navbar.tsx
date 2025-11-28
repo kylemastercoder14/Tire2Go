@@ -68,12 +68,6 @@ const Navbar = () => {
               </Link>
             </div>
             <div className="flex items-center gap-4">
-              <Link
-                href="/assistance"
-                className="text-sm text-white hover:text-white/80 transition-colors"
-              >
-                Assistance
-              </Link>
               <div className="flex items-center gap-3">
                 <Link
                   target="_blank"
@@ -166,6 +160,12 @@ const Navbar = () => {
                 className="px-4 py-2 text-black hover:text-primary transition-colors text-sm font-medium"
               >
                 Contact Us
+              </Link>
+              <Link
+                href="/feedback"
+                className="px-4 py-2 text-black hover:text-primary transition-colors text-sm font-medium"
+              >
+                Feedback
               </Link>
             </div>
 

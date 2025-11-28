@@ -30,8 +30,17 @@ import {
   Brands,
   TireSize,
   CarMake,
-  CarModel,
 } from "@prisma/client";
+
+type CarModelWithYears = {
+  id: string;
+  name: string;
+  makeId: string;
+  years?: number[] | null;
+  createdAt: Date;
+  updatedAt: Date;
+  make: CarMake;
+};
 import ImageUpload from "@/components/globals/ImageUpload";
 import { RichTextEditor } from "@/components/globals/RichTextEditor";
 import Image from "next/image";
@@ -51,7 +60,7 @@ const ProductForm = ({
   brands: Brands[];
   tireSizes: TireSize[];
   carMakes: CarMake[];
-  carModels: CarModel[];
+  carModels: CarModelWithYears[];
 }) => {
   const router = useRouter();
   const [tireSizeSearch, setTireSizeSearch] = useState("");
@@ -60,10 +69,13 @@ const ProductForm = ({
     price: number;
     discountedPrice?: number;
   }>>({});
+  const [selectedMake, setSelectedMake] = useState<string>("");
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
 
   // Get models grouped by make for easier selection
   const modelsByMake = useMemo(() => {
-    const grouped: Record<string, CarModel[]> = {};
+    const grouped: Record<string, CarModelWithYears[]> = {};
     carModels.forEach((model) => {
       if (!grouped[model.makeId]) {
         grouped[model.makeId] = [];
@@ -72,6 +84,19 @@ const ProductForm = ({
     });
     return grouped;
   }, [carModels]);
+
+  // Get available years for the selected model
+  const availableYears = useMemo(() => {
+    if (!selectedModel) return [];
+    const model = carModels.find((m) => m.id === selectedModel);
+    if (!model) return [];
+
+    // Use years field if available, otherwise return empty array
+    if (model.years && Array.isArray(model.years) && model.years.length > 0) {
+      return [...model.years].sort((a, b) => a - b);
+    }
+    return [];
+  }, [selectedModel, carModels]);
 
   // Filter tire sizes based on search
   const filteredTireSizes = useMemo(() => {
@@ -127,10 +152,6 @@ const ProductForm = ({
         })) || [],
     },
   });
-
-  const [selectedMake, setSelectedMake] = useState<string>("");
-  const [selectedModel, setSelectedModel] = useState<string>("");
-  const [selectedYear, setSelectedYear] = useState<string>("");
 
   const { isSubmitting } = form.formState;
 
@@ -660,15 +681,30 @@ const ProductForm = ({
                       </Select>
 
                       <div className="flex gap-2">
-                        <Input
-                          type="number"
-                          placeholder="Year (e.g. 2020)"
+                        <Select
                           value={selectedYear}
-                          onChange={(e) => setSelectedYear(e.target.value)}
-                          disabled={isSubmitting || !selectedModel}
-                          min={1900}
-                          max={2100}
-                        />
+                          onValueChange={(value) => setSelectedYear(value)}
+                          disabled={isSubmitting || !selectedModel || availableYears.length === 0}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={
+                                !selectedModel
+                                  ? "Select model first"
+                                  : availableYears.length === 0
+                                    ? "No years available"
+                                    : "Select year"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableYears.map((year) => (
+                              <SelectItem key={year} value={year.toString()}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <Button
                           type="button"
                           onClick={() => {

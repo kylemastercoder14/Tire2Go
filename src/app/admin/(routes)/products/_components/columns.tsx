@@ -87,7 +87,15 @@ export const columns: ColumnDef<ProductWithBrand>[] = [
 
       return name.includes(search) || id.includes(search);
     },
-    enableSorting: false,
+    sortingFn: (rowA, rowB) => {
+      const nameA = (rowA.original.name ?? "").toLowerCase();
+      const nameB = (rowB.original.name ?? "").toLowerCase();
+
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    },
+    enableSorting: true,
     enableHiding: false,
   },
   {

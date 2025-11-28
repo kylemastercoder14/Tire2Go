@@ -8,7 +8,16 @@ const Page = async () => {
   const data = await db.carModel.findMany({
     include: {
       make: true,
-    }
+    },
+    select: {
+      id: true,
+      name: true,
+      makeId: true,
+      years: true,
+      createdAt: true,
+      updatedAt: true,
+      make: true,
+    },
   });
 
   const carMakes = await db.carMake.findMany({

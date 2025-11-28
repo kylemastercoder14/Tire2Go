@@ -39,8 +39,11 @@ const Page = () => {
   const item = items[0]; // since you allow only one product
   const srpPrice = item.unitPrice;
   const srpTotal = item.unitPrice * item.quantity;
-  const discountedTotal =
-    (item.discountedPrice ?? item.unitPrice) * item.quantity;
+  // Use discountedPrice if it exists and is greater than 0, otherwise use unitPrice
+  const effectivePrice = (item.discountedPrice && item.discountedPrice > 0)
+    ? item.discountedPrice
+    : item.unitPrice;
+  const discountedTotal = effectivePrice * item.quantity;
   const discountAmount = srpTotal - discountedTotal;
 
   const handlePlaceOrder = async () => {

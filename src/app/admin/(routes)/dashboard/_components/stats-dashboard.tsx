@@ -22,10 +22,10 @@ const periods: Period[] = [
 
 interface StatsDashboardProps {
   onDataChange?: (data: any[]) => void;
+  period: Period;
 }
 
-const StatsDashboard = ({ onDataChange }: StatsDashboardProps) => {
-  const [period, setPeriod] = useState<Period>("Monthly");
+const StatsDashboard = ({ onDataChange, period }: StatsDashboardProps) => {
   const [stats, setStats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,26 +46,6 @@ const StatsDashboard = ({ onDataChange }: StatsDashboardProps) => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-2xl font-bold tracking-tight">
-          Analytics Overview
-        </h3>
-        <div className="flex items-center gap-2">
-          <label className="mb-1 block font-semibold">Select Period:</label>
-          <Select value={period} onValueChange={(val) => setPeriod(val as Period)}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Select period" />
-            </SelectTrigger>
-            <SelectContent>
-              {periods.map((p) => (
-                <SelectItem key={p} value={p}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
       {loading ? (
         <div className="grid lg:grid-cols-4 grid-cols-1 gap-5">

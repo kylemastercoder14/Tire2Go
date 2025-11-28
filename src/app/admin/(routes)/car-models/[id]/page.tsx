@@ -14,6 +14,14 @@ const Page = async (props: {
     where: {
       id: params.id,
     },
+    select: {
+      id: true,
+      name: true,
+      makeId: true,
+      years: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   const carMakes = await db.carMake.findMany({ orderBy: { name: "asc" } });

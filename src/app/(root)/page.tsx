@@ -66,22 +66,6 @@ const Page = async () => {
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-5">
           <div className="relative w-52 h-32">
             <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-mastercard.d5375a5.png"
-              alt="Mastercard"
-              fill
-              className="size-full object-contain"
-            />
-          </div>
-          <div className="relative w-52 h-32">
-            <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-visa.f4afbce.png"
-              alt="Visa"
-              fill
-              className="size-full object-contain"
-            />
-          </div>
-          <div className="relative w-52 h-32">
-            <Image
               src="https://gogulong.ph/_nuxt/img/payment-channel-gcash.32ec8a6.png"
               alt="Gcash"
               fill
@@ -98,42 +82,10 @@ const Page = async () => {
           </div>
           <div className="relative w-52 h-32">
             <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-chinabank.875cf1a.png"
-              alt="China Bank"
+              src="/maya.png"
+              alt="Maya"
               fill
-              className="size-full object-contain"
-            />
-          </div>
-          <div className="relative w-52 h-32">
-            <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-union-bank.44fa4b0.png"
-              alt="Union Bank"
-              fill
-              className="size-full object-contain"
-            />
-          </div>
-          <div className="relative w-52 h-32">
-            <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-metrobank.7f4e395.png"
-              alt="Metrobank"
-              fill
-              className="size-full object-contain"
-            />
-          </div>
-          <div className="relative w-52 h-32">
-            <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-landbank.fdad9c1.png"
-              alt="Landbank"
-              fill
-              className="size-full object-contain"
-            />
-          </div>
-          <div className="relative w-52 h-32">
-            <Image
-              src="https://gogulong.ph/_nuxt/img/payment-channel-bayad-center.cc8fe22.png"
-              alt="Bayad Center"
-              fill
-              className="size-full object-contain"
+              className="size-full grayscale object-contain"
             />
           </div>
         </div>

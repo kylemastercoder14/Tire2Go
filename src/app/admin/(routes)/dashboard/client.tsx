@@ -7,24 +7,89 @@ import { ProductChart } from "./_components/product-chart";
 import StatsDashboard from "./_components/stats-dashboard";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Period } from "@/lib/api";
+
+const periods: Period[] = [
+  "Weekly",
+  "Monthly",
+  "Quarterly",
+  "Semi Anually",
+  "Annually",
+];
 
 const DashboardContent = ({ orders }: { orders: any }) => {
   const [statData, setStatData] = useState<any[]>([]);
+  const [period, setPeriod] = useState<Period>("Monthly");
 
-  // Extract chart data from orders
+  // Get date range based on selected period
+  const getPeriodDateRange = (selectedPeriod: Period) => {
+    const now = new Date();
+    let startDate: Date, endDate: Date;
+
+    switch (selectedPeriod) {
+      case "Weekly": {
+        const dayOfWeek = now.getDay();
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - dayOfWeek);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      }
+      case "Monthly": {
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+        break;
+      }
+      case "Quarterly": {
+        const quarter = Math.floor(now.getMonth() / 3);
+        startDate = new Date(now.getFullYear(), quarter * 3, 1);
+        endDate = new Date(now.getFullYear(), quarter * 3 + 3, 0, 23, 59, 59, 999);
+        break;
+      }
+      case "Semi Anually": {
+        const half = now.getMonth() < 6 ? 0 : 6;
+        startDate = new Date(now.getFullYear(), half, 1);
+        endDate = new Date(now.getFullYear(), half + 6, 0, 23, 59, 59, 999);
+        break;
+      }
+      case "Annually": {
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+        break;
+      }
+      default: {
+        // Fallback to last 30 days
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 30);
+        endDate = new Date();
+        break;
+      }
+    }
+
+    return { startDate, endDate };
+  };
+
+  // Extract chart data from orders based on selected period
   const chartData = useMemo(() => {
-    // Get date range for filtering (last 30 days by default for print)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const { startDate, endDate } = getPeriodDateRange(period);
 
-    // Sales data by date (filtered to last 30 days)
+    // Sales data by date (filtered by selected period)
     const salesMap: Record<string, { completed: number; cancelled: number; profit: number; loss: number }> = {};
 
     orders.forEach((o: any) => {
       const orderDate = new Date(o.createdAt);
 
-      // Only include orders from last 30 days
-      if (orderDate < thirtyDaysAgo) return;
+      // Only include orders within the selected period
+      if (orderDate < startDate || orderDate > endDate) return;
 
       const date = orderDate.toISOString().split("T")[0];
 
@@ -46,10 +111,11 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       .map(([date, data]) => ({ date, ...data }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    // Top 5 brands
+    // Top 5 brands (filtered by period)
     const brandMap: Record<string, number> = {};
     orders.forEach((order: any) => {
-      if (order.status === "COMPLETED") {
+      const orderDate = new Date(order.createdAt);
+      if (order.status === "COMPLETED" && orderDate >= startDate && orderDate <= endDate) {
         order.orderItem.forEach((item: any) => {
           const brandName = item.product.brand.name;
           if (!brandMap[brandName]) brandMap[brandName] = 0;
@@ -62,10 +128,11 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       .sort((a, b) => b.sold - a.sold)
       .slice(0, 5);
 
-    // Top 5 products
+    // Top 5 products (filtered by period)
     const productMap: Record<string, number> = {};
     orders.forEach((order: any) => {
-      if (order.status === "COMPLETED") {
+      const orderDate = new Date(order.createdAt);
+      if (order.status === "COMPLETED" && orderDate >= startDate && orderDate <= endDate) {
         order.orderItem.forEach((item: any) => {
           const productName = item.product.name;
           if (!productMap[productName]) productMap[productName] = 0;
@@ -79,7 +146,7 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       .slice(0, 5);
 
     return { salesStateData, topBrands, topProducts };
-  }, [orders]);
+  }, [orders, period]);
 
   const handlePrint = () => {
     if (statData.length === 0) {
@@ -89,6 +156,11 @@ const DashboardContent = ({ orders }: { orders: any }) => {
 
     const printWindow = window.open("", "_blank", "width=800,height=600");
     if (!printWindow) return;
+
+    // Get date range for the selected period
+    const { startDate, endDate } = getPeriodDateRange(period);
+    const periodLabel = period === "Semi Anually" ? "Semi-Annually" : period;
+    const dateRangeLabel = `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
 
     // Find the stat objects by their exact titles
     const revenue = statData.find(s => s.title === 'Total Revenue');
@@ -148,10 +220,11 @@ const DashboardContent = ({ orders }: { orders: any }) => {
 </head>
 <body>
   <div class="print-container">
-    <h1>Dashboard Report</h1>
+    <h1>Dashboard Report - ${periodLabel} Period</h1>
+    <p class="text-center text-sm">Period: ${dateRangeLabel}</p>
     <p class="text-center text-sm">Generated: ${new Date().toLocaleString()}</p>
 
-    <h2>Statistics Overview</h2>
+    <h2>Statistics Overview (${periodLabel})</h2>
     <table>
       <thead>
         <tr><th>Metric</th><th>Value</th><th>Trend</th><th>Change</th></tr>
@@ -192,7 +265,7 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       </tbody>
     </table>
 
-    <h2>Sales Report Summary (Last 30 Days)</h2>
+    <h2>Sales Report Summary (${period} Period)</h2>
     <table>
       <thead>
         <tr><th>Date</th><th>Completed</th><th>Cancelled</th><th>Revenue (₱)</th></tr>
@@ -209,7 +282,7 @@ const DashboardContent = ({ orders }: { orders: any }) => {
           </tr>
         `
           )
-          .join("") : '<tr><td colspan="4" class="text-center">No sales data in the last 30 days</td></tr>'}
+          .join("") : `<tr><td colspan="4" class="text-center">No sales data for the ${period.toLowerCase()} period</td></tr>`}
         <tr style="background-color: #f5f5f5; font-weight: bold;">
           <td>Total</td>
           <td>${chartData.salesStateData.reduce((sum, day) => sum + day.completed, 0)}</td>
@@ -278,20 +351,37 @@ const DashboardContent = ({ orders }: { orders: any }) => {
 
   return (
     <div>
-      {/* Header and Print Button */}
+      {/* Header, Print Button and Period Selector */}
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-2xl font-bold">Dashboard Overview</h2>
-        <Button
-          onClick={handlePrint}
-          className="bg-green-600 hover:bg-green-700"
-        >
-          Print Dashboard
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <label className="font-semibold">Select Period:</label>
+            <Select value={period} onValueChange={(val) => setPeriod(val as Period)}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Select period" />
+              </SelectTrigger>
+              <SelectContent>
+                {periods.map((p) => (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            onClick={handlePrint}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            Print Dashboard
+          </Button>
+        </div>
       </div>
 
       {/* Printable Section */}
       <div data-printable="true">
-        <StatsDashboard onDataChange={setStatData} />
+        <StatsDashboard onDataChange={setStatData} period={period} />
         <div className="mt-5">
           <SoldChart orders={orders} />
         </div>

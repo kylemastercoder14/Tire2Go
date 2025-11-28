@@ -108,6 +108,9 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           } else {
             priceRange = `₱${minPrice.toLocaleString()} - ₱${maxPrice.toLocaleString()}`;
           }
+
+          // Also check product-level clearance sale
+          if (product.isClearanceSale) hasClearanceSale = true;
         } else {
           // Fallback to product price
           const effectivePrice =

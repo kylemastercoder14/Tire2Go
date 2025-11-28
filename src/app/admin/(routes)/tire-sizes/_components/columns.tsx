@@ -65,7 +65,15 @@ export const columns: ColumnDef<TireSize>[] = [
 
       return width.includes(search) || ratio.includes(search) || diameter.includes(search) || id.includes(search);
     },
-    enableSorting: false,
+    enableSorting: true,
+    sortingFn: (rowA, rowB) => {
+      const nameA = (rowA.original.width ?? "");
+      const nameB = (rowB.original.width ?? "");
+
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    },
     enableHiding: false,
   },
   {

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Page = () => {
   return (
@@ -44,9 +45,11 @@ const Page = () => {
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Hyundai Elantra</h3>
-              <Button>
-                View Tires
-              </Button>
+              <Link href="/car-models/HYUNDAI/ELANTRA">
+                <Button>
+                  View Tires
+                </Button>
+              </Link>
             </div>
           </div>
 		  {/* Card */}
@@ -65,9 +68,11 @@ const Page = () => {
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Toyota Avanza</h3>
-              <Button>
-                View Tires
-              </Button>
+              <Link href="/car-models/TOYOTA/AVANZA">
+                <Button>
+                  View Tires
+                </Button>
+              </Link>
             </div>
           </div>
 		  {/* Card */}
@@ -86,9 +91,11 @@ const Page = () => {
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold capitalize text-gray-900">MITSUBISHI XPANDER</h3>
-              <Button>
-                View Tires
-              </Button>
+              <Link href="/car-models/MITSUBISHI/XPANDER">
+                <Button>
+                  View Tires
+                </Button>
+              </Link>
             </div>
           </div>
 		  {/* Card */}
@@ -107,9 +114,11 @@ const Page = () => {
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold capitalize text-gray-900">FORD RAPTOR</h3>
-              <Button>
-                View Tires
-              </Button>
+              <Link href="/car-models/FORD/RAPTOR">
+                <Button>
+                  View Tires
+                </Button>
+              </Link>
             </div>
           </div>
 		  {/* Card */}
@@ -128,9 +137,11 @@ const Page = () => {
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold capitalize text-gray-900">NISSAN NAVARA</h3>
-              <Button>
-                View Tires
-              </Button>
+              <Link href="/car-models/NISSAN/NAVARA">
+                <Button>
+                  View Tires
+                </Button>
+              </Link>
             </div>
           </div>
 		  {/* Card */}
@@ -149,9 +160,11 @@ const Page = () => {
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold capitalize text-gray-900">HONDA CIVIC</h3>
-              <Button>
-                View Tires
-              </Button>
+              <Link href="/car-models/HONDA/CIVIC">
+                <Button>
+                  View Tires
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
