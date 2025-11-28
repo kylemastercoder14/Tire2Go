@@ -92,10 +92,10 @@ const Page = () => {
               <div className="flex text-sm items-center gap-2">
                 <IconBrandInstagramFilled className="size-4 text-primary" />
                 <Link
-                  href="https://www.instagram.com/gogulong/"
+                  href="https://www.instagram.com/202magstires/?igsh=M3ZzbnZpanExZnl5#"
                   className="text-primary"
                 >
-                  https://www.instagram.com/gogulong/
+                  https://www.instagram.com/202magstires
                 </Link>
               </div>
               <div className="flex text-sm items-center gap-2">
