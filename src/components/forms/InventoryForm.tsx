@@ -53,6 +53,12 @@ const InventoryForm = ({
 
   async function onSubmit(values: z.infer<typeof InventoryValidators>) {
     try {
+      // Client-side guard to mirror server-side validation
+      if (values.quantity < values.minStock) {
+        toast.error("Quantity cannot be less than min stock");
+        return;
+      }
+
       let response;
       if (initialData?.id) {
         // If initialData.id exists, it's an update (PUT)

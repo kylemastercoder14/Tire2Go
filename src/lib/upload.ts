@@ -76,6 +76,7 @@ export async function uploadFile(
       Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
       Key: file_key,
       Body: file,
+      // Note: ACL is disabled on this bucket - files need bucket policy or signed URLs for access
     };
 
     const upload = s3

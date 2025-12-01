@@ -48,6 +48,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ProductWithRelations, ProductSizeWithPricing } from "@/types";
+import { uploadFile } from "@/lib/upload";
 
 const ProductForm = ({
   initialData,
@@ -143,6 +144,7 @@ const ProductForm = ({
       warranty: initialData?.warranty || "",
       tireSize: initialData?.tireSize || "",
       brandId: initialData?.brandId || "",
+      threeDModel: initialData?.threeDModel || "",
       tireSizeIds:
         initialData?.productSize?.map((ps) => ps.tireSizeId) || [],
       compatibilities:
@@ -613,6 +615,59 @@ const ProductForm = ({
                       defaultValue={field.value}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="threeDModel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    3D Model (.glb) <span className="text-muted-foreground">(optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="space-y-2">
+                      <Input
+                        type="text"
+                        value={field.value || ""}
+                        readOnly
+                        placeholder="No 3D model uploaded"
+                        disabled={isSubmitting}
+                      />
+                      <Input
+                        type="file"
+                        accept=".glb"
+                        disabled={isSubmitting}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+
+                          if (!file.name.toLowerCase().endsWith(".glb")) {
+                            toast.error("Please upload a .glb file.");
+                            return;
+                          }
+
+                          try {
+                            const { url } = await uploadFile(file);
+                            field.onChange(url);
+                            toast.success("3D model uploaded successfully.");
+                          } catch (error) {
+                            console.error("3D model upload failed:", error);
+                            toast.error("Failed to upload 3D model. Please try again.");
+                          } finally {
+                            // reset file input so same file can be re-selected if needed
+                            e.target.value = "";
+                          }
+                        }}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Upload an optional 3D model of the product in <code>.glb</code> format. This will be used for 3D visualization only.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

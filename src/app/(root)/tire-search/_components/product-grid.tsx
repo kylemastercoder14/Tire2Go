@@ -1,11 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { IconHandClick } from "@tabler/icons-react";
+import { buttonVariants, Button } from "@/components/ui/button";
+import { IconHandClick, IconCube } from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tire3DViewer } from "@/components/tire-3d-viewer";
 
 interface Product {
   id: string;
@@ -13,6 +21,7 @@ interface Product {
   images: string[];
   inclusion: string;
   tireSize?: string | null;
+  threeDModel?: string | null;
   brand: {
     id: string;
     name: string;
@@ -39,6 +48,14 @@ interface ProductGridProps {
 }
 
 const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
+
+  const handleView3D = (product: Product) => {
+    setSelectedProduct(product);
+    setIs3DViewerOpen(true);
+  };
+
   if (isLoading) {
     return (
       <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
@@ -147,6 +164,16 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
                 alt={product.name}
                 className="object-contain size-full"
               />
+              {product.threeDModel && (
+                <Button
+                  variant="default"
+                  className='absolute top-2 left-2'
+                  size="icon"
+                  onClick={() => handleView3D(product)}
+                >
+                  <IconCube className="size-4" />
+                </Button>
+              )}
               <div className="absolute top-2 right-2 size-15">
                 <img
                   src={product.brand.logo}
@@ -198,19 +225,77 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
 								  prose-li:marker:text-muted-foreground"
                 dangerouslySetInnerHTML={{ __html: product.inclusion }}
               />
-              <Link
-                href={`/tire/${product.id}`}
-                className={`w-full mb-2 ${buttonVariants({
-                  variant: "default",
-                })}`}
-              >
-                <IconHandClick className="size-4" />
-                View Tire Details
-              </Link>
+              <div className="flex flex-col gap-2">
+                <Link
+                  href={`/tire/${product.id}`}
+                  className={`w-full ${buttonVariants({
+                    variant: "default",
+                  })}`}
+                >
+                  <IconHandClick className="size-4" />
+                  View Tire Details
+                </Link>
+              </div>
             </div>
           </div>
         );
       })}
+
+      {/* 3D Viewer Dialog */}
+      <Dialog open={is3DViewerOpen} onOpenChange={setIs3DViewerOpen}>
+        <DialogContent className="max-w-7xl! max-h-[95vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedProduct?.name} - 3D Preview on Ford Ranger
+            </DialogTitle>
+            <DialogDescription>
+              Rotate, zoom, and explore how this tire looks on a Ford Ranger.
+              {selectedProduct?.productSize &&
+                selectedProduct.productSize.length > 0 && (
+                  <span className="block mt-1">
+                    Available sizes:{" "}
+                    {selectedProduct.productSize
+                      .map((ps) => {
+                        const ts = ps.tireSize;
+                        if (ts.ratio && ts.diameter) {
+                          return `${ts.width}/${ts.ratio} R${ts.diameter}`;
+                        } else if (ts.diameter) {
+                          return `${ts.width} R${ts.diameter}`;
+                        } else {
+                          return `${ts.width}`;
+                        }
+                      })
+                      .join(", ")}
+                  </span>
+                )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {selectedProduct && (
+              <Tire3DViewer
+                tireImage={selectedProduct.images[0]}
+                tireName={selectedProduct.name}
+                tireSize={
+                  selectedProduct.productSize &&
+                  selectedProduct.productSize.length > 0
+                    ? (() => {
+                        const ts = selectedProduct.productSize[0].tireSize;
+                        if (ts.ratio && ts.diameter) {
+                          return `${ts.width}/${ts.ratio} R${ts.diameter}`;
+                        } else if (ts.diameter) {
+                          return `${ts.width} R${ts.diameter}`;
+                        } else {
+                          return `${ts.width}`;
+                        }
+                      })()
+                    : selectedProduct.tireSize || undefined
+                }
+                threeDModel={selectedProduct.threeDModel}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

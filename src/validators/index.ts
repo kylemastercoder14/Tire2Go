@@ -21,6 +21,7 @@ export const ProductValidators = z.object({
   warranty: z.string().min(10, { message: "Warranty details are required." }),
   tireSize: z.string().optional(),
   brandId: z.string().min(1, { message: "Brand is required." }),
+  threeDModel: z.string().optional(),
   tireSizeIds: z.array(z.string()).optional(),
   tireSizePricing: z
     .array(

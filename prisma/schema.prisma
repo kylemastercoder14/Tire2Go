@@ -64,6 +64,7 @@ model Products {
   description     String
   price           Float
   images          String[]
+  threeDModel     String?  // optional URL/path to 3D model (.glb)
   inclusion       String
   warranty        String
   tireSize        String?

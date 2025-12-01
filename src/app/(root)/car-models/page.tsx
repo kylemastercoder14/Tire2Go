@@ -46,13 +46,11 @@ const Page = () => {
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Hyundai Elantra</h3>
               <Link href="/car-models/HYUNDAI/ELANTRA">
-                <Button>
-                  View Tires
-                </Button>
+                <Button>View Tires</Button>
               </Link>
             </div>
           </div>
-		  {/* Card */}
+          {/* Card */}
           <div className="relative w-full h-[300px] rounded-md overflow-hidden shadow border">
             {/* Background Image */}
             <Image
@@ -69,13 +67,11 @@ const Page = () => {
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Toyota Avanza</h3>
               <Link href="/car-models/TOYOTA/AVANZA">
-                <Button>
-                  View Tires
-                </Button>
+                <Button>View Tires</Button>
               </Link>
             </div>
           </div>
-		  {/* Card */}
+          {/* Card */}
           <div className="relative w-full h-[300px] rounded-md overflow-hidden shadow border">
             {/* Background Image */}
             <Image
@@ -90,15 +86,15 @@ const Page = () => {
 
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
-              <h3 className="font-semibold capitalize text-gray-900">MITSUBISHI XPANDER</h3>
+              <h3 className="font-semibold capitalize text-gray-900">
+                MITSUBISHI XPANDER
+              </h3>
               <Link href="/car-models/MITSUBISHI/XPANDER">
-                <Button>
-                  View Tires
-                </Button>
+                <Button>View Tires</Button>
               </Link>
             </div>
           </div>
-		  {/* Card */}
+          {/* Card */}
           <div className="relative w-full h-[300px] rounded-md overflow-hidden shadow border">
             {/* Background Image */}
             <Image
@@ -113,15 +109,15 @@ const Page = () => {
 
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
-              <h3 className="font-semibold capitalize text-gray-900">FORD RAPTOR</h3>
+              <h3 className="font-semibold capitalize text-gray-900">
+                FORD RAPTOR
+              </h3>
               <Link href="/car-models/FORD/RAPTOR">
-                <Button>
-                  View Tires
-                </Button>
+                <Button>View Tires</Button>
               </Link>
             </div>
           </div>
-		  {/* Card */}
+          {/* Card */}
           <div className="relative w-full h-[300px] rounded-md overflow-hidden shadow border">
             {/* Background Image */}
             <Image
@@ -136,15 +132,15 @@ const Page = () => {
 
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
-              <h3 className="font-semibold capitalize text-gray-900">NISSAN NAVARA</h3>
+              <h3 className="font-semibold capitalize text-gray-900">
+                NISSAN NAVARA
+              </h3>
               <Link href="/car-models/NISSAN/NAVARA">
-                <Button>
-                  View Tires
-                </Button>
+                <Button>View Tires</Button>
               </Link>
             </div>
           </div>
-		  {/* Card */}
+          {/* Card */}
           <div className="relative w-full h-[300px] rounded-md overflow-hidden shadow border">
             {/* Background Image */}
             <Image
@@ -159,11 +155,11 @@ const Page = () => {
 
             {/* Text + Button at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
-              <h3 className="font-semibold capitalize text-gray-900">HONDA CIVIC</h3>
+              <h3 className="font-semibold capitalize text-gray-900">
+                HONDA CIVIC
+              </h3>
               <Link href="/car-models/HONDA/CIVIC">
-                <Button>
-                  View Tires
-                </Button>
+                <Button>View Tires</Button>
               </Link>
             </div>
           </div>
