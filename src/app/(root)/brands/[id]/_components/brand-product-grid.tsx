@@ -43,9 +43,16 @@ interface Product {
 
 interface BrandProductGridProps {
   products: Product[];
+  colorScheme?: {
+    primary: string;
+    secondary: string;
+    accent?: string;
+  };
 }
 
-const BrandProductGrid = ({ products }: BrandProductGridProps) => {
+const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
+  // Default color scheme if not provided
+  const colors = colorScheme || { primary: "#c02b2b", secondary: "#dc2626", accent: "#ef4444" };
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
 
@@ -132,7 +139,8 @@ const BrandProductGrid = ({ products }: BrandProductGridProps) => {
           return (
             <div
               key={product.id}
-              className="border border-primary shadow rounded-md"
+              className="border shadow rounded-md"
+              style={{ borderColor: colors.primary }}
             >
               <div className="relative w-full h-60">
                 <img
@@ -166,7 +174,12 @@ const BrandProductGrid = ({ products }: BrandProductGridProps) => {
                   />
                 </div>
               </div>
-              <div className="bg-gradient-to-l p-2 from-red-500 to-primary text-white">
+              <div
+                className="p-2 text-white"
+                style={{
+                  background: `linear-gradient(to left, ${colors.secondary}, ${colors.primary})`
+                }}
+              >
                 <h2 className="font-bold text-sm">
                   {hasClearanceSale ? "CLEARANCE SALE" : "REGULAR PRICE"}
                 </h2>
@@ -190,7 +203,7 @@ const BrandProductGrid = ({ products }: BrandProductGridProps) => {
                   </p>
                 )}
                 <div className="flex items-center gap-2 mt-2">
-                  <p className="text-primary font-bold text-lg">
+                  <p className="font-bold text-lg" style={{ color: colors.primary }}>
                     {priceRange}{" "}
                     <span className="font-medium text-base">per tire</span>
                   </p>
@@ -199,9 +212,12 @@ const BrandProductGrid = ({ products }: BrandProductGridProps) => {
                   className="my-3 text-sm prose prose-sm max-w-none
 								  prose-headings:font-bold
 								  prose-headings:text-muted-foreground
-								  prose-a:text-primary prose-a:underline
+								  prose-a:underline
 								  prose-ul:list-disc prose-ol:list-decimal
 								  prose-li:marker:text-muted-foreground"
+                  style={{
+                    "--tw-prose-links": colors.primary,
+                  } as React.CSSProperties}
                   dangerouslySetInnerHTML={{ __html: product.inclusion }}
                 />
                 <Link
@@ -209,6 +225,16 @@ const BrandProductGrid = ({ products }: BrandProductGridProps) => {
                   className={`w-full mb-2 ${buttonVariants({
                     variant: "default",
                   })}`}
+                  style={{
+                    backgroundColor: colors.primary,
+                    color: "white",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = colors.secondary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = colors.primary;
+                  }}
                 >
                   <IconHandClick className="size-4" />
                   View Tire Details

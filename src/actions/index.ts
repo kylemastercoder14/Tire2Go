@@ -1691,9 +1691,17 @@ export const getCarDataForSearch = async () => {
       const modelsMap: { [key: string]: number[] } = {};
 
       make.models.forEach((model) => {
-        // Get unique years from product compatibilities for this model
+        // Get unique years from both the model's years field and product compatibilities
         const years = new Set<number>();
 
+        // First, add years from the CarModel's years field (primary source)
+        if (model.years && Array.isArray(model.years) && model.years.length > 0) {
+          model.years.forEach((year) => {
+            years.add(year);
+          });
+        }
+
+        // Then, add years from product compatibilities as a supplement
         model.compatibilities.forEach((compat) => {
           if (compat.year) {
             years.add(compat.year);

@@ -51,6 +51,7 @@ model Brands {
   logo        String
   type        String // e.g., "Premium", "Mid-range", "Budget"
   thumbnail   String
+  colorScheme Json?   // Color scheme for brand theming: { primary: "#hex", secondary: "#hex", accent: "#hex" }
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

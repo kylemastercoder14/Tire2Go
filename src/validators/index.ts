@@ -6,6 +6,11 @@ export const BrandValidators = z.object({
   logo: z.string().min(1, { message: "Logo URL is required." }),
   thumbnail: z.string().min(1, { message: "Thumbnail URL is required." }),
   type: z.string().min(1, { message: "Type is required." }),
+  colorScheme: z.object({
+    primary: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, { message: "Primary color must be a valid hex color." }),
+    secondary: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, { message: "Secondary color must be a valid hex color." }),
+    accent: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, { message: "Accent color must be a valid hex color." }).optional(),
+  }).optional(),
 });
 
 export const ProductValidators = z.object({

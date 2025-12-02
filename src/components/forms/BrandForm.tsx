@@ -42,6 +42,15 @@ const BrandForm = ({ initialData }: { initialData: Brands | null }) => {
       logo: initialData?.logo || "",
       thumbnail: initialData?.thumbnail || "",
       type: initialData?.type || "",
+      colorScheme: initialData?.colorScheme
+        ? (typeof initialData.colorScheme === 'object' && initialData.colorScheme !== null
+            ? initialData.colorScheme as { primary: string; secondary: string; accent?: string }
+            : undefined)
+        : {
+            primary: "#c02b2b",
+            secondary: "#dc2626",
+            accent: "#ef4444",
+          },
     },
   });
 
@@ -211,6 +220,150 @@ const BrandForm = ({ initialData }: { initialData: Brands | null }) => {
               </FormItem>
             )}
           />
+
+          {/* Color Scheme Section */}
+          <div className="space-y-4 border-t pt-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Color Scheme</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Customize the brand colors that will be displayed on customer-facing pages. Colors should be in hex format (e.g., #c02b2b).
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+              <FormField
+                control={form.control}
+                name="colorScheme.primary"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Primary Color <span className="text-red-600">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={field.value || "#c02b2b"}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                          }}
+                          disabled={isSubmitting}
+                          className="w-16 h-10 rounded border border-gray-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#c02b2b"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            // Ensure hex format
+                            const value = e.target.value.trim();
+                            if (value === "" || /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
+                              field.onChange(value || "#c02b2b");
+                            }
+                          }}
+                          disabled={isSubmitting}
+                          className="flex-1"
+                        />
+                        <div
+                          className="w-12 h-10 rounded border border-gray-300 flex-shrink-0"
+                          style={{ backgroundColor: field.value || "#c02b2b" }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="colorScheme.secondary"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Secondary Color <span className="text-red-600">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={field.value || "#dc2626"}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                          }}
+                          disabled={isSubmitting}
+                          className="w-16 h-10 rounded border border-gray-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#dc2626"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            // Ensure hex format
+                            const value = e.target.value.trim();
+                            if (value === "" || /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
+                              field.onChange(value || "#dc2626");
+                            }
+                          }}
+                          disabled={isSubmitting}
+                          className="flex-1"
+                        />
+                        <div
+                          className="w-12 h-10 rounded border border-gray-300 flex-shrink-0"
+                          style={{ backgroundColor: field.value || "#dc2626" }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="colorScheme.accent"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Accent Color <span className="text-muted-foreground">(optional)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={field.value || "#ef4444"}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                          }}
+                          disabled={isSubmitting}
+                          className="w-16 h-10 rounded border border-gray-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#ef4444"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            // Ensure hex format
+                            const value = e.target.value.trim();
+                            if (value === "" || /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
+                              field.onChange(value || undefined);
+                            }
+                          }}
+                          disabled={isSubmitting}
+                          className="flex-1"
+                        />
+                        <div
+                          className="w-12 h-10 rounded border border-gray-300 flex-shrink-0"
+                          style={{ backgroundColor: field.value || "#ef4444" }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
 
           <div className="flex items-center gap-2">
             <Button

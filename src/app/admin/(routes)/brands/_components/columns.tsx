@@ -133,6 +133,57 @@ export const columns: ColumnDef<BrandWithProducts>[] = [
     },
   },
   {
+    accessorKey: "colorScheme",
+    header: () => {
+      return <span className="ml-3.5">Color Theme</span>;
+    },
+    cell: ({ row }) => {
+      const colorScheme = row.original.colorScheme;
+
+      // Check if colorScheme exists and is an object
+      if (!colorScheme || typeof colorScheme !== 'object' || colorScheme === null) {
+        return <span className="ml-3.5 text-muted-foreground text-sm">Not set</span>;
+      }
+
+      const colors = colorScheme as { primary?: string; secondary?: string; accent?: string };
+
+      return (
+        <div className="ml-3.5 flex items-center gap-2">
+          {colors.primary && (
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                style={{ backgroundColor: colors.primary }}
+                title={`Primary: ${colors.primary}`}
+              />
+              <span className="text-xs text-muted-foreground">P</span>
+            </div>
+          )}
+          {colors.secondary && (
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                style={{ backgroundColor: colors.secondary }}
+                title={`Secondary: ${colors.secondary}`}
+              />
+              <span className="text-xs text-muted-foreground">S</span>
+            </div>
+          )}
+          {colors.accent && (
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                style={{ backgroundColor: colors.accent }}
+                title={`Accent: ${colors.accent}`}
+              />
+              <span className="text-xs text-muted-foreground">A</span>
+            </div>
+          )}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "date",
     header: ({ column }) => {
       return (
