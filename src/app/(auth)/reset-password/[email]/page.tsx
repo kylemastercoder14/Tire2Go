@@ -67,11 +67,12 @@ const Page = () => {
           );
         }
 
-        if (emailFactor && emailFactor.emailAddressId) {
+        // Type guard: check if factor has emailAddressId property
+        if (emailFactor && 'emailAddressId' in emailFactor && (emailFactor as any).emailAddressId) {
           // Prepare the password reset email code
           await signIn.prepareFirstFactor({
             strategy: "reset_password_email_code",
-            emailAddressId: emailFactor.emailAddressId,
+            emailAddressId: (emailFactor as any).emailAddressId,
           });
         }
       } catch (err: any) {
@@ -92,10 +93,11 @@ const Page = () => {
               );
             }
 
-            if (emailFactor && emailFactor.emailAddressId) {
+            // Type guard: check if factor has emailAddressId property
+            if (emailFactor && 'emailAddressId' in emailFactor && (emailFactor as any).emailAddressId) {
               await signIn.prepareFirstFactor({
                 strategy: "reset_password_email_code",
-                emailAddressId: emailFactor.emailAddressId,
+                emailAddressId: (emailFactor as any).emailAddressId,
               });
             }
           } catch (prepareErr) {
@@ -166,14 +168,15 @@ const Page = () => {
           );
         }
 
-        if (!emailFactor || !emailFactor.emailAddressId) {
+        // Type guard: check if factor has emailAddressId property
+        if (!emailFactor || !('emailAddressId' in emailFactor) || !(emailFactor as any).emailAddressId) {
           throw new Error("Could not prepare password reset. Please try again.");
         }
 
         // Prepare the first factor
         await currentSignIn.prepareFirstFactor({
           strategy: "reset_password_email_code",
-          emailAddressId: emailFactor.emailAddressId,
+          emailAddressId: (emailFactor as any).emailAddressId,
         });
       } else if (currentSignIn.status !== "needs_first_factor") {
         // If status is not needs_first_factor, we might need to prepare it
@@ -191,10 +194,11 @@ const Page = () => {
           );
         }
 
-        if (emailFactor && emailFactor.emailAddressId) {
+        // Type guard: check if factor has emailAddressId property
+        if (emailFactor && 'emailAddressId' in emailFactor && (emailFactor as any).emailAddressId) {
           await currentSignIn.prepareFirstFactor({
             strategy: "reset_password_email_code",
-            emailAddressId: emailFactor.emailAddressId,
+            emailAddressId: (emailFactor as any).emailAddressId,
           });
         }
       }
@@ -260,14 +264,15 @@ const Page = () => {
         );
       }
 
-      if (!emailFactor || !emailFactor.emailAddressId) {
+      // Type guard: check if factor has emailAddressId property
+      if (!emailFactor || !('emailAddressId' in emailFactor) || !(emailFactor as any).emailAddressId) {
         throw new Error("Email address not found");
       }
 
       // Resend the code
       await signIn.prepareFirstFactor({
         strategy: "reset_password_email_code",
-        emailAddressId: emailFactor.emailAddressId,
+        emailAddressId: (emailFactor as any).emailAddressId,
       });
 
       toast.success("Reset code resent successfully!");

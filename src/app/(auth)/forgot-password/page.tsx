@@ -45,12 +45,13 @@ const Page = () => {
         );
       }
 
-      if (!emailFactor || !emailFactor.emailAddressId) {
+      // Type guard: check if factor has emailAddressId property
+      if (!emailFactor || !('emailAddressId' in emailFactor) || !emailFactor.emailAddressId) {
         throw new Error("Email address not found. Please check your email and try again.");
       }
 
       // Get the email address ID from the factor
-      const emailAddressId = emailFactor.emailAddressId;
+      const emailAddressId = (emailFactor as any).emailAddressId;
 
       // Prepare password reset email code with the email address ID
       await signIn.prepareFirstFactor({
