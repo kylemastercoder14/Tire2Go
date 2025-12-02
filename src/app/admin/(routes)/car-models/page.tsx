@@ -9,15 +9,6 @@ const Page = async () => {
     include: {
       make: true,
     },
-    select: {
-      id: true,
-      name: true,
-      makeId: true,
-      years: true,
-      createdAt: true,
-      updatedAt: true,
-      make: true,
-    },
   });
 
   const carMakes = await db.carMake.findMany({
