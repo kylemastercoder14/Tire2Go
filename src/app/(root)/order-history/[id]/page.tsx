@@ -5,13 +5,12 @@ import { auth } from "@clerk/nextjs/server";
 import OrderDetailsUser from "./_components/order-details-user";
 import { OrderWithOrderItem } from "@/types";
 
-interface PageProps {
-  params: {
+const Page = async (props: {
+  params: Promise<{
     id: string;
-  };
-}
-
-const Page = async ({ params }: PageProps) => {
+  }>;
+}) => {
+  const params = await props.params;
   const { userId } = await auth();
 
   if (!userId) {
