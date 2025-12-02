@@ -72,7 +72,7 @@ const ProductForm = ({
   }>>({});
   const [selectedMake, setSelectedMake] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
 
   // Get models grouped by make for easier selection
   const modelsByMake = useMemo(() => {
@@ -698,7 +698,7 @@ const ProductForm = ({
                         onValueChange={(value) => {
                           setSelectedMake(value);
                           setSelectedModel("");
-                          setSelectedYear("");
+                          setSelectedYears([]);
                         }}
                         disabled={isSubmitting}
                       >
@@ -718,7 +718,7 @@ const ProductForm = ({
                         value={selectedModel}
                         onValueChange={(value) => {
                           setSelectedModel(value);
-                          setSelectedYear("");
+                          setSelectedYears([]);
                         }}
                         disabled={isSubmitting || !selectedMake}
                       >
@@ -736,65 +736,117 @@ const ProductForm = ({
                       </Select>
 
                       <div className="flex gap-2">
-                        <Select
-                          value={selectedYear}
-                          onValueChange={(value) => setSelectedYear(value)}
-                          disabled={isSubmitting || !selectedModel || availableYears.length === 0}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue
-                              placeholder={
-                                !selectedModel
-                                  ? "Select model first"
-                                  : availableYears.length === 0
-                                    ? "No years available"
-                                    : "Select year"
-                              }
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {availableYears.map((year) => (
-                              <SelectItem key={year} value={year.toString()}>
-                                {year}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="flex-1">
+                          <div className="border rounded-md p-2 max-h-40 overflow-y-auto">
+                            <p className="text-xs text-muted-foreground mb-1">
+                              {!selectedModel
+                                ? "Select model first"
+                                : availableYears.length === 0
+                                  ? "No years available for this model"
+                                  : "Select one or more years"}
+                            </p>
+                            <div className="grid grid-cols-2 gap-1">
+                              {availableYears.map((year) => {
+                                const value = year.toString();
+                                const checked = selectedYears.includes(value);
+                                return (
+                                  <label
+                                    key={value}
+                                    className="flex items-center gap-1 text-xs cursor-pointer"
+                                  >
+                                    <Checkbox
+                                      checked={checked}
+                                      onCheckedChange={(isChecked) => {
+                                        setSelectedYears((prev) => {
+                                          if (isChecked) {
+                                            if (prev.includes(value)) return prev;
+                                            return [...prev, value];
+                                          }
+                                          return prev.filter((y) => y !== value);
+                                        });
+                                      }}
+                                      disabled={
+                                        isSubmitting ||
+                                        !selectedModel ||
+                                        availableYears.length === 0
+                                      }
+                                    />
+                                    <span>{year}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
                         <Button
                           type="button"
                           onClick={() => {
-                            if (!selectedModel || !selectedYear) {
+                            if (!selectedModel || selectedYears.length === 0) {
                               toast.error(
-                                "Please select both model and year"
+                                "Please select at least one year for the selected model"
                               );
-                              return;
-                            }
-                            const yearNum = parseInt(selectedYear, 10);
-                            if (isNaN(yearNum) || yearNum < 1900 || yearNum > 2100) {
-                              toast.error("Please enter a valid year");
                               return;
                             }
                             const current = field.value || [];
-                            const exists = current.some(
-                              (c) =>
-                                c.modelId === selectedModel &&
-                                c.year === yearNum
-                            );
-                            if (exists) {
-                              toast.error(
-                                "This compatibility already exists"
+                            const newCompatibilities = [...current];
+
+                            const invalidYears: string[] = [];
+                            const addedYears: number[] = [];
+
+                            selectedYears.forEach((yearStr) => {
+                              const yearNum = parseInt(yearStr, 10);
+                              if (
+                                isNaN(yearNum) ||
+                                yearNum < 1900 ||
+                                yearNum > 2100
+                              ) {
+                                invalidYears.push(yearStr);
+                                return;
+                              }
+
+                              const exists = newCompatibilities.some(
+                                (c) =>
+                                  c.modelId === selectedModel &&
+                                  c.year === yearNum
                               );
+                              if (exists) {
+                                return;
+                              }
+
+                              newCompatibilities.push({
+                                modelId: selectedModel,
+                                year: yearNum,
+                              });
+                              addedYears.push(yearNum);
+                            });
+
+                            if (invalidYears.length > 0) {
+                              toast.error(
+                                `Invalid year${invalidYears.length > 1 ? "s" : ""}: ${invalidYears.join(
+                                  ", "
+                                )}`
+                              );
+                            }
+
+                            if (addedYears.length === 0) {
+                              if (invalidYears.length === 0) {
+                                toast.error(
+                                  "All selected compatibilities already exist"
+                                );
+                              }
                               return;
                             }
-                            field.onChange([
-                              ...current,
-                              { modelId: selectedModel, year: yearNum },
-                            ]);
+
+                            field.onChange(newCompatibilities);
                             setSelectedMake("");
                             setSelectedModel("");
-                            setSelectedYear("");
+                            setSelectedYears([]);
                           }}
-                          disabled={isSubmitting || !selectedModel || !selectedYear}
+                          disabled={
+                            isSubmitting ||
+                            !selectedModel ||
+                            selectedYears.length === 0
+                          }
                         >
                           Add
                         </Button>
@@ -804,9 +856,14 @@ const ProductForm = ({
                           onClick={() => {
                             setSelectedMake("");
                             setSelectedModel("");
-                            setSelectedYear("");
+                            setSelectedYears([]);
                           }}
-                          disabled={isSubmitting || (!selectedMake && !selectedModel && !selectedYear)}
+                          disabled={
+                            isSubmitting ||
+                            (!selectedMake &&
+                              !selectedModel &&
+                              selectedYears.length === 0)
+                          }
                         >
                           Clear
                         </Button>
