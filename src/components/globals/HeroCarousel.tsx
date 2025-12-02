@@ -43,7 +43,7 @@ const HeroCarousel = () => {
         className="w-full h-full"
       >
         <CarouselContent>
-          {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+          {[1, 2, 3].map((num) => (
             <CarouselItem key={num} className="w-full h-[280px]">
               <div className="relative w-full h-full">
                 <Image

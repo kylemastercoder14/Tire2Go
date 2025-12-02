@@ -1246,6 +1246,51 @@ export const getOrderForTracking = async (orderId: string, email: string) => {
   }
 };
 
+// Get all orders for the current logged-in user
+export const getUserOrders = async () => {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { error: "You must be logged in to view your orders" };
+    }
+
+    // Find user in database
+    const user = await db.users.findUnique({ where: { authId: userId } });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    // Fetch all orders for this user
+    const orders = await db.order.findMany({
+      where: {
+        userId: user.id,
+        isArchived: false, // Only show active orders
+      },
+      orderBy: {
+        createdAt: "desc", // Most recent first
+      },
+      include: {
+        orderItem: {
+          include: {
+            product: {
+              include: {
+                brand: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { success: "Orders fetched successfully", data: orders };
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    return { error: "Failed to fetch orders. Please try again." };
+  }
+};
+
 export async function rejectOrder(orderId: string, reason: string) {
   try {
     const order = await db.order.update({
@@ -1704,6 +1749,88 @@ export const submitFeedback = async (values: z.infer<typeof FeedbackValidators>)
   } catch (error) {
     console.error("Error submitting feedback:", error);
     return { error: "Failed to submit feedback" };
+  }
+};
+
+// Ticket CRUD
+export const updateTicket = async (
+  id: string,
+  values: { status?: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED"; priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT" }
+) => {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { error: "Unauthorized" };
+    }
+
+    // Check if user is admin
+    const user = await db.users.findUnique({
+      where: { authId: userId },
+      select: { role: true },
+    });
+
+    if (!user || user.role !== "ADMIN") {
+      return { error: "Forbidden - Admin access required" };
+    }
+
+    // Check if ticket exists
+    const existingTicket = await db.ticket.findUnique({
+      where: { id },
+    });
+
+    if (!existingTicket) {
+      return { error: "Ticket not found" };
+    }
+
+    const ticket = await db.ticket.update({
+      where: { id },
+      data: values,
+    });
+
+    return { success: "Ticket updated successfully", ticket };
+  } catch (error) {
+    console.error("Error updating ticket:", error);
+    return { error: "Failed to update ticket" };
+  }
+};
+
+export const deleteTicket = async (id: string) => {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { error: "Unauthorized" };
+    }
+
+    // Check if user is admin
+    const user = await db.users.findUnique({
+      where: { authId: userId },
+      select: { role: true },
+    });
+
+    if (!user || user.role !== "ADMIN") {
+      return { error: "Forbidden - Admin access required" };
+    }
+
+    // Check if ticket exists
+    const ticket = await db.ticket.findUnique({
+      where: { id },
+    });
+
+    if (!ticket) {
+      return { error: "Ticket not found" };
+    }
+
+    // Delete ticket
+    await db.ticket.delete({
+      where: { id },
+    });
+
+    return { success: "Ticket deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting ticket:", error);
+    return { error: "Failed to delete ticket" };
   }
 };
 

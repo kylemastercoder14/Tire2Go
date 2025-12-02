@@ -63,6 +63,9 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
   const [isLoadingModel, setIsLoadingModel] = React.useState(false);
   const [isLoadingYear, setIsLoadingYear] = React.useState(false);
 
+  // Full-screen loading state
+  const [isFullScreenLoading, setIsFullScreenLoading] = React.useState(false);
+
   // --- DERIVED OPTIONS FOR SIZE ---
   const widthOptions = Object.keys(searchBySize);
   const aspectOptions =
@@ -117,12 +120,14 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
       // Only redirect if we have a query and haven't already redirected for this combination
       if (redirectQuery && redirectedRef.current !== redirectQuery) {
         redirectedRef.current = redirectQuery;
+        setIsFullScreenLoading(true);
         router.push(redirectQuery);
         // Reset loading states after a delay
         setTimeout(() => {
           setIsLoadingWidth(false);
           setIsLoadingAspect(false);
           setIsLoadingRim(false);
+          setIsFullScreenLoading(false);
         }, 1000);
       } else if (!redirectQuery) {
         // Reset loading if no redirect needed
@@ -157,12 +162,14 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
         // Only redirect if we have a query and haven't already redirected for this combination
         if (redirectQuery && redirectedRef.current !== redirectQuery) {
           redirectedRef.current = redirectQuery;
+          setIsFullScreenLoading(true);
           router.push(redirectQuery);
           // Reset loading states after a delay
           setTimeout(() => {
             setIsLoadingBrand(false);
             setIsLoadingModel(false);
             setIsLoadingYear(false);
+            setIsFullScreenLoading(false);
           }, 1000);
         } else if (!redirectQuery) {
           // Reset loading if no redirect needed
@@ -187,6 +194,16 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
 
   return (
     <>
+      {/* Full-screen loading overlay */}
+      {isFullScreenLoading && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center">
+          <div className="bg-white rounded-lg p-8 flex flex-col items-center gap-4 shadow-xl">
+            <Loader className="size-8 text-primary animate-spin" />
+            <p className="text-lg font-medium text-gray-700">Loading search results...</p>
+          </div>
+        </div>
+      )}
+
       {/* ---- MODAL ---- */}
       {isOpen.toggle && (
         <div className="bg-primary fixed inset-0 flex flex-col items-center pt-30 w-full overflow-hidden h-screen z-50">

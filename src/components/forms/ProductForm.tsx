@@ -798,6 +798,18 @@ const ProductForm = ({
                         >
                           Add
                         </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedMake("");
+                            setSelectedModel("");
+                            setSelectedYear("");
+                          }}
+                          disabled={isSubmitting || (!selectedMake && !selectedModel && !selectedYear)}
+                        >
+                          Clear
+                        </Button>
                       </div>
                     </div>
 

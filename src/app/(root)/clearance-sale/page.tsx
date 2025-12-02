@@ -265,11 +265,11 @@ const Page = async ({ searchParams }: PageProps) => {
 
   return (
     <div className="min-h-screen">
-      <div className="w-full relative h-[59.7vh] mt-30 bg-[#ab0000]">
+      <div className="w-full relative h-screen mt-30 bg-[#ab0000]">
         <img
           src="/CLEARANCE SALE.png"
           alt="Clearance Sale Banner"
-          className="size-full object-contain"
+          className="size-full object-cover"
         />
       </div>
       <section className="pt-5 px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-10">

@@ -16,7 +16,7 @@ import {
 import { useRouter } from "next/navigation";
 import AlertModal from "@/components/globals/AlertModal";
 import { toast } from "sonner";
-import { deleteTipsGuides } from "@/actions";
+import { deleteFaqs } from "@/actions";
 import { Faqs } from '@prisma/client';
 
 const CellActions = ({ topic }: { topic: Faqs }) => {
@@ -24,15 +24,16 @@ const CellActions = ({ topic }: { topic: Faqs }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const handleDelete = async () => {
     try {
-      const response = await deleteTipsGuides(topic.id);
+      const response = await deleteFaqs(topic.id);
       if (response.error) {
         toast.error(response.error);
         return;
       }
-      toast.success("FAQs deleted successfully");
+      toast.success(response.success || "FAQ deleted successfully");
       router.refresh();
     } catch (error) {
       console.log(error);
+      toast.error("Failed to delete FAQ");
     } finally {
       setIsOpen(false);
     }

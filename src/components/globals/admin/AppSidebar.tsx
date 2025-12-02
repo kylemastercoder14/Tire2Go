@@ -10,6 +10,7 @@ import {
   IconDatabase,
   IconFileText,
   IconHelpCircle,
+  IconMessageCircle,
   IconScale,
   IconSitemap,
   IconTag,
