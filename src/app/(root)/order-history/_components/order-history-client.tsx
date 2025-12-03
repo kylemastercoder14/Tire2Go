@@ -1,15 +1,17 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { OrderWithOrderItem } from "@/types";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Package, Calendar, MapPin, Eye, CopyIcon } from "lucide-react";
+import { Package, Calendar, MapPin, Eye, CopyIcon, XCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { CancelOrderDialog } from "./cancel-order-dialog";
 
 interface OrderHistoryClientProps {
   orders: OrderWithOrderItem[];
@@ -17,6 +19,18 @@ interface OrderHistoryClientProps {
 
 const OrderHistoryClient = ({ orders }: OrderHistoryClientProps) => {
   const router = useRouter();
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+
+  const handleCancelClick = (orderId: string) => {
+    setSelectedOrderId(orderId);
+    setCancelDialogOpen(true);
+  };
+
+  const handleCancelDialogClose = () => {
+    setCancelDialogOpen(false);
+    setSelectedOrderId(null);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -190,20 +204,41 @@ const OrderHistoryClient = ({ orders }: OrderHistoryClientProps) => {
                       <span>₱{formatCurrency(order.totalAmount)}</span>
                     </div>
                   </div>
-                  <Button
-                    onClick={() => handleViewDetails(order.id)}
-                    className="w-full"
-                    variant="outline"
-                  >
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Details
-                  </Button>
+                  <div className="space-y-2">
+                    <Button
+                      onClick={() => handleViewDetails(order.id)}
+                      className="w-full"
+                      variant="outline"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Details
+                    </Button>
+                    {order.status === "PENDING" && (
+                      <Button
+                        onClick={() => handleCancelClick(order.id)}
+                        className="w-full"
+                        variant="destructive"
+                      >
+                        <XCircle className="h-4 w-4 mr-2" />
+                        Cancel Order
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </Card>
           ))}
         </div>
       </div>
+
+      {/* Cancel Order Dialog */}
+      {selectedOrderId && (
+        <CancelOrderDialog
+          isOpen={cancelDialogOpen}
+          onClose={handleCancelDialogClose}
+          orderId={selectedOrderId}
+        />
+      )}
     </div>
   );
 };

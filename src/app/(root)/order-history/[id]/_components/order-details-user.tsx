@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { OrderWithOrderItem } from "@/types";
 import Image from "next/image";
-import { ArrowLeft, CopyIcon } from "lucide-react";
+import { ArrowLeft, CopyIcon, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Package, Calendar, MapPin, Phone, Mail, Wallet } from "lucide-react";
+import { CancelOrderDialog } from "../../_components/cancel-order-dialog";
 
 const OrderDetailsUser = ({
   initialData,
@@ -19,6 +20,7 @@ const OrderDetailsUser = ({
   initialData: OrderWithOrderItem | null;
 }) => {
   const router = useRouter();
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
   if (!initialData) {
     return <div>No order details available</div>;
@@ -352,9 +354,32 @@ const OrderDetailsUser = ({
                 </div>
               )}
             </div>
+
+            {/* Cancel Order Button - Only for PENDING orders */}
+            {initialData.status === "PENDING" && (
+              <div className="mt-6 pt-6 border-t">
+                <Button
+                  onClick={() => setIsCancelDialogOpen(true)}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <XCircle className="mr-2 h-4 w-4" />
+                  Cancel Order
+                </Button>
+              </div>
+            )}
           </Card>
         </div>
       </div>
+
+      {/* Cancel Order Dialog */}
+      {initialData && (
+        <CancelOrderDialog
+          isOpen={isCancelDialogOpen}
+          onClose={() => setIsCancelDialogOpen(false)}
+          orderId={initialData.id}
+        />
+      )}
     </>
   );
 };

@@ -25,6 +25,7 @@ import { OrderCompleteHTML } from "@/components/email-template/order-complete";
 import { sendMail } from "@/lib/nodemailer";
 import { OrderStatusEmailHTML } from "@/components/email-template/order-status";
 import { OrderRejectionEmailHTML } from "@/components/email-template/order-rejection";
+import { OrderCancellationEmailHTML } from "@/components/email-template/order-cancellation";
 
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
@@ -1340,6 +1341,94 @@ export const sendOrderRejectionEmail = async (
     return { success: "Email has been sent." };
   } catch (error) {
     console.error("Error sending product status email:", error);
+    return { message: "An error occurred. Please try again." };
+  }
+};
+
+export async function cancelOrder(orderId: string, reason: string) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { error: "Unauthorized" };
+    }
+
+    // Find user in database
+    const user = await db.users.findUnique({
+      where: { authId: userId },
+    });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    // Get the order and verify ownership and status
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      return { error: "Order not found" };
+    }
+
+    // Verify the order belongs to the current user
+    if (order.userId !== user.id) {
+      return { error: "Unauthorized - You can only cancel your own orders" };
+    }
+
+    // Only allow cancellation of PENDING orders
+    if (order.status !== "PENDING") {
+      return { error: "Only pending orders can be cancelled" };
+    }
+
+    // Update the order with cancellation details
+    const cancelledOrder = await db.order.update({
+      where: { id: orderId },
+      data: {
+        status: "CANCELLED",
+        reasonCancelled: reason,
+        cancelledAt: new Date(),
+      },
+      include: {
+        orderItem: {
+          include: {
+            product: {
+              include: { brand: true },
+            },
+          },
+        },
+      },
+    });
+
+    // Send cancellation confirmation email
+    await sendOrderCancellationEmail(cancelledOrder, order.email);
+
+    return { success: "Order cancelled successfully", order: cancelledOrder };
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    return { error: "Failed to cancel order" };
+  }
+}
+
+export const sendOrderCancellationEmail = async (
+  order: OrderWithOrderItem,
+  email: string
+) => {
+  try {
+    const htmlContent = await OrderCancellationEmailHTML({
+      order,
+    });
+
+    await sendMail(
+      email,
+      `Your order has been CANCELLED`,
+      `Your order "${order.id}" has been cancelled. Reason: ${order.reasonCancelled}`,
+      htmlContent
+    );
+
+    return { success: "Email has been sent." };
+  } catch (error) {
+    console.error("Error sending cancellation email:", error);
     return { message: "An error occurred. Please try again." };
   }
 };
