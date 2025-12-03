@@ -28,6 +28,8 @@ const Page = () => {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [timer, setTimer] = React.useState(60);
+  const [isInitialized, setIsInitialized] = React.useState(false);
+  const isSubmittingRef = React.useRef(false);
 
   React.useEffect(() => {
     if (timer > 0) {
@@ -36,13 +38,22 @@ const Page = () => {
     }
   }, [timer]);
 
-  // Initialize sign-in attempt and prepare first factor when component mounts
+  // Initialize sign-in attempt only if it doesn't already exist
+  // The forgot-password page should have already created one
   React.useEffect(() => {
     const initializeSignIn = async () => {
-      if (!isLoaded || !signIn) return;
+      if (!isLoaded || !signIn || isInitialized) return;
 
       try {
-        // Always create a fresh sign-in attempt for password reset
+        // Check if sign-in attempt already exists and is ready
+        if (signIn.status && signIn.status !== null) {
+          // Sign-in attempt already exists, just verify we can prepare first factor
+          setIsInitialized(true);
+          return;
+        }
+
+        // Only create a new sign-in attempt if one doesn't exist
+        // This should rarely happen since forgot-password page creates it
         const signInAttempt = await signIn.create({
           identifier: formattedEmail,
         });
@@ -75,42 +86,25 @@ const Page = () => {
             emailAddressId: (emailFactor as any).emailAddressId,
           });
         }
+
+        setIsInitialized(true);
       } catch (err: any) {
-        // If sign-in attempt already exists, try to prepare first factor
-        if (err.errors?.[0]?.code === "form_identifier_exists") {
-          try {
-            const supportedFirstFactors = signIn.supportedFirstFactors || [];
-            let emailFactor = supportedFirstFactors.find(
-              (factor: any) => factor.strategy === "reset_password_email_code"
-            );
-
-            if (!emailFactor) {
-              emailFactor = supportedFirstFactors.find(
-                (factor: any) =>
-                  factor.strategy === "email_code" ||
-                  (factor.safeIdentifier &&
-                    factor.safeIdentifier.toLowerCase() === formattedEmail.toLowerCase())
-              );
-            }
-
-            // Type guard: check if factor has emailAddressId property
-            if (emailFactor && 'emailAddressId' in emailFactor && (emailFactor as any).emailAddressId) {
-              await signIn.prepareFirstFactor({
-                strategy: "reset_password_email_code",
-                emailAddressId: (emailFactor as any).emailAddressId,
-              });
-            }
-          } catch (prepareErr) {
-            console.log("Error preparing first factor:", prepareErr);
-          }
-        } else {
-          console.log("Error initializing sign-in:", err);
+        // If sign-in attempt already exists (from forgot-password page), that's fine
+        if (err.errors?.[0]?.code === "form_identifier_exists" ||
+            err.errors?.[0]?.message?.includes("already exists")) {
+          setIsInitialized(true);
+          return;
         }
+
+        // For other errors, log but don't block the UI
+        // User can still try to resend if needed
+        console.log("Error initializing sign-in:", err);
+        setIsInitialized(true);
       }
     };
 
     initializeSignIn();
-  }, [isLoaded, signIn, formattedEmail]);
+  }, [isLoaded, signIn, formattedEmail, isInitialized]);
 
   // robust onChange handler in case the InputOTP emits string or event
   const handleOtpChange = (val: any) => {
@@ -127,7 +121,9 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoaded || !signIn) return;
+    e.stopPropagation();
+
+    if (isSubmittingRef.current || !isLoaded || !signIn) return;
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
@@ -139,72 +135,23 @@ const Page = () => {
       return;
     }
 
+    if (!code || code.length !== 6) {
+      toast.error("Please enter the 6-digit code");
+      return;
+    }
+
+    isSubmittingRef.current = true;
     setIsLoading(true);
 
     try {
-      // Ensure sign-in attempt exists and first factor is prepared
-      let currentSignIn = signIn;
-
-      // If status is null, create the sign-in attempt
-      if (currentSignIn.status === null) {
-        const signInAttempt = await currentSignIn.create({
-          identifier: formattedEmail,
-        });
-
-        // Get supported first factors
-        const supportedFirstFactors =
-          signInAttempt.supportedFirstFactors || currentSignIn.supportedFirstFactors || [];
-
-        let emailFactor = supportedFirstFactors.find(
-          (factor: any) => factor.strategy === "reset_password_email_code"
-        );
-
-        if (!emailFactor) {
-          emailFactor = supportedFirstFactors.find(
-            (factor: any) =>
-              factor.strategy === "email_code" ||
-              (factor.safeIdentifier &&
-                factor.safeIdentifier.toLowerCase() === formattedEmail.toLowerCase())
-          );
-        }
-
-        // Type guard: check if factor has emailAddressId property
-        if (!emailFactor || !('emailAddressId' in emailFactor) || !(emailFactor as any).emailAddressId) {
-          throw new Error("Could not prepare password reset. Please try again.");
-        }
-
-        // Prepare the first factor
-        await currentSignIn.prepareFirstFactor({
-          strategy: "reset_password_email_code",
-          emailAddressId: (emailFactor as any).emailAddressId,
-        });
-      } else if (currentSignIn.status !== "needs_first_factor") {
-        // If status is not needs_first_factor, we might need to prepare it
-        const supportedFirstFactors = currentSignIn.supportedFirstFactors || [];
-        let emailFactor = supportedFirstFactors.find(
-          (factor: any) => factor.strategy === "reset_password_email_code"
-        );
-
-        if (!emailFactor) {
-          emailFactor = supportedFirstFactors.find(
-            (factor: any) =>
-              factor.strategy === "email_code" ||
-              (factor.safeIdentifier &&
-                factor.safeIdentifier.toLowerCase() === formattedEmail.toLowerCase())
-          );
-        }
-
-        // Type guard: check if factor has emailAddressId property
-        if (emailFactor && 'emailAddressId' in emailFactor && (emailFactor as any).emailAddressId) {
-          await currentSignIn.prepareFirstFactor({
-            strategy: "reset_password_email_code",
-            emailAddressId: (emailFactor as any).emailAddressId,
-          });
-        }
+      // Use the existing sign-in attempt (created by forgot-password page)
+      // Verify that we have a valid sign-in attempt
+      if (!signIn.status || signIn.status === null) {
+        throw new Error("Please request a new reset code first");
       }
 
       // Attempt to verify the code
-      const signInAttempt = await currentSignIn.attemptFirstFactor({
+      const signInAttempt = await signIn.attemptFirstFactor({
         strategy: "reset_password_email_code",
         code,
         password,
@@ -231,24 +178,34 @@ const Page = () => {
       toast.error(message);
     } finally {
       setIsLoading(false);
+      isSubmittingRef.current = false;
     }
   };
 
   const handleResend = async () => {
-    if (!isLoaded || !signIn) return;
+    if (isSubmittingRef.current || !isLoaded || !signIn) return;
+
+    isSubmittingRef.current = true;
     setIsLoading(true);
 
     try {
-      // Recreate the sign-in attempt
-      const signInAttempt = await signIn.create({
-        identifier: formattedEmail,
-      });
+      // Check if we have an existing sign-in attempt
+      let signInResource = signIn;
 
-      // Get supported first factors
-      const supportedFirstFactors =
-        signInAttempt.supportedFirstFactors ||
-        signIn.supportedFirstFactors ||
-        [];
+      // If no sign-in attempt exists, create one
+      if (!signIn.status || signIn.status === null) {
+        const signInAttempt = await signIn.create({
+          identifier: formattedEmail,
+        });
+        signInResource = signInAttempt;
+      }
+
+      // Get supported first factors from existing sign-in attempt
+      const supportedFirstFactors = signInResource.supportedFirstFactors || [];
+
+      if (supportedFirstFactors.length === 0) {
+        throw new Error("Could not find email verification method");
+      }
 
       // Find the email address ID
       let emailFactor = supportedFirstFactors.find(
@@ -266,11 +223,11 @@ const Page = () => {
 
       // Type guard: check if factor has emailAddressId property
       if (!emailFactor || !('emailAddressId' in emailFactor) || !(emailFactor as any).emailAddressId) {
-        throw new Error("Email address not found");
+        throw new Error("Email address not found. Please go back and request a new code.");
       }
 
-      // Resend the code
-      await signIn.prepareFirstFactor({
+      // Resend the code using the existing sign-in attempt
+      await signInResource.prepareFirstFactor({
         strategy: "reset_password_email_code",
         emailAddressId: (emailFactor as any).emailAddressId,
       });
@@ -279,9 +236,22 @@ const Page = () => {
       setTimer(60);
     } catch (err: any) {
       console.error("Resend error:", err);
-      toast.error("Failed to resend code. Please try again.");
+
+      // Handle specific error cases
+      if (err.errors?.[0]?.code === "too_many_requests" ||
+          err.errors?.[0]?.message?.includes("rate limit") ||
+          err.status === 429) {
+        toast.error("Too many requests. Please wait a moment before trying again.");
+      } else if (err.errors?.[0]?.code === "form_parameter_format_invalid" ||
+                 err.errors?.[0]?.message?.includes("Update operations are not allowed")) {
+        toast.error("The reset code has expired. Please go back and request a new one.");
+      } else {
+        const message = err.errors?.[0]?.message || err.message || "Failed to resend code. Please try again.";
+        toast.error(message);
+      }
     } finally {
       setIsLoading(false);
+      isSubmittingRef.current = false;
     }
   };
 

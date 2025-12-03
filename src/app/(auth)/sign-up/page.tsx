@@ -17,13 +17,23 @@ const Page = () => {
   //  States for form inputs
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [mobileNumber, setMobileNumber] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
+  // Country code for Philippines
+  const countryCode = "+63";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     if (!isLoaded) return;
     setIsLoading(true);
 
@@ -37,6 +47,9 @@ const Page = () => {
       });
 
       // 2. Save to your DB
+      // Combine country code and mobile number
+      const fullMobileNumber = `${countryCode}${mobileNumber}`;
+
       await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,7 +58,7 @@ const Page = () => {
           password,
           firstName,
           lastName,
-          mobileNumber,
+          mobileNumber: fullMobileNumber,
         }),
       });
 
@@ -135,15 +148,46 @@ const Page = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label>Mobile Number</Label>
+              <Label>Confirm Password</Label>
               <Input
-                type="tel"
-                placeholder="Enter mobile number"
-                value={mobileNumber}
+                type="password"
+                placeholder="Confirm password"
+                value={confirmPassword}
                 required
                 disabled={!isLoaded || isLoading}
-                onChange={(e) => setMobileNumber(e.target.value)}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
+            </div>
+            <div className="space-y-2">
+              <Label>Mobile Number</Label>
+              <div className="flex gap-2">
+                <div className="w-20 flex-shrink-0">
+                  <Input
+                    type="text"
+                    value={countryCode}
+                    disabled
+                    className="bg-gray-100 text-center font-medium"
+                    readOnly
+                  />
+                </div>
+                <Input
+                  type="tel"
+                  placeholder="9152479693"
+                  value={mobileNumber}
+                  required
+                  disabled={!isLoaded || isLoading}
+                  maxLength={10}
+                  onChange={(e) => {
+                    // Only allow digits and limit to 10 characters
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    setMobileNumber(value);
+                  }}
+                  className="flex-1"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Enter 10 digits (e.g., 9152479693)
+              </p>
             </div>
             {/* <div id="clerk-captcha"></div> */}
             <Button

@@ -20,7 +20,7 @@ import db from "@/lib/db";
 import { InventoryResponse, OrderWithOrderItem } from "@/types";
 import { getStockStatus } from "@/lib/utils";
 import { CartItem, CustomerDetails, DeliveryOption } from "@/hooks/use-cart";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { OrderCompleteHTML } from "@/components/email-template/order-complete";
 import { sendMail } from "@/lib/nodemailer";
 import { OrderStatusEmailHTML } from "@/components/email-template/order-status";
@@ -1784,7 +1784,11 @@ export const getCarDataForSearch = async () => {
         const years = new Set<number>();
 
         // First, add years from the CarModel's years field (primary source)
-        if (model.years && Array.isArray(model.years) && model.years.length > 0) {
+        if (
+          model.years &&
+          Array.isArray(model.years) &&
+          model.years.length > 0
+        ) {
           model.years.forEach((year) => {
             years.add(year);
           });
@@ -1818,7 +1822,9 @@ export const getCarDataForSearch = async () => {
 };
 
 // Feedback CRUD
-export const submitFeedback = async (values: z.infer<typeof FeedbackValidators>) => {
+export const submitFeedback = async (
+  values: z.infer<typeof FeedbackValidators>
+) => {
   const parseValues = FeedbackValidators.parse(values);
 
   try {
@@ -1842,7 +1848,10 @@ export const submitFeedback = async (values: z.infer<typeof FeedbackValidators>)
       },
     });
 
-    return { success: "Feedback submitted successfully! Thank you for your input.", feedback };
+    return {
+      success: "Feedback submitted successfully! Thank you for your input.",
+      feedback,
+    };
   } catch (error) {
     console.error("Error submitting feedback:", error);
     return { error: "Failed to submit feedback" };
@@ -1852,7 +1861,10 @@ export const submitFeedback = async (values: z.infer<typeof FeedbackValidators>)
 // Ticket CRUD
 export const updateTicket = async (
   id: string,
-  values: { status?: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED"; priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT" }
+  values: {
+    status?: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  }
 ) => {
   try {
     const { userId } = await auth();
@@ -1967,5 +1979,87 @@ export const deleteFeedback = async (id: string) => {
   } catch (error) {
     console.error("Error deleting feedback:", error);
     return { error: "Failed to delete feedback" };
+  }
+};
+
+// Get feedback for testimonials (public access - no auth required)
+export const getTestimonials = async () => {
+  try {
+    // Fetch feedback with comments and user information
+    const feedbacks = await db.feedback.findMany({
+      where: {
+        comment: {
+          not: null,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            authId: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 10, // Limit to 10 most recent testimonials
+    });
+
+    // Transform feedback to testimonial format
+    // Fetch user images from Clerk in parallel
+    const testimonialsWithImages = await Promise.all(
+      feedbacks.map(async (feedback) => {
+        let avatarUrl: string | null = null;
+
+        // Try to get Clerk user image if authId exists
+        if (feedback.user.authId) {
+          try {
+            const clerk = await clerkClient();
+            const clerkUser = await clerk.users.getUser(feedback.user.authId);
+            avatarUrl = clerkUser.imageUrl || null;
+          } catch (error) {
+            // If Clerk API fails, avatarUrl remains null
+            console.error(
+              `Error fetching Clerk user image for ${feedback.user.authId}:`,
+              error
+            );
+            avatarUrl = null;
+          }
+        }
+
+        // If no image from Clerk or authId is null, use fallback
+        if (!avatarUrl) {
+          // Generate avatar URL based on name initials (using UI Avatars service)
+          avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            `${feedback.user.firstName}+${feedback.user.lastName}`
+          )}&background=c02b2b&color=fff&size=256&bold=true`;
+        }
+
+        // Create designation (without star count, as we'll show stars separately)
+        const getDesignation = (rating: number) => {
+          if (rating >= 4) return "Very Satisfied Customer";
+          if (rating >= 3) return "Satisfied Customer";
+          return "Customer";
+        };
+
+        return {
+          quote: feedback.comment || "",
+          name: `${feedback.user.firstName} ${feedback.user.lastName}`,
+          designation: getDesignation(feedback.rating),
+          rating: feedback.rating,
+          src: avatarUrl,
+        };
+      })
+    );
+
+    return {
+      success: "Testimonials fetched successfully",
+      data: testimonialsWithImages,
+    };
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    return { error: "Failed to fetch testimonials" };
   }
 };

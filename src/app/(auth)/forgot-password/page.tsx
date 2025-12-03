@@ -15,10 +15,18 @@ const Page = () => {
   const { isLoaded, signIn } = useSignIn();
   const [email, setEmail] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const isSubmittingRef = React.useRef(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoaded || !signIn) return;
+    e.stopPropagation();
+
+    // Prevent double submission
+    if (isSubmittingRef.current || !isLoaded || !signIn || isLoading) {
+      return;
+    }
+
+    isSubmittingRef.current = true;
     setIsLoading(true);
 
     try {
@@ -69,6 +77,7 @@ const Page = () => {
       );
     } finally {
       setIsLoading(false);
+      isSubmittingRef.current = false;
     }
   };
 

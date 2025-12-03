@@ -5,14 +5,17 @@ import {
   HISTORY,
   MISSION,
   TEAM,
-  TESTIMONIALS,
   VISION,
 } from "@/constants";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { AnimatedTestimonials } from "@/components/globals/AnimatedTestimonials";
+import { getTestimonials } from "@/actions";
 
-const Page = () => {
+const Page = async () => {
+  // Fetch testimonials from database
+  const testimonialsResult = await getTestimonials();
+  const testimonials = testimonialsResult.data || [];
   return (
     <div className="min-h-screen">
       <div className="w-full h-[75vh] relative bg-gray-500">
@@ -132,7 +135,15 @@ const Page = () => {
         <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
           What our customers say about us
         </h3>
-        <AnimatedTestimonials testimonials={TESTIMONIALS} />
+        {testimonials.length > 0 ? (
+          <AnimatedTestimonials testimonials={testimonials} />
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground text-lg">
+              No testimonials available yet. Be the first to share your feedback!
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

@@ -3,7 +3,7 @@
 
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
-
+import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type Testimonial = {
@@ -11,6 +11,7 @@ type Testimonial = {
   name: string;
   designation: string;
   src: string;
+  rating?: number;
 };
 export const AnimatedTestimonials = ({
   testimonials,
@@ -116,9 +117,25 @@ export const AnimatedTestimonials = ({
             <h3 className="text-2xl font-bold text-black dark:text-white">
               {testimonials[active].name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-neutral-500">
-              {testimonials[active].designation}
-            </p>
+            <div className="flex items-center gap-2 mt-1">
+              {testimonials[active].rating && (
+                <div className="flex items-center gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${
+                        i < testimonials[active].rating!
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "fill-gray-300 text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+              <p className="text-sm text-gray-500 dark:text-neutral-500">
+                {testimonials[active].designation}
+              </p>
+            </div>
             <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
