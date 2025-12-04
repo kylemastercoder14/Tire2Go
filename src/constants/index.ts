@@ -336,29 +336,4 @@ export const TIPS_CATEGORY = [
     slug: "tire-buying",
     image: "https://images.pexels.com/photos/3806252/pexels-photo-3806252.jpeg",
   },
-  {
-    label: "Road Trip Ideas",
-    value: "Road Trip Ideas",
-    slug: "road-trip-ideas",
-    image: "https://images.pexels.com/photos/1353232/pexels-photo-1353232.jpeg",
-  },
-  {
-    label: "Eco-Friendly Driving",
-    value: "Eco-Friendly Driving",
-    slug: "eco-friendly-driving",
-    image: "https://images.pexels.com/photos/110844/pexels-photo-110844.jpeg",
-  },
-  {
-    label: "Tire Technology",
-    value: "Tire Technology",
-    slug: "tire-technology",
-    image: "https://images.pexels.com/photos/7019600/pexels-photo-7019600.jpeg",
-  },
-  {
-    label: "Industry News",
-    value: "Industry News",
-    slug: "industry-news",
-    image:
-      "https://images.pexels.com/photos/17183439/pexels-photo-17183439.jpeg",
-  },
 ];
