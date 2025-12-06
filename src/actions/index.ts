@@ -1945,21 +1945,21 @@ export const deleteTicket = async (id: string) => {
 
 export const deleteFeedback = async (id: string) => {
   try {
-    const { userId } = await auth();
+    // const { userId } = await auth();
 
-    if (!userId) {
-      return { error: "Unauthorized" };
-    }
+    // if (!userId) {
+    //   return { error: "Unauthorized" };
+    // }
 
-    // Check if user is admin
-    const user = await db.users.findUnique({
-      where: { authId: userId },
-      select: { role: true },
-    });
+    // // Check if user is admin
+    // const user = await db.users.findUnique({
+    //   where: { authId: userId },
+    //   select: { role: true },
+    // });
 
-    if (!user || user.role !== "ADMIN") {
-      return { error: "Forbidden - Admin access required" };
-    }
+    // if (!user || user.role !== "ADMIN") {
+    //   return { error: "Forbidden - Admin access required" };
+    // }
 
     // Check if feedback exists
     const feedback = await db.feedback.findUnique({

@@ -6,6 +6,7 @@ import Footer from "@/components/globals/Footer";
 import { useCheckProfile } from "@/hooks/use-check-profile";
 import { LoaderOne } from "@/components/globals/Loader";
 import ChatApp from '@/components/globals/ChatApp';
+import { OAuthSyncHandler } from "@/components/globals/OAuthSyncHandler";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const { loading } = useCheckProfile();
@@ -19,6 +20,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   }
   return (
     <div>
+      <OAuthSyncHandler />
       <Navbar />
       <main>{children}</main>
       <Footer />
