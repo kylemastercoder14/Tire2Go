@@ -28,9 +28,10 @@ export async function POST(req: NextRequest) {
             clerkUser.externalAccounts &&
             clerkUser.externalAccounts.length > 0 &&
             clerkUser.externalAccounts.some(
-              (account) =>
-                account.provider === "oauth_google" ||
-                account.provider === "oauth_facebook"
+              (account) => {
+                const provider = account.provider as string;
+                return provider === "oauth_google" || provider === "oauth_facebook" || provider === "google" || provider === "facebook";
+              }
             );
 
           if (hasOAuthConnection && clerkUser.emailAddresses[0]?.emailAddress) {

@@ -30,9 +30,10 @@ export const OAuthSyncHandler = () => {
       user.externalAccounts &&
       user.externalAccounts.length > 0 &&
       user.externalAccounts.some(
-        (account) =>
-          account.provider === "oauth_google" ||
-          account.provider === "oauth_facebook"
+        (account) => {
+          const provider = account.provider as string;
+          return provider === "oauth_google" || provider === "oauth_facebook" || provider === "google" || provider === "facebook";
+        }
       );
 
     // Check if this is likely an OAuth callback
