@@ -195,21 +195,21 @@ const Page = async ({ searchParams }: PageProps) => {
   return (
     <div className="min-h-screen">
       <div
-        className="w-full pt-30 h-[20vh] flex items-center justify-center bg-cover bg-center"
+        className="w-full pt-20 sm:pt-24 md:pt-30 min-h-[15vh] sm:h-[20vh] flex items-center justify-center bg-cover bg-center px-4"
         style={{
           backgroundImage:
             "url('https://gogulong.ph/_nuxt/img/breadcrumbs-bg.f31fb0b.png')",
         }}
       >
-        <h3 className="text-white text-center">
+        <h3 className="text-white text-center text-sm sm:text-base md:text-lg">
           Showing results for <strong>{searchCriteria}</strong>
           {products.length > 0 && (
-            <span className="text-sm font-normal"> ({products.length} {products.length === 1 ? "product" : "products"})</span>
+            <span className="block sm:inline text-xs sm:text-sm font-normal mt-1 sm:mt-0"> ({products.length} {products.length === 1 ? "product" : "products"})</span>
           )}
         </h3>
       </div>
-      <section className="pt-5 px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-10">
-        <div className="lg:col-span-2 p-5">
+      <section className="pt-5 px-4 sm:px-6 md:px-12 lg:px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-6 lg:gap-10">
+        <div className="lg:col-span-2 p-3 sm:p-4 lg:p-5">
           <FilterSidebar
             brands={brands}
             searchBySize={searchBySize}

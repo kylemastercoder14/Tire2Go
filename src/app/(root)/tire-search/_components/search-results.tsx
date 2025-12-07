@@ -82,9 +82,9 @@ const SearchResults = ({ products }: SearchResultsProps) => {
   };
 
   return (
-    <div className="lg:col-span-8 p-5">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold tracking-tight">{getTitle()}</h3>
+    <div className="lg:col-span-8 p-3 sm:p-4 lg:p-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+        <h3 className="text-lg sm:text-xl font-bold tracking-tight">{getTitle()}</h3>
         <SortOptions />
       </div>
       <ProductGrid products={currentProducts} isLoading={isLoading} />

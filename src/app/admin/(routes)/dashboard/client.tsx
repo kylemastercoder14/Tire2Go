@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Period } from "@/lib/api";
+import { useUser } from "@clerk/nextjs";
 
 const periods: Period[] = [
   "Weekly",
@@ -25,6 +26,7 @@ const periods: Period[] = [
 ];
 
 const DashboardContent = ({ orders }: { orders: any }) => {
+  const { user } = useUser();
   const [statData, setStatData] = useState<any[]>([]);
   const [period, setPeriod] = useState<Period>("Monthly");
 
@@ -154,12 +156,14 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       return;
     }
 
-    const printWindow = window.open("", "_blank", "width=800,height=600");
+    const printWindow = window.open("about:blank", "_blank", "width=800,height=600");
     if (!printWindow) return;
+
+    // Change document title to prevent showing "about:blank"
+    printWindow.document.title = "Dashboard Report - 202 Mags and Tires Collections";
 
     // Get date range for the selected period
     const { startDate, endDate } = getPeriodDateRange(period);
-    const periodLabel = period === "Semi Anually" ? "Semi-Annually" : period;
     const dateRangeLabel = `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
 
     // Find the stat objects by their exact titles
@@ -173,18 +177,53 @@ const DashboardContent = ({ orders }: { orders: any }) => {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard Report</title>
+  <title>202 Mags and Tires Collections - Dashboard Report</title>
   <meta charset="utf-8">
   <style>
     @page {
       margin: 1cm;
       size: A4;
+      @top-left { content: ""; }
+      @top-center { content: ""; }
+      @top-right { content: ""; }
+      @bottom-left { content: ""; }
+      @bottom-center { content: ""; }
+      @bottom-right { content: ""; }
+    }
+    @media print {
+      @page {
+        margin: 1cm;
+        size: A4;
+        @top-left { content: ""; }
+        @top-center { content: ""; }
+        @top-right { content: ""; }
+        @bottom-left { content: ""; }
+        @bottom-center { content: ""; }
+        @bottom-right { content: ""; }
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .footer-info {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        padding: 10px;
+        font-size: 11px;
+        color: #666;
+        border-top: 1px solid #ddd;
+        background: white;
+      }
     }
     body {
       font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       color: #000;
       background: #fff;
       padding: 20px;
+      padding-bottom: 80px;
       line-height: 1.5;
     }
     h1, h2 {
@@ -216,15 +255,26 @@ const DashboardContent = ({ orders }: { orders: any }) => {
     .mt-8 { margin-top: 32px; }
     .pt-4 { padding-top: 16px; }
     .border-t { border-top: 1px solid #ddd; }
+    .footer-info {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      padding: 10px;
+      font-size: 11px;
+      color: #666;
+      border-top: 1px solid #ddd;
+      background: white;
+    }
   </style>
 </head>
 <body>
   <div class="print-container">
-    <h1>Dashboard Report - ${periodLabel} Period</h1>
+    <h1>202 Mags and Tires Collections</h1>
     <p class="text-center text-sm">Period: ${dateRangeLabel}</p>
-    <p class="text-center text-sm">Generated: ${new Date().toLocaleString()}</p>
 
-    <h2>Statistics Overview (${periodLabel})</h2>
+    <h2>Statistics Overview</h2>
     <table>
       <thead>
         <tr><th>Metric</th><th>Value</th><th>Trend</th><th>Change</th></tr>
@@ -330,8 +380,9 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       </tbody>
     </table>
 
-    <div class="text-center mt-8 pt-4 border-t">
-      <p class="text-sm">This report was generated on ${new Date().toLocaleString()}</p>
+    <div class="footer-info">
+      <p>This report was generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+      ${user ? `<p>Printed by: ${user.firstName || ''} ${user.lastName || ''}${user.emailAddresses?.[0]?.emailAddress ? ` (${user.emailAddresses[0].emailAddress})` : ''}</p>` : '<p>Printed by: System Administrator</p>'}
     </div>
   </div>
 </body>
@@ -374,7 +425,7 @@ const DashboardContent = ({ orders }: { orders: any }) => {
             onClick={handlePrint}
             className="bg-green-600 hover:bg-green-700"
           >
-            Print Dashboard
+            Print Report
           </Button>
         </div>
       </div>

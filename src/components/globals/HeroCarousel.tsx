@@ -28,7 +28,7 @@ const HeroCarousel = () => {
   }, [api]);
 
   return (
-    <div className="relative w-[600px] h-[280px]">
+    <div className="relative lg:w-[600px] w-full h-[280px]">
       <Carousel
         setApi={setApi}
         opts={{

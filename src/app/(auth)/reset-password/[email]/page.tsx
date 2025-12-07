@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 const Page = () => {
   const router = useRouter();
@@ -26,6 +27,8 @@ const Page = () => {
   const [code, setCode] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [timer, setTimer] = React.useState(60);
   const [isInitialized, setIsInitialized] = React.useState(false);
@@ -326,28 +329,62 @@ const Page = () => {
 
             <div className="space-y-2">
               <Label>New Password</Label>
-              <Input
-                type="password"
-                placeholder="Enter new password"
-                value={password}
-                required
-                disabled={!isLoaded || isLoading}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength={8}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter new password"
+                  value={password}
+                  required
+                  disabled={!isLoaded || isLoading}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={8}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={!isLoaded || isLoading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-2">
               <Label>Confirm New Password</Label>
-              <Input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                required
-                disabled={!isLoaded || isLoading}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                minLength={8}
-              />
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  required
+                  disabled={!isLoaded || isLoading}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  minLength={8}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={!isLoaded || isLoading}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
             </div>
 
             <Button

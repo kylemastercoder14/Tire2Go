@@ -1876,10 +1876,10 @@ export const updateTicket = async (
     // Check if user is admin
     const user = await db.users.findUnique({
       where: { authId: userId },
-      select: { role: true },
+      select: { userType: true, role: true },
     });
 
-    if (!user || user.role !== "ADMIN") {
+    if (!user || (user.userType !== "ADMIN" && user.role !== "ADMIN")) {
       return { error: "Forbidden - Admin access required" };
     }
 
@@ -1915,10 +1915,10 @@ export const deleteTicket = async (id: string) => {
     // Check if user is admin
     const user = await db.users.findUnique({
       where: { authId: userId },
-      select: { role: true },
+      select: { userType: true, role: true },
     });
 
-    if (!user || user.role !== "ADMIN") {
+    if (!user || (user.userType !== "ADMIN" && user.role !== "ADMIN")) {
       return { error: "Forbidden - Admin access required" };
     }
 
@@ -1940,6 +1940,37 @@ export const deleteTicket = async (id: string) => {
   } catch (error) {
     console.error("Error deleting ticket:", error);
     return { error: "Failed to delete ticket" };
+  }
+};
+
+// Get low stock inventory items for notifications
+export const getLowStockInventory = async () => {
+  try {
+    const lowStockItems = await db.inventory.findMany({
+      where: {
+        status: {
+          in: ["LOW_STOCK", "OUT_OF_STOCK"],
+        },
+      },
+      include: {
+        product: {
+          include: {
+            brand: true,
+          },
+        },
+      },
+      orderBy: {
+        quantity: "asc", // Show lowest stock first
+      },
+    });
+
+    return {
+      success: "Low stock items fetched successfully",
+      data: lowStockItems,
+    };
+  } catch (error) {
+    console.error("Error fetching low stock inventory:", error);
+    return { error: "Failed to fetch low stock inventory", data: [] };
   }
 };
 

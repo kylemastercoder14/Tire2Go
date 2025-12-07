@@ -209,16 +209,16 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
         <div className="bg-primary fixed inset-0 flex flex-col items-center pt-30 w-full overflow-hidden h-screen z-50">
           <div
             onClick={() => setIsOpen({ toggle: false, key: null })}
-            className="absolute size-12 top-7 right-7 border border-white rounded-full flex items-center justify-center cursor-pointer"
+            className="absolute size-10 sm:size-12 top-4 right-4 sm:top-7 sm:right-7 border border-white rounded-full flex items-center justify-center cursor-pointer z-10"
           >
-            <XIcon className="size-7 text-white" />
+            <XIcon className="size-5 sm:size-7 text-white" />
           </div>
 
           {/* ---- SIZE FLOW ---- */}
           {isOpen.key === "size" && (
-            <div className="flex max-w-7xl gap-20 mx-auto items-start">
+            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0">
               {/* Left preview */}
-              <div className="bg-[#c02b2b] w-[400px] rounded-2xl p-8">
+              <div className="bg-[#c02b2b] w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8">
                 <h3 className="font-semibold text-white text-lg mb-5">
                   About your Dimension
                 </h3>
@@ -268,10 +268,10 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
               </div>
 
               {/* Right side content */}
-              <div className="w-[700px]">
+              <div className="w-full lg:w-[700px]">
                 {/* Reset */}
                 <div
-                  className="flex cursor-pointer text-white items-center gap-2"
+                  className="flex cursor-pointer text-white items-center gap-2 mb-4 lg:mb-0"
                   onClick={() => {
                     setSelectedWidth("");
                     setSelectedAspect("");
@@ -281,13 +281,13 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                     setIsLoadingRim(false);
                   }}
                 >
-                  <ChevronLeft className="size-7" />
-                  Reset my search
+                  <ChevronLeft className="size-5 sm:size-7" />
+                  <span className="text-sm sm:text-base">Reset my search</span>
                 </div>
 
-                <div className="flex items-start -mt-5 justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-start -mt-5 sm:-mt-5 justify-between gap-4 sm:gap-0">
                   {/* Step Title */}
-                  <h3 className="font-semibold mt-14 text-white text-2xl">
+                  <h3 className="font-semibold mt-4 sm:mt-14 text-white text-lg sm:text-xl lg:text-2xl">
                     {selectedWidth === ""
                       ? "Please enter the width..."
                       : selectedAspect === ""
@@ -297,7 +297,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                           : "All set!"}
                   </h3>
 
-                  <div className="relative size-60">
+                  <div className="relative w-full sm:w-48 lg:w-60 h-48 sm:h-48 lg:h-60">
                     <Image
                       src="https://adzktgbqdq.cloudimg.io/https://dgaddcosprod.blob.core.windows.net/cxf-multisite/clsnd2leu002711ow8tgx7mfc/attachments/g1op4dopzho9s4qrm03ynut2-ts-ref-tyre-4w-step-02.one-third.png"
                       alt="Tire Size"
@@ -377,9 +377,9 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
 
           {/* ---- CAR FLOW ---- */}
           {isOpen.key === "car" && (
-            <div className="flex max-w-7xl gap-20 mx-auto items-start">
+            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0">
               {/* Left preview */}
-              <div className="bg-[#c02b2b] w-[400px] rounded-2xl p-8">
+              <div className="bg-[#c02b2b] w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8">
                 <h3 className="font-semibold text-white text-lg mb-5">
                   About your Car
                 </h3>
@@ -428,10 +428,10 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
               </div>
 
               {/* Right side */}
-              <div className="w-[700px]">
+              <div className="w-full lg:w-[700px]">
                 {/* Reset */}
                 <div
-                  className="flex cursor-pointer text-white items-center gap-2"
+                  className="flex cursor-pointer text-white items-center gap-2 mb-4 lg:mb-0"
                   onClick={() => {
                     setSelectedBrand("");
                     setSelectedModel("");
@@ -441,12 +441,12 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                     setIsLoadingYear(false);
                   }}
                 >
-                  <ChevronLeft className="size-7" />
-                  Reset my search
+                  <ChevronLeft className="size-5 sm:size-7" />
+                  <span className="text-sm sm:text-base">Reset my search</span>
                 </div>
 
-                <div className="flex items-start -mt-5 justify-between">
-                  <h3 className="font-semibold mt-14 text-white text-2xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-start -mt-5 sm:-mt-5 justify-between gap-4 sm:gap-0">
+                  <h3 className="font-semibold mt-4 sm:mt-14 text-white text-lg sm:text-xl lg:text-2xl">
                     {selectedBrand === ""
                       ? "Please select the brand..."
                       : selectedModel === ""
@@ -455,7 +455,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                           ? "Please select the year..."
                           : "All set!"}
                   </h3>
-                  <div className="relative size-64">
+                  <div className="relative w-full sm:w-52 lg:w-64 h-52 sm:h-52 lg:h-64">
                     <Image
                       src="/car.png"
                       alt="Car"

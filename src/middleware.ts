@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
@@ -24,12 +25,31 @@ const isPublicRoute = createRouteMatcher([
   "/api/user(.*)", // allow signup + verify API calls
   "/api/stats(.*)",
   "/api/database(.*)",
-  "/admin(.*)", // allow access to admin panel for now, later it should be protected
 ]);
 
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+
 export default clerkMiddleware(async (auth, req) => {
+  // Protect all non-public routes
   if (!isPublicRoute(req)) {
     await auth.protect();
+  }
+
+  // For admin routes, just check if user is authenticated
+  // The actual userType check will be done client-side in AuthRedirectHandler
+  // This avoids Prisma Edge runtime issues
+  if (isAdminRoute(req)) {
+    const { userId } = await auth();
+
+    if (!userId) {
+      // User not authenticated, redirect to sign-in
+      const signInUrl = new URL("/sign-in", req.url);
+      signInUrl.searchParams.set("redirect_url", req.url);
+      return NextResponse.redirect(signInUrl);
+    }
+
+    // Note: User type check is handled client-side in AuthRedirectHandler
+    // to avoid Prisma Edge runtime limitations
   }
 });
 

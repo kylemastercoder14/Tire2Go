@@ -17,6 +17,7 @@ export async function POST(req: Request) {
         lastName,
         mobileNumber,
         isEmailVerified: false,
+        userType: "CUSTOMER", // Default to customer for new signups
       },
     });
 

@@ -12,7 +12,7 @@ import { IconSortAscendingLetters } from "@tabler/icons-react";
 const SortOptions = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="bg-primary w-[500px] px-3 py-1.5 flex items-center justify-between rounded-md text-white">
+      <DropdownMenuTrigger className="bg-primary lg:w-[500px] w-full px-3 py-1.5 flex items-center justify-between rounded-md text-white">
         <span>Sort by</span>
         <IconSortAscendingLetters className="size-5" />
       </DropdownMenuTrigger>

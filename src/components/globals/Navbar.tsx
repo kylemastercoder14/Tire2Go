@@ -179,7 +179,30 @@ const Navbar = () => {
                 Tire selector
               </Link>
               {isSignedIn ? (
-                <UserButton />
+                <UserButton>
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      href="/order-history"
+                      label="Order History"
+                      labelIcon={
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                          />
+                        </svg>
+                      }
+                    />
+                  </UserButton.MenuItems>
+                </UserButton>
               ) : (
                 <Link
                   href="/sign-in"
@@ -223,9 +246,9 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Navigation Menu */}
+            {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden bg-white border-t shadow-lg">
+        <div className="lg:hidden bg-white border-t shadow-lg max-h-[calc(100vh-140px)] overflow-y-auto">
           <div className="px-4 pt-2 pb-3 space-y-1">
             {menuItems.map((menu, idx) => (
               <div key={idx} className="border-b border-gray-100 pb-2 mb-2">
@@ -236,6 +259,7 @@ const Navbar = () => {
                   <Link
                     key={itemIdx}
                     href={`/${item.url}`}
+                    onClick={() => setIsMenuOpen(false)}
                     className="block px-6 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50"
                   >
                     {item.label}
@@ -245,19 +269,49 @@ const Navbar = () => {
             ))}
             <Link
               href="/about-us"
+              onClick={() => setIsMenuOpen(false)}
               className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50"
             >
               About Us
             </Link>
+            <Link
+              href="/contact-us"
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50"
+            >
+              Contact Us
+            </Link>
+            <Link
+              href="/feedback"
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50"
+            >
+              Feedback
+            </Link>
             <div className="pt-3 space-y-2">
+              {isSignedIn ? (
+                <div className="px-3 py-2">
+                  <UserButton />
+                </div>
+              ) : (
+                <Link
+                  href="/sign-in"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block border border-primary text-primary px-4 py-2.5 rounded font-medium text-center"
+                >
+                  Sign In
+                </Link>
+              )}
               <Link
                 href="/tire-selector"
-                className="block bg-primary text-gray-900 px-4 py-2 rounded font-medium text-center"
+                onClick={() => setIsMenuOpen(false)}
+                className="block bg-primary text-white px-4 py-2.5 rounded font-medium text-center"
               >
                 Tire selector
               </Link>
               <Link
                 href="/find-dealer"
+                onClick={() => setIsMenuOpen(false)}
                 className="block bg-gray-700 text-white px-4 py-2 rounded font-medium text-center"
               >
                 Find a dealer

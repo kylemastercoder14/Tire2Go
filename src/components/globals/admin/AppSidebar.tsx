@@ -22,7 +22,6 @@ import {
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/globals/admin/NavMain";
-import { NavUser } from "@/components/globals/admin/NavUser";
 import {
   Sidebar,
   SidebarContent,
@@ -33,90 +32,83 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const data = {
-  user: {
-    name: "Admin",
-    email: "m@example.com",
-    avatar: "https://github.com/evilrabbit.png",
+const navMainData = [
+  {
+    title: "Dashboard",
+    url: "/admin/dashboard",
+    icon: IconDashboard,
   },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/admin/dashboard",
-      icon: IconDashboard,
-    },
-    {
-      title: "Brands",
-      url: "/admin/brands",
-      icon: IconBadgeTm,
-    },
-    {
-      title: "Product Catalog",
-      url: "/admin/products",
-      icon: IconSitemap,
-    },
-    {
-      title: "Car Management",
-      url: "/admin/car-management",
-      icon: IconCar,
-    },
-    {
-      title: "Tire Sizes",
-      url: "/admin/tire-sizes",
-      icon: IconWheel,
-    },
-    {
-      title: "Inventory Management",
-      url: "/admin/inventory-management",
-      icon: IconBox,
-    },
-    {
-      title: "Customers",
-      url: "/admin/customers",
-      icon: IconUsersGroup,
-    },
-    // {
-    //   title: "Staff Management",
-    //   url: "/admin/staff-management",
-    //   icon: IconUserCog,
-    // },
-    {
-      title: "Orders",
-      url: "/admin/orders",
-      icon: IconWallet,
-    },
-    {
-      title: "Promotion & Discounts",
-      url: "/admin/promotions-and-discounts",
-      icon: IconTag,
-    },
-    {
-      title: "Tips & Guides",
-      url: "/admin/tips-and-guides",
-      icon: IconHelpCircle,
-    },
-    {
-      title: "Feedback",
-      url: "/admin/feedback",
-      icon: IconFileText,
-    },
-    {
-      title: "FAQs",
-      url: "/admin/faqs",
-      icon: IconZoomQuestion,
-    },
-    {
-      title: "Policies",
-      url: "/admin/policies",
-      icon: IconScale,
-    },
-    {
-      title: "Backup & Recovery",
-      url: "/admin/backup-recovery",
-      icon: IconDatabase,
-    },
-  ],
-};
+  {
+    title: "Brands",
+    url: "/admin/brands",
+    icon: IconBadgeTm,
+  },
+  {
+    title: "Product Catalog",
+    url: "/admin/products",
+    icon: IconSitemap,
+  },
+  {
+    title: "Car Management",
+    url: "/admin/car-management",
+    icon: IconCar,
+  },
+  {
+    title: "Tire Sizes",
+    url: "/admin/tire-sizes",
+    icon: IconWheel,
+  },
+  {
+    title: "Inventory Management",
+    url: "/admin/inventory-management",
+    icon: IconBox,
+  },
+  {
+    title: "Customers",
+    url: "/admin/customers",
+    icon: IconUsersGroup,
+  },
+  // {
+  //   title: "Staff Management",
+  //   url: "/admin/staff-management",
+  //   icon: IconUserCog,
+  // },
+  {
+    title: "Orders",
+    url: "/admin/orders",
+    icon: IconWallet,
+  },
+  {
+    title: "Promotion & Discounts",
+    url: "/admin/promotions-and-discounts",
+    icon: IconTag,
+  },
+  {
+    title: "Tips & Guides",
+    url: "/admin/tips-and-guides",
+    icon: IconHelpCircle,
+  },
+  {
+    title: "Feedback",
+    url: "/admin/feedback",
+    icon: IconFileText,
+  },
+  {
+    title: "FAQs",
+    url: "/admin/faqs",
+    icon: IconZoomQuestion,
+  },
+  {
+    title: "Policies",
+    url: "/admin/policies",
+    icon: IconScale,
+  },
+  {
+    title: "Backup & Recovery",
+    url: "/admin/backup-recovery",
+    icon: IconDatabase,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -140,11 +132,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainData} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
+      <SidebarFooter></SidebarFooter>
     </Sidebar>
   );
 }

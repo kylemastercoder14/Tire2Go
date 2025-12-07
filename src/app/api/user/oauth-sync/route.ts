@@ -110,6 +110,7 @@ export async function POST(req: NextRequest) {
           ipAddress,
           userAgent,
           deviceType: device.type || "desktop",
+          userType: "CUSTOMER", // Default to customer for OAuth signups
         },
       });
     }

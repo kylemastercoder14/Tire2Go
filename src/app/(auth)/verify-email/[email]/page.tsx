@@ -55,7 +55,7 @@ const Page = () => {
         code,
       });
       // If verification was completed, set the session to active
-      // and redirect the user
+      // and redirect the user based on userType
       if (signUpAttempt.status === "complete") {
         await setActive({ session: signUpAttempt.createdSessionId });
         // ✅ mark user verified in DB
@@ -64,7 +64,28 @@ const Page = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: formattedEmail, authId: signUpAttempt.createdUserId }), // or Clerk userId
         });
-        router.replace("/");
+
+        // Check user type and redirect accordingly
+        try {
+          const typeResponse = await fetch("/api/user/check-type");
+          const typeData = await typeResponse.json();
+
+          if (typeData.success) {
+            // ADMIN: Redirect to admin dashboard
+            if (typeData.userType === "ADMIN") {
+              router.replace("/admin/dashboard");
+            }
+            // CUSTOMER: Redirect to root page
+            else {
+              router.replace("/");
+            }
+          } else {
+            router.replace("/");
+          }
+        } catch (err) {
+          console.error("Error checking user type:", err);
+          router.replace("/");
+        }
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.

@@ -738,13 +738,44 @@ const ProductForm = ({
                       <div className="flex gap-2">
                         <div className="flex-1">
                           <div className="border rounded-md p-2 max-h-40 overflow-y-auto">
-                            <p className="text-xs text-muted-foreground mb-1">
-                              {!selectedModel
-                                ? "Select model first"
-                                : availableYears.length === 0
-                                  ? "No years available for this model"
-                                  : "Select one or more years"}
-                            </p>
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-xs text-muted-foreground">
+                                {!selectedModel
+                                  ? "Select model first"
+                                  : availableYears.length === 0
+                                    ? "No years available for this model"
+                                    : `Select one or more years (${selectedYears.length}/${availableYears.length} selected)`}
+                              </p>
+                              {selectedModel && availableYears.length > 0 && (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6 px-2 text-xs"
+                                  onClick={() => {
+                                    const allSelected = availableYears.every((year) =>
+                                      selectedYears.includes(year.toString())
+                                    );
+                                    if (allSelected) {
+                                      // Deselect all
+                                      setSelectedYears([]);
+                                    } else {
+                                      // Select all
+                                      setSelectedYears(
+                                        availableYears.map((year) => year.toString())
+                                      );
+                                    }
+                                  }}
+                                  disabled={isSubmitting}
+                                >
+                                  {availableYears.every((year) =>
+                                    selectedYears.includes(year.toString())
+                                  )
+                                    ? "Deselect All"
+                                    : "Select All"}
+                                </Button>
+                              )}
+                            </div>
                             <div className="grid grid-cols-2 gap-1">
                               {availableYears.map((year) => {
                                 const value = year.toString();

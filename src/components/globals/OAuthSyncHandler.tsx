@@ -43,7 +43,7 @@ export const OAuthSyncHandler = () => {
       return;
     }
 
-    // Sync user to database
+    // Sync user to database and redirect based on userType
     const syncUser = async () => {
       try {
         // Mark as syncing to prevent duplicate calls
@@ -67,6 +67,27 @@ export const OAuthSyncHandler = () => {
         const data = await response.json();
         if (data.success) {
           console.log("OAuth user synced successfully");
+
+          // After sync, check user type and redirect accordingly
+          try {
+            const typeResponse = await fetch("/api/user/check-type");
+            const typeData = await typeResponse.json();
+
+            if (typeData.success) {
+              // ADMIN: Redirect to admin dashboard
+              if (typeData.userType === "ADMIN") {
+                window.location.href = "/admin/dashboard";
+              }
+              // CUSTOMER: Redirect to root page
+              else {
+                window.location.href = "/";
+              }
+            }
+          } catch (err) {
+            console.error("Error redirecting after OAuth sync:", err);
+            // Default to home on error
+            window.location.href = "/";
+          }
         }
       } catch (error) {
         console.error("Failed to sync OAuth user:", error);

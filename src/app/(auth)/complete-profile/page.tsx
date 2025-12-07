@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 const CompleteProfile = () => {
   const { user, isLoaded } = useUser();
@@ -19,6 +20,7 @@ const CompleteProfile = () => {
     user?.emailAddresses[0]?.emailAddress || ""
   );
   const [password, setPassword] = useState(""); // optional if you want a local pw
+  const [showPassword, setShowPassword] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -63,7 +65,28 @@ const CompleteProfile = () => {
       });
 
       toast.success("Profile completed!");
-      router.replace("/");
+
+      // Check user type and redirect accordingly
+      try {
+        const typeResponse = await fetch("/api/user/check-type");
+        const typeData = await typeResponse.json();
+
+        if (typeData.success) {
+          // ADMIN: Redirect to admin dashboard
+          if (typeData.userType === "ADMIN") {
+            router.replace("/admin/dashboard");
+          }
+          // CUSTOMER: Redirect to root page
+          else {
+            router.replace("/");
+          }
+        } else {
+          router.replace("/");
+        }
+      } catch (err) {
+        console.error("Error checking user type:", err);
+        router.replace("/");
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to save profile");
     } finally {
@@ -122,14 +145,31 @@ const CompleteProfile = () => {
             </div>
             <div className="space-y-2">
               <Label>Password</Label>
-              <Input
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                required
-                disabled={!isLoaded || loading}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={password}
+                  required
+                  disabled={!isLoaded || loading}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={!isLoaded || loading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
             </div>
             <div className="space-y-2">
               <Label>Mobile Number</Label>

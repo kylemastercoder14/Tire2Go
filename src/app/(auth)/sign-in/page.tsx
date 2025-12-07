@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useSignIn } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 const Page = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const Page = () => {
   //  States for form inputs
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,10 +33,43 @@ const Page = () => {
       })
 
       // If sign-in process is complete, set the created session as active
-      // and redirect the user
+      // and redirect the user based on their userType
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId })
-        router.replace('/')
+
+        // Wait a moment for session to be fully established
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Check user type and redirect accordingly
+        try {
+          const response = await fetch('/api/user/check-type');
+
+          if (!response.ok) {
+            console.error("Failed to check user type:", response.statusText);
+            router.replace('/');
+            return;
+          }
+
+          const data = await response.json();
+
+          if (data.success && data.userType) {
+            // ADMIN: Redirect to admin dashboard
+            if (data.userType === 'ADMIN') {
+              router.replace('/admin/dashboard');
+            }
+            // CUSTOMER: Redirect to root page
+            else {
+              router.replace('/');
+            }
+          } else {
+            // Default to home if check fails
+            router.replace('/');
+          }
+        } catch (err) {
+          console.error("Error checking user type:", err);
+          // Default to home if check fails
+          router.replace('/');
+        }
       } else {
         // If the status isn't complete, check why. User might need to
         // complete further steps.
@@ -87,14 +122,31 @@ const Page = () => {
             </div>
             <div className="space-y-2">
               <Label>Password</Label>
-              <Input
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                required
-                disabled={!isLoaded || isLoading}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={password}
+                  required
+                  disabled={!isLoaded || isLoading}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={!isLoaded || isLoading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
             </div>
             <Link
               href="/forgot-password"

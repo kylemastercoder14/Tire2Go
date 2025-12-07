@@ -23,7 +23,7 @@ const AdminLayout = ({ children }: Props) => {
       <SidebarInset>
         <SiteHeader />
         <PageLoadingOverlay />
-        <main className='px-6 py-5'>{children}</main>
+        <main className='px-3 sm:px-4 md:px-6 py-4 sm:py-5'>{children}</main>
         <AdminChatApp />
       </SidebarInset>
     </SidebarProvider>

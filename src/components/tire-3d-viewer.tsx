@@ -6,7 +6,7 @@ import { OrbitControls, PerspectiveCamera, useGLTF, Html } from "@react-three/dr
 import { Group } from "three";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import { IconZoomIn, IconZoomOut, IconRotateClockwise, IconBrightness, IconInfoCircle } from "@tabler/icons-react";
+import { IconZoomIn, IconZoomOut, IconRotateClockwise, IconBrightness, IconInfoCircle, IconChevronDown } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import Image from "next/image";
@@ -1129,7 +1129,8 @@ function ControlBar({
   onZoomIn,
   onZoomOut,
   onReset,
-  hasReferencePanel = false
+  hasReferencePanel = false,
+  isMobile = false
 }: {
   brightness: number;
   onBrightnessChange: (value: number) => void;
@@ -1137,38 +1138,41 @@ function ControlBar({
   onZoomOut: () => void;
   onReset: () => void;
   hasReferencePanel?: boolean;
+  isMobile?: boolean;
 }) {
   return (
     <div
-      className="absolute bottom-0 left-0 bg-black/80 backdrop-blur-sm border-t border-white/10"
-      style={{ right: hasReferencePanel ? '320px' : '0' }}
+      className={`absolute left-0 bg-black/80 backdrop-blur-sm border-t border-white/10 z-20 ${isMobile ? 'bottom-12 sm:bottom-14' : 'bottom-0'}`}
+      style={{
+        right: hasReferencePanel && !isMobile ? 'clamp(0px, 320px, 25vw)' : '0'
+      }}
     >
-      <div className="flex items-center justify-between px-6 py-4 gap-6">
+      <div className={`flex flex-col sm:flex-row items-stretch sm:items-center justify-between px-2 sm:px-3 md:px-4 lg:px-6 py-2 sm:py-2.5 md:py-3 lg:py-4 gap-2 sm:gap-2.5 md:gap-3 lg:gap-4 xl:gap-6 ${isMobile ? '' : ''}`}>
         {/* Panning Hint */}
         <div className="hidden lg:flex items-center gap-2 text-white/60 text-xs">
           <span>🖱️ Right-click or Middle-click + drag to pan</span>
         </div>
 
         {/* Zoom Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <Button
             variant="ghost"
             size="default"
             onClick={onZoomOut}
-            className="text-white hover:bg-white/20 h-10 w-10 p-0"
+            className="text-white hover:bg-white/20 h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 p-0"
             aria-label="Zoom out"
           >
-            <IconZoomOut className="h-5 w-5" />
+            <IconZoomOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5" />
           </Button>
-          <span className="text-white text-base font-medium">Zoom</span>
+          <span className="text-white text-xs sm:text-sm md:text-base font-medium hidden sm:inline">Zoom</span>
           <Button
             variant="ghost"
             size="default"
             onClick={onZoomIn}
-            className="text-white hover:bg-white/20 h-10 w-10 p-0"
+            className="text-white hover:bg-white/20 h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 p-0"
             aria-label="Zoom in"
           >
-            <IconZoomIn className="h-5 w-5" />
+            <IconZoomIn className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5" />
           </Button>
         </div>
 
@@ -1177,26 +1181,26 @@ function ControlBar({
           variant="ghost"
           size="default"
           onClick={onReset}
-          className="text-white hover:bg-white/20 h-10"
+          className="text-white hover:bg-white/20 h-7 sm:h-8 md:h-10 text-xs sm:text-sm md:text-base flex-shrink-0"
           aria-label="Reset view"
         >
-          <IconRotateClockwise className="h-5 w-5 mr-2" />
-          Reset
+          <IconRotateClockwise className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 sm:mr-2" />
+          <span className="hidden sm:inline">Reset</span>
         </Button>
 
         {/* Brightness Control */}
-        <div className="flex items-center gap-4 flex-1 max-w-md">
-          <IconBrightness className="h-5 w-5 text-white" />
-          <span className="text-white text-base font-medium min-w-[100px]">Brightness</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 flex-1 max-w-full sm:max-w-md min-w-0">
+          <IconBrightness className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-white flex-shrink-0" />
+          <span className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base font-medium min-w-[60px] sm:min-w-[70px] md:min-w-[100px] flex-shrink-0">Brightness</span>
           <Slider
             value={[brightness * 100]}
             min={50}
             max={200}
             step={5}
             onValueChange={(values) => onBrightnessChange(values[0] / 100)}
-            className="flex-1"
+            className="flex-1 min-w-0"
           />
-          <span className="text-white text-base font-medium min-w-[45px] text-right">
+          <span className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base font-medium min-w-[30px] sm:min-w-[35px] md:min-w-[45px] text-right flex-shrink-0">
             {Math.round(brightness * 100)}%
           </span>
         </div>
@@ -1206,13 +1210,29 @@ function ControlBar({
 }
 
 // Disclaimer Component
-function DisclaimerBanner() {
+function DisclaimerBanner({ hasReferencePanel = false, isMobile = false }: { hasReferencePanel?: boolean; isMobile?: boolean }) {
+  if (isMobile) {
+    // On mobile, make it smaller and positioned at top
+    return (
+      <div className="absolute top-1 left-1 right-1 z-20 bg-amber-500/90 backdrop-blur-sm border border-amber-400/50 rounded p-1.5 sm:p-2 shadow-lg">
+        <div className="flex items-start gap-1.5">
+          <IconInfoCircle className="h-3 w-3 text-amber-900 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <p className="text-[10px] sm:text-xs font-medium text-amber-900 leading-tight">
+              <strong>Disclaimer:</strong> Visual reference only. Details may vary. Check product specs for accuracy.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="absolute top-3 left-3 right-3 z-20 w-[calc(100%-320px)] bg-amber-500/90 backdrop-blur-sm border border-amber-400/50 rounded-lg p-4 shadow-lg">
-      <div className="flex items-start gap-3">
-        <IconInfoCircle className="h-5 w-5 text-amber-900 mt-0.5 flex-shrink-0" />
+    <div className={`absolute top-2 sm:top-3 left-2 sm:left-3 z-20 bg-amber-500/90 backdrop-blur-sm border border-amber-400/50 rounded-lg p-2 sm:p-3 md:p-4 shadow-lg ${hasReferencePanel ? 'right-2 sm:right-3 lg:right-[clamp(336px,calc(320px+1rem),calc(25vw+1rem))]' : 'right-2 sm:right-3'}`}>
+      <div className="flex items-start gap-2 sm:gap-3">
+        <IconInfoCircle className="h-4 w-4 sm:h-5 sm:w-5 text-amber-900 mt-0.5 flex-shrink-0" />
         <div className="flex-1">
-          <p className="text-sm font-medium text-amber-900 leading-relaxed">
+          <p className="text-xs sm:text-sm font-medium text-amber-900 leading-relaxed">
             <strong>Disclaimer:</strong> This 3D model is for visual reference only. Detailed textures, colors, and exact dimensions may not be accurate.
             This tool is designed to help you visualize how the tire looks on the vehicle model and assist with your purchasing decision.
             Please refer to product specifications and images for accurate details.
@@ -1224,47 +1244,98 @@ function DisclaimerBanner() {
 }
 
 // Reference Image Panel Component
-function ReferenceImagePanel({ tireImage }: { tireImage?: string }) {
+function ReferenceImagePanel({ tireImage, isMobile = false }: { tireImage?: string; isMobile?: boolean }) {
+  const [isOpen, setIsOpen] = React.useState(!isMobile);
+
   if (!tireImage) return null;
 
-  return (
-    <div className="absolute top-0 right-0 h-full w-80 bg-black/90 backdrop-blur-sm border-l border-white/10 z-10 flex flex-col">
-      <div className="p-6 border-b border-white/10">
-        <h3 className="text-white text-base font-semibold">Reference Image</h3>
+  // On mobile, show as a collapsible panel (starts collapsed by default)
+  if (isMobile) {
+    return (
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-black/90 backdrop-blur-sm border-t border-white/10 max-h-[35vh] sm:max-h-[40vh] flex flex-col shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full p-2.5 sm:p-3 flex items-center justify-between text-white hover:bg-white/10 flex-shrink-0 border-b border-white/5"
+        >
+          <h3 className="text-xs sm:text-sm font-semibold">Reference Image</h3>
+          <IconChevronDown className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {isOpen && (
+          <div className="p-2.5 sm:p-3 md:p-4 space-y-2.5 sm:space-y-3 md:space-y-4 overflow-y-auto flex-1 min-h-0">
+            <div className="relative w-full aspect-square bg-zinc-800 rounded-lg overflow-hidden border border-white/10 max-w-[200px] sm:max-w-xs mx-auto">
+              <Image
+                src={tireImage}
+                alt="Tire Reference"
+                fill
+                className="object-contain"
+                sizes="(max-width: 640px) 100vw, 320px"
+              />
+            </div>
+            <div className="p-2.5 sm:p-3 md:p-4 bg-zinc-800 rounded-lg border border-white/10">
+              <h3 className="text-white text-xs sm:text-sm font-semibold mb-2 sm:mb-3">Model Parameters</h3>
+              <div className="space-y-1.5 sm:space-y-2">
+                <div className="flex text-[11px] sm:text-xs md:text-sm items-center justify-between">
+                  <span className='text-gray-300'>Triangles: </span>
+                  <span className='text-white font-medium'>80k</span>
+                </div>
+                <div className="flex text-[11px] sm:text-xs md:text-sm items-center justify-between">
+                  <span className='text-gray-300'>Quality: </span>
+                  <span className='text-white font-medium'>Standard</span>
+                </div>
+                <div className="flex text-[11px] sm:text-xs md:text-sm items-center justify-between">
+                  <span className='text-gray-300'>Texture: </span>
+                  <span className='text-white font-medium'>No Texture</span>
+                </div>
+                <div className="flex text-[11px] sm:text-xs md:text-sm items-center justify-between">
+                  <span className='text-gray-300'>Size: </span>
+                  <span className='text-white font-medium'>120MB</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      <div className="flex-1 p-6 h-full flex flex-col items-between overflow-auto">
+    );
+  }
+
+  // Desktop: Side panel
+  return (
+    <div className="hidden lg:block absolute top-0 right-0 h-full w-64 xl:w-80 bg-black/90 backdrop-blur-sm border-l border-white/10 z-10 flex-col">
+      <div className="p-4 xl:p-6 border-b border-white/10">
+        <h3 className="text-white text-sm xl:text-base font-semibold">Reference Image</h3>
+      </div>
+      <div className="flex-1 p-4 xl:p-6 h-full flex flex-col items-between overflow-auto">
         <div className="relative w-full aspect-square bg-zinc-800 rounded-lg overflow-hidden border border-white/10">
           <Image
             src={tireImage}
             alt="Tire Reference"
             fill
             className="object-contain"
-            sizes="(max-width: 320px) 100vw, 320px"
+            sizes="(max-width: 1024px) 256px, 320px"
           />
         </div>
-        <div className="mt-auto p-5 bg-zinc-800 rounded-lg overflow-hidden border border-white/10">
-        <h3 className="text-white text-base font-semibold mb-4">Model Parameters</h3>
-        <div className="space-y-3">
-          <div className="flex text-base items-center justify-between">
-          <span className='text-gray-300'>Triangles: </span>
-          <span className='text-white font-medium'>80k</span>
-        </div>
-        <div className="flex text-base items-center justify-between">
-          <span className='text-gray-300'>Quality: </span>
-          <span className='text-white font-medium'>Standard</span>
-        </div>
-        <div className="flex text-base items-center justify-between">
-          <span className='text-gray-300'>Texture: </span>
-          <span className='text-white font-medium'>No Texture</span>
-        </div>
-        <div className="flex text-base items-center justify-between">
-          <span className='text-gray-300'>Size: </span>
-          <span className='text-white font-medium'>120MB</span>
-        </div>
+        <div className="mt-auto p-4 xl:p-5 bg-zinc-800 rounded-lg overflow-hidden border border-white/10">
+          <h3 className="text-white text-sm xl:text-base font-semibold mb-3 xl:mb-4">Model Parameters</h3>
+          <div className="space-y-2 xl:space-y-3">
+            <div className="flex text-sm xl:text-base items-center justify-between">
+              <span className='text-gray-300'>Triangles: </span>
+              <span className='text-white font-medium'>80k</span>
+            </div>
+            <div className="flex text-sm xl:text-base items-center justify-between">
+              <span className='text-gray-300'>Quality: </span>
+              <span className='text-white font-medium'>Standard</span>
+            </div>
+            <div className="flex text-sm xl:text-base items-center justify-between">
+              <span className='text-gray-300'>Texture: </span>
+              <span className='text-white font-medium'>No Texture</span>
+            </div>
+            <div className="flex text-sm xl:text-base items-center justify-between">
+              <span className='text-gray-300'>Size: </span>
+              <span className='text-white font-medium'>120MB</span>
+            </div>
+          </div>
         </div>
       </div>
-      </div>
-
     </div>
   );
 }
@@ -1273,6 +1344,18 @@ export function Tire3DViewer({ tireName, tireImage, threeDModel }: Tire3DViewerP
   const [isLoading, setIsLoading] = React.useState(true);
   const [loadError, setLoadError] = React.useState<Error | null>(null);
   const [brightness, setBrightness] = React.useState(1.0);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  // Detect mobile screen size
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+    checkMobile();
+    const resizeHandler = () => checkMobile();
+    window.addEventListener('resize', resizeHandler);
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, []);
 
   // Timeout fallback - hide loading after max 8 seconds
   React.useEffect(() => {
@@ -1359,22 +1442,22 @@ export function Tire3DViewer({ tireName, tireImage, threeDModel }: Tire3DViewerP
   };
 
   return (
-    <div className="relative w-full h-[800px] rounded-lg overflow-hidden flex" style={{ backgroundColor: '#e8e8e8' }}>
+    <div className="relative w-full h-[450px] sm:h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] rounded-lg overflow-hidden flex flex-col lg:flex-row" style={{ backgroundColor: '#e8e8e8' }}>
       {/* 3D Viewer Container - takes remaining space */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative min-h-0 pb-0 sm:pb-0 lg:pb-0">
         {/* Loading overlay */}
         {isLoading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-100/80 backdrop-blur-sm">
-            <div className="flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-lg shadow-lg">
-              <div className="relative w-20 h-20">
+            <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 p-4 sm:p-6 md:p-8 bg-white rounded-lg shadow-lg mx-4">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20">
                 <div className="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
                 <div
                   className="absolute inset-0 border-4 border-primary rounded-full border-t-transparent animate-spin"
                   style={{ animationDuration: '1s' }}
                 ></div>
               </div>
-              <p className="text-base font-medium text-gray-700">Loading 3D Model...</p>
-              <p className="text-sm text-gray-500">Please wait</p>
+              <p className="text-sm sm:text-base font-medium text-gray-700">Loading 3D Model...</p>
+              <p className="text-xs sm:text-sm text-gray-500">Please wait</p>
             </div>
           </div>
         )}
@@ -1395,16 +1478,16 @@ export function Tire3DViewer({ tireName, tireImage, threeDModel }: Tire3DViewerP
         >
           {loadError ? (
           <Html center>
-            <div className="flex flex-col items-center justify-center gap-5 p-10 bg-white/90 rounded-lg shadow-lg max-w-lg">
-              <div className="text-7xl">⚠️</div>
+            <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-5 p-4 sm:p-6 md:p-8 lg:p-10 bg-white/90 rounded-lg shadow-lg max-w-lg mx-4">
+              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">⚠️</div>
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                   Model Loading Error
                 </h3>
-                <p className="text-base text-gray-600 mb-4">
+                <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
                   {loadError.message || 'Failed to load 3D model. The file may not be publicly accessible.'}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500">
                   Error: 403 Forbidden - Please check S3 bucket permissions or contact support.
                 </p>
               </div>
@@ -1433,16 +1516,17 @@ export function Tire3DViewer({ tireName, tireImage, threeDModel }: Tire3DViewerP
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onReset={handleReset}
-            hasReferencePanel={!!tireImage}
+            hasReferencePanel={!!tireImage && !isMobile}
+            isMobile={isMobile}
           />
         )}
       </div>
 
       {/* Reference Image Panel */}
-      {!isLoading && <ReferenceImagePanel tireImage={tireImage} />}
+      {!isLoading && <ReferenceImagePanel tireImage={tireImage} isMobile={isMobile} />}
 
       {/* Disclaimer Banner */}
-      {!isLoading && <DisclaimerBanner />}
+      {!isLoading && <DisclaimerBanner hasReferencePanel={!!tireImage && !isMobile} isMobile={isMobile} />}
     </div>
   );
 }

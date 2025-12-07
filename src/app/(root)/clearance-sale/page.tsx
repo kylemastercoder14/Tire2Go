@@ -265,15 +265,15 @@ const Page = async ({ searchParams }: PageProps) => {
 
   return (
     <div className="min-h-screen">
-      <div className="w-full relative h-screen mt-30 bg-[#ab0000]">
+      <div className="w-full relative h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-screen mt-20 sm:mt-24 md:mt-30 bg-[#ab0000]">
         <img
           src="/CLEARANCE SALE.png"
           alt="Clearance Sale Banner"
-          className="size-full object-cover"
+          className="size-full object-cover object-center"
         />
       </div>
-      <section className="pt-5 px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-10">
-        <div className="lg:col-span-2 p-5">
+      <section className="pt-5 px-4 sm:px-6 md:px-12 lg:px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-6 lg:gap-10">
+        <div className="lg:col-span-2 p-3 sm:p-4 lg:p-5">
           <FilterSidebar
             brands={brands}
             searchBySize={searchBySize}

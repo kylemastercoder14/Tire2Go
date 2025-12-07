@@ -81,7 +81,7 @@ const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
 
   return (
     <>
-      <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-7">
         {products.map((product) => {
           // Calculate price range from productSize
           const productSizes = product.productSize || [];
