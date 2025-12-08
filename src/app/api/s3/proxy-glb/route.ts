@@ -50,7 +50,21 @@ export async function GET(req: NextRequest) {
     }).promise();
 
     // Return the file with proper headers to bypass CORS
-    return new NextResponse(s3Object.Body as Buffer, {
+    // Convert S3 Body to Uint8Array for NextResponse (it accepts Uint8Array, ArrayBuffer, or Buffer)
+    let fileData: Uint8Array;
+    if (Buffer.isBuffer(s3Object.Body)) {
+      fileData = new Uint8Array(s3Object.Body);
+    } else if (s3Object.Body instanceof Uint8Array) {
+      fileData = s3Object.Body;
+    } else if (typeof s3Object.Body === 'string') {
+      fileData = new Uint8Array(Buffer.from(s3Object.Body, 'binary'));
+    } else {
+      // Fallback: convert to Uint8Array
+      const buffer = Buffer.from(s3Object.Body as any);
+      fileData = new Uint8Array(buffer);
+    }
+
+    return new NextResponse(fileData, {
       headers: {
         "Content-Type": "model/gltf-binary",
         "Content-Disposition": `inline; filename="${key.split('/').pop()}"`,
