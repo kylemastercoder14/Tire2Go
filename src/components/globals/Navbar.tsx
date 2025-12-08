@@ -246,7 +246,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-            {/* Mobile Navigation Menu */}
+      {/* Mobile Navigation Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-white border-t shadow-lg max-h-[calc(100vh-140px)] overflow-y-auto">
           <div className="px-4 pt-2 pb-3 space-y-1">
@@ -291,7 +291,30 @@ const Navbar = () => {
             <div className="pt-3 space-y-2">
               {isSignedIn ? (
                 <div className="px-3 py-2">
-                  <UserButton />
+                  <UserButton>
+                    <UserButton.MenuItems>
+                      <UserButton.Link
+                        href="/order-history"
+                        label="Order History"
+                        labelIcon={
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            />
+                          </svg>
+                        }
+                      />
+                    </UserButton.MenuItems>
+                  </UserButton>
                 </div>
               ) : (
                 <Link
@@ -308,13 +331,6 @@ const Navbar = () => {
                 className="block bg-primary text-white px-4 py-2.5 rounded font-medium text-center"
               >
                 Tire selector
-              </Link>
-              <Link
-                href="/find-dealer"
-                onClick={() => setIsMenuOpen(false)}
-                className="block bg-gray-700 text-white px-4 py-2 rounded font-medium text-center"
-              >
-                Find a dealer
               </Link>
             </div>
           </div>

@@ -10,7 +10,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
     <div>
       <Navbar />
-      <main>{children}</main>
+      <main className='lg:pt-0 pt-20'>{children}</main>
       <Footer />
     </div>
   );

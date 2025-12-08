@@ -86,8 +86,8 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] pb-20 pt-40">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f5f5f5] lg:pb-20 pb-10 lg:pt-40 pt-36">
+      <div className="max-w-3xl mx-auto px-5">
         <Heading
           title="Share Your Feedback"
           description="We value your opinion! Please take a moment to share your experience with us."

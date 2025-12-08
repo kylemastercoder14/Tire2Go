@@ -259,42 +259,42 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen flex w-full flex-col items-center bg-[#f5f5f5]">
-      <div className="pt-50 max-w-3xl mx-auto w-full">
-        <div className="bg-primary rounded-tl-md rounded-tr-md py-3 px-3 w-full">
-          <h3 className="text-white w-full text-2xl font-bold tracking-tight">
+    <div className="min-h-screen flex w-full flex-col items-center bg-[#f5f5f5] pt-20 sm:pt-24 lg:pt-32 pb-8 sm:pb-10">
+      <div className="px-4 sm:px-6 max-w-3xl mx-auto w-full">
+        <div className="bg-primary rounded-tl-md rounded-tr-md py-3 sm:py-4 px-4 sm:px-6 w-full">
+          <h3 className="text-white w-full text-xl sm:text-2xl font-bold tracking-tight">
             Reset password code
           </h3>
         </div>
-        <div className="bg-white border shadow rounded-bl-md rounded-br-md py-3 px-3 w-full">
+        <div className="bg-white border shadow rounded-bl-md rounded-br-md py-4 sm:py-6 px-4 sm:px-6 w-full">
           <form
             onSubmit={handleSubmit}
             className="mt-2 flex flex-col space-y-4 w-full"
           >
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground break-words">
               Enter the code sent to{" "}
               <span className="font-medium text-foreground">{formattedEmail}</span>{" "}
               and your new password.
             </p>
 
             <div className="space-y-2">
-              <Label className="block text-center">Reset Code</Label>
+              <Label className="block text-center text-sm sm:text-base">Reset Code</Label>
               <div className="w-full flex justify-center">
                 <InputOTP
                   value={code}
                   onChange={handleOtpChange}
                   maxLength={6}
                   pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                  className="w-fit inline-flex items-center justify-center gap-3"
+                  className="w-fit inline-flex items-center justify-center gap-1 sm:gap-2 lg:gap-3"
                 >
                   <InputOTPGroup>
                     <InputOTPSlot
                       index={0}
-                      className="size-12 mx-1 text-center rounded-md border"
+                      className="size-12 sm:size-14 lg:size-16 mx-0.5 sm:mx-1 text-center rounded-md border text-lg sm:text-xl"
                     />
                     <InputOTPSlot
                       index={1}
-                      className="size-12 mx-1 text-center rounded-md border"
+                      className="size-12 sm:size-14 lg:size-16 mx-0.5 sm:mx-1 text-center rounded-md border text-lg sm:text-xl"
                     />
                   </InputOTPGroup>
 
@@ -303,11 +303,11 @@ const Page = () => {
                   <InputOTPGroup>
                     <InputOTPSlot
                       index={2}
-                      className="size-12 mx-1 text-center rounded-md border"
+                      className="size-12 sm:size-14 lg:size-16 mx-0.5 sm:mx-1 text-center rounded-md border text-lg sm:text-xl"
                     />
                     <InputOTPSlot
                       index={3}
-                      className="size-12 mx-1 text-center rounded-md border"
+                      className="size-12 sm:size-14 lg:size-16 mx-0.5 sm:mx-1 text-center rounded-md border text-lg sm:text-xl"
                     />
                   </InputOTPGroup>
 
@@ -316,11 +316,11 @@ const Page = () => {
                   <InputOTPGroup>
                     <InputOTPSlot
                       index={4}
-                      className="size-12 mx-1 text-center rounded-md border"
+                      className="size-12 sm:size-14 lg:size-16 mx-0.5 sm:mx-1 text-center rounded-md border text-lg sm:text-xl"
                     />
                     <InputOTPSlot
                       index={5}
-                      className="size-12 mx-1 text-center rounded-md border"
+                      className="size-12 sm:size-14 lg:size-16 mx-0.5 sm:mx-1 text-center rounded-md border text-lg sm:text-xl"
                     />
                   </InputOTPGroup>
                 </InputOTP>
@@ -328,7 +328,7 @@ const Page = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>New Password</Label>
+              <Label className="text-sm sm:text-base">New Password</Label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
@@ -338,7 +338,7 @@ const Page = () => {
                   disabled={!isLoaded || isLoading}
                   onChange={(e) => setPassword(e.target.value)}
                   minLength={8}
-                  className="pr-10"
+                  className="pr-10 text-sm sm:text-base"
                 />
                 <Button
                   type="button"
@@ -358,7 +358,7 @@ const Page = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>Confirm New Password</Label>
+              <Label className="text-sm sm:text-base">Confirm New Password</Label>
               <div className="relative">
                 <Input
                   type={showConfirmPassword ? "text" : "password"}
@@ -368,7 +368,7 @@ const Page = () => {
                   disabled={!isLoaded || isLoading}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   minLength={8}
-                  className="pr-10"
+                  className="pr-10 text-sm sm:text-base"
                 />
                 <Button
                   type="button"
@@ -390,12 +390,12 @@ const Page = () => {
             <Button
               disabled={!isLoaded || isLoading || code.length !== 6}
               type="submit"
-              className="w-full"
+              className="w-full text-sm sm:text-base"
             >
               {isLoading ? "Resetting..." : "Reset Password"}
             </Button>
 
-            <p className="text-center text-sm">
+            <p className="text-center text-xs sm:text-sm">
               Didn&apos;t receive the code?{" "}
               {timer > 0 ? (
                 <span className="text-gray-500">Resend in {timer}s</span>
@@ -411,7 +411,7 @@ const Page = () => {
               )}
             </p>
 
-            <p className="text-center mx-auto">
+            <p className="text-center mx-auto text-xs sm:text-sm">
               <Link
                 href="/sign-in"
                 className="text-primary font-medium underline"

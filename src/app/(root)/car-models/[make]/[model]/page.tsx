@@ -164,8 +164,8 @@ const Page = async (props: PageProps) => {
       </div>
 
       {/* Main Banner */}
-      <section className="relative max-w-7xl mx-auto px-10">
-        <div className="relative w-full h-[65vh] overflow-hidden">
+      <section className="relative max-w-7xl mx-auto lg:px-10 px-0">
+        <div className="relative w-full lg:h-[65vh] h-[23vh] overflow-hidden">
           {/* Background Image with car model */}
           <div className="absolute inset-0">
             <Image

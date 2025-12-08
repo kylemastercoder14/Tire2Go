@@ -78,6 +78,9 @@ const SearchResults = ({ products }: SearchResultsProps) => {
     if (pathnameLower.includes("clearance")) {
       return "Clearance Sale Products";
     }
+    if (pathnameLower.includes("/tire") && !pathnameLower.includes("tire-search")) {
+      return "All Tires";
+    }
     return "Search Results";
   };
 

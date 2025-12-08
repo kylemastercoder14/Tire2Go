@@ -99,21 +99,21 @@ const Page = async (props: {
         </Breadcrumb>
       </div>
       <section className="max-w-7xl mx-auto pb-10">
-        <div className="relative w-full h-[30vh]">
+        <div className="relative w-full lg:h-[30vh] h-[20vh]">
           <img
             src={showTireBrandBanner(initialData.name)}
             alt={initialData.name}
             className="object-cover size-full"
           />
         </div>
-        <div className="mt-3">
+        <div className="mt-3 lg:px-0 px-5">
           <h3 className="font-bold text-center text-gray-500 text-2xl">
             We Guarantee
           </h3>
           <div className="grid lg:grid-cols-4 grid-cols-1 mt-3 gap-5">
-            <div className="flex items-center gap-3 border-r border-gray-500">
+            <div className="flex items-center gap-3 lg:border-r lg:border-gray-500">
               <IconChecks className="size-10" style={{ color: colorScheme.primary }} />
-              <h3 className="text-xl leading-tight font-semibold">
+              <h3 className="lg:text-xl text-base leading-tight font-semibold">
                 <strong>BRAND NEW</strong> tires <br /> with manufacturer&apos;s{" "}
                 <strong>
                   {" "}
@@ -122,22 +122,22 @@ const Page = async (props: {
                 </strong>
               </h3>
             </div>
-            <div className="flex items-center gap-3 border-r border-gray-500">
+            <div className="flex items-center gap-3 lg:border-r lg:border-gray-500">
               <IconChecks className="size-10" style={{ color: colorScheme.primary }} />
-              <h3 className="text-xl leading-tight font-semibold">
+              <h3 className="lg:text-xl text-base leading-tight font-semibold">
                 <strong>LEGITIMATE</strong> <br /> tire sellers
               </h3>
             </div>
-            <div className="flex items-center gap-3 border-r border-gray-500">
+            <div className="flex items-center gap-3 lg:border-r lg:border-gray-500">
               <IconChecks className="size-10" style={{ color: colorScheme.primary }} />
-              <h3 className="text-xl leading-tight font-semibold">
+              <h3 className="lg:text-xl text-base leading-tight font-semibold">
                 Sales invoice with <br />
                 <strong>NO HIDDEN CHARGES</strong>
               </h3>
             </div>
             <div className="flex items-center gap-3">
               <IconChecks className="size-10" style={{ color: colorScheme.primary }} />
-              <h3 className="text-xl leading-tight font-semibold">
+              <h3 className="lg:text-xl text-base leading-tight font-semibold">
                 <strong>PROFESSIONAL</strong> <br /> tire installation
               </h3>
             </div>

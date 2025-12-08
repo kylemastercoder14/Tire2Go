@@ -285,7 +285,7 @@ export const columns: ColumnDef<ProductWithBrand>[] = [
                   +{remainingCount} more
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-80 p-0" align="start">
+              <PopoverContent className="lg:w-80 w-full p-0" side='left' align="center">
                 <div className="p-4 border-b">
                   <h4 className="font-semibold text-sm">All Available Tire Sizes</h4>
                   <p className="text-xs text-muted-foreground mt-1">

@@ -247,7 +247,7 @@ export const TEAM = [
   {
     id: 3,
     name: "Junsay, Rica Yvonne D.",
-    designation: "Document Specialist",
+    designation: "Project Manager",
     image: "/team/rica.jpg",
     facebook: "https://www.facebook.com/yveesure#",
   },
@@ -261,7 +261,7 @@ export const TEAM = [
   {
     id: 5,
     name: "Obalan, Francine R.",
-    designation: "Project Manager",
+    designation: "Document Specialist",
     image: "/team/francine.jpg",
     facebook: "https://www.facebook.com/frawnseen#",
   },

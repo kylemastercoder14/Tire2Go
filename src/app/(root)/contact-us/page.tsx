@@ -15,8 +15,8 @@ import {
 
 const Page = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center  bg-[#f5f5f5]">
-      <div className="pt-50 max-w-7xl mx-auto">
+    <div className="min-h-screen flex flex-col items-center bg-[#f5f5f5]">
+      <div className="lg:pt-50 pt-40 lg:px-0 px-5 max-w-7xl mx-auto">
         <div className="bg-primary rounded-tl-md rounded-tr-md py-3 px-3 w-full">
           <h3 className="text-white text-2xl font-bold tracking-tight">
             We&apos;d love to hear from you!
@@ -76,31 +76,33 @@ const Page = () => {
                   business.202magstires@gmail.com
                 </Link>
               </div>
-              <div className="flex text-sm items-center gap-2">
-                <IconPhoneFilled className="size-4 text-primary" />
-                <span>+63977 835 5320</span>
-              </div>
+              <Link href="tel:09778355320" className="flex text-sm text-primary items-center gap-2">
+                <IconPhoneFilled className="size-4" />
+                +63977 835 5320
+              </Link>
               <div className="flex text-sm items-center gap-2">
                 <IconBrandFacebookFilled className="size-4 text-primary" />
                 <Link
                   href="https://www.facebook.com/202magsandtires/"
-                  className="text-primary"
+                  className="text-primary break-all"
                 >
                   https://www.facebook.com/202magsandtires/
                 </Link>
               </div>
+
               <div className="flex text-sm items-center gap-2">
                 <IconBrandInstagramFilled className="size-4 text-primary" />
                 <Link
                   href="https://www.instagram.com/202magstires/?igsh=M3ZzbnZpanExZnl5#"
-                  className="text-primary"
+                  className="text-primary break-all"
                 >
                   https://www.instagram.com/202magstires
                 </Link>
               </div>
+
               <div className="flex text-sm items-center gap-2">
                 <IconMapPinFilled className="size-4 text-primary" />
-                <span>236 N.Domingo Street, San Juan, Philippines</span>
+                <span className='text-primary'>236 N.Domingo Street, San Juan, Philippines</span>
               </div>
             </div>
             <iframe

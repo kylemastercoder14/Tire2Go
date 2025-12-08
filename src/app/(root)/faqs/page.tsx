@@ -16,7 +16,7 @@ const Page = async () => {
   });
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
-      <div className="pt-40 px-24">
+      <div className="pt-40 lg:px-24 px-5 lg:pb-0 pb-10">
         <h3 className="text-black text-4xl font-bold tracking-tight text-center">
           Tyre2Go Frequently Asked Questions
         </h3>

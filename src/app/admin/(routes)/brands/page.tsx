@@ -18,7 +18,7 @@ const Page = async () => {
   });
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3 flex-wrap justify-between">
         <Heading
           title="Tires & Mags Brands"
           description="Browse and manage tire and mag brands for performance, safety, and style."

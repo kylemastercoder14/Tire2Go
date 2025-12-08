@@ -44,7 +44,7 @@ const Page = async (props: {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] pt-36 pb-10">
+    <div className="min-h-screen bg-[#f5f5f5] pt-24 sm:pt-32 lg:pt-36 pb-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <OrderDetailsUser initialData={orderWithItems} />
       </div>

@@ -151,7 +151,7 @@ const Page = () => {
     <div className="min-h-screen">
       {/* Breadcrumbs */}
       <div
-        className="w-full pt-30 h-[20vh] flex items-center justify-center bg-cover bg-center"
+        className="w-full pt-30 lg:h-[20vh] h-[23vh] flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage:
             "url('https://gogulong.ph/_nuxt/img/breadcrumbs-bg.f31fb0b.png')",
@@ -162,14 +162,14 @@ const Page = () => {
           <div className="bg-primary size-5 rounded-full flex items-center justify-center text-white text-xs font-medium">
             ✓
           </div>
-          <h3 className="text-primary font-semibold text-center">CART</h3>
+          <h3 className="text-primary font-semibold lg:block hidden text-center lg:text-base text-sm">CART</h3>
         </div>
         <ChevronRight className="size-4 text-white mx-5" />
         <div className="flex items-center gap-2">
           <div className="bg-primary size-5 rounded-full flex items-center justify-center text-white text-xs font-medium">
             2
           </div>
-          <h3 className="text-primary font-semibold text-center">
+          <h3 className="text-primary lg:block hidden font-semibold lg:text-base text-sm text-center">
             ORDER DETAILS
           </h3>
         </div>
@@ -178,19 +178,19 @@ const Page = () => {
           <div className="bg-white size-5 rounded-full flex items-center justify-center text-primary text-xs font-medium">
             3
           </div>
-          <h3 className="text-white font-semibold text-center">REVIEW</h3>
+          <h3 className="text-white font-semibold lg:block hidden lg:text-base text-sm text-center">REVIEW</h3>
         </div>
         <ChevronRight className="size-4 text-white mx-5" />
         <div className="flex items-center gap-2">
           <div className="bg-white size-5 rounded-full flex items-center justify-center text-primary text-xs font-medium">
             4
           </div>
-          <h3 className="text-white font-semibold text-center">COMPLETED</h3>
+          <h3 className="text-white font-semibold lg:block hidden lg:text-base text-sm text-center">COMPLETED</h3>
         </div>
       </div>
 
       {/* Main Section */}
-      <section className="pt-5 px-34 pb-10">
+      <section className="pt-5 lg:px-34 px-5 pb-10">
         <div className="grid items-stretch lg:grid-cols-5 grid-cols-1">
           {/* Order Details */}
           <div className="lg:col-span-3 h-full flex flex-col">

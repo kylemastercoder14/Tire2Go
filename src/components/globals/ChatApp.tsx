@@ -113,12 +113,12 @@ const ChatApp = () => {
               ref={chatIconRef}
               onClick={toggleChat}
               size="icon"
-              className="bg-primary p-7 rounded-full cursor-pointer shadow-lg hover:shadow-xl hover:bg-primay/90 transition-all hover:scale-110 z-50"
+              className="bg-primary p-5 sm:p-6 md:p-7 rounded-full cursor-pointer shadow-lg hover:shadow-xl hover:bg-primay/90 transition-all hover:scale-110 z-50"
             >
               {isOpen ? (
-                <IconX className="size-7 text-white" />
+                <IconX className="size-5 sm:size-6 md:size-7 text-white" />
               ) : (
-                <IconBubbleTextFilled className="size-7 text-white" />
+                <IconBubbleTextFilled className="size-5 sm:size-6 md:size-7 text-white" />
               )}
             </Button>
           </motion.div>
@@ -133,45 +133,45 @@ const ChatApp = () => {
             transition={{ duration: 0.2 }}
             className={`fixed z-50 ${
               isFullscreen
-                ? "inset-0 w-full h-full flex items-center justify-center p-4"
-                : "bottom-20 right-4 w-[95%] md:w-[900px]"
+                ? "inset-0 w-full h-full flex items-center justify-center p-2 sm:p-4"
+                : "bottom-16 sm:bottom-20 right-2 sm:right-4 w-[calc(100%-1rem)] sm:w-[95%] md:w-[900px]"
             }`}
           >
             <Card className="flex flex-col w-full h-full border-2 shadow-xl">
-              <CardHeader className="flex flex-row justify-between items-center border-b">
-                <div>
-                  <CardTitle>Chat Support</CardTitle>
-                  <CardDescription>How can we help you?</CardDescription>
+              <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b p-3 sm:p-6">
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-base sm:text-lg">Chat Support</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">How can we help you?</CardDescription>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 self-end sm:self-auto">
                   <Button
                     onClick={() => setIsFullscreen(!isFullscreen)}
                     size="icon"
-                    className="rounded-full"
+                    className="rounded-full h-8 w-8 sm:h-10 sm:w-10"
                     variant="ghost"
                   >
                     {isFullscreen ? (
-                      <Minimize className="size-5" />
+                      <Minimize className="size-4 sm:size-5" />
                     ) : (
-                      <Maximize className="size-5" />
+                      <Maximize className="size-4 sm:size-5" />
                     )}
                   </Button>
                   <Button
                     onClick={toggleChat}
                     size="icon"
-                    className="rounded-full"
+                    className="rounded-full h-8 w-8 sm:h-10 sm:w-10"
                     variant="ghost"
                   >
-                    <X className="size-5" />
+                    <X className="size-4 sm:size-5" />
                   </Button>
                 </div>
               </CardHeader>
               <CardContent className="flex flex-1 overflow-hidden">
                 <ScrollArea
-                  className={`${isFullscreen ? "h-full" : "h-[500px]"} pr-4`}
+                  className={`${isFullscreen ? "h-full" : "h-[400px] sm:h-[500px]"} pr-2 sm:pr-4`}
                 >
                   {messages.length === 0 && (
-                    <div className="w-full mt-32 text-gray-500 items-center justify-center flex gap-3">
+                    <div className="w-full mt-16 sm:mt-32 text-gray-500 items-center justify-center flex gap-3 text-sm sm:text-base">
                       No message yet.
                     </div>
                   )}
@@ -185,12 +185,12 @@ const ChatApp = () => {
                     return (
                       <div
                         key={index}
-                        className={`mb-4 ${
+                        className={`mb-3 sm:mb-4 ${
                           message.role === "user" ? "text-right" : "text-left"
                         }`}
                       >
                         <div
-                          className={`inline-block rounded-lg px-3 py-2 ${
+                          className={`inline-block max-w-[85%] sm:max-w-[75%] rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base ${
                             message.role === "user"
                               ? "bg-primary text-white"
                               : "bg-muted text-black"
@@ -227,15 +227,15 @@ const ChatApp = () => {
                   })}
 
                   {(status === "submitted" || status === "streaming") && (
-                    <div className="w-full items-center flex justify-center flex-col gap-3">
+                    <div className="w-full items-center flex justify-center flex-col gap-3 py-2">
                       {status === "submitted" && (
-                        <Loader2 className="animate-spin size-5" />
+                        <Loader2 className="animate-spin size-4 sm:size-5" />
                       )}
                     </div>
                   )}
 
                   {error && (
-                    <div className="text-center w-full flex items-center justify-center gap-1 mt-2">
+                    <div className="text-center w-full flex items-center justify-center gap-1 mt-2 text-xs sm:text-sm">
                       <span>An error occured.</span>
                       <button
                         type="button"
@@ -249,7 +249,7 @@ const ChatApp = () => {
                   <div ref={scrollRef} />
                 </ScrollArea>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="p-2 sm:p-4 sm:p-6">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -258,22 +258,22 @@ const ChatApp = () => {
                       setInput("");
                     }
                   }}
-                  className="flex w-full items-center space-x-2"
+                  className="flex w-full items-center gap-2"
                 >
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     disabled={status !== "ready"}
-                    className="flex-1"
+                    className="flex-1 text-sm sm:text-base"
                     placeholder="Ask something..."
                   />
                   {status === "streaming" ? (
-                    <Button type="button" onClick={() => stop()}>
-                      <Square className="size-4" />
+                    <Button type="button" onClick={() => stop()} size="icon" className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0">
+                      <Square className="size-3 sm:size-4" />
                     </Button>
                   ) : (
-                    <Button type="submit" disabled={status !== "ready"}>
-                      <Send className="size-4" />
+                    <Button type="submit" disabled={status !== "ready"} size="icon" className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0">
+                      <Send className="size-3 sm:size-4" />
                     </Button>
                   )}
                 </form>

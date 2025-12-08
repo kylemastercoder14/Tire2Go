@@ -2,9 +2,10 @@ import React from "react";
 import TireSearch from "@/components/globals/TireSearch";
 import Image from "next/image";
 import BrandsCollection from "@/components/globals/BrandsCollection";
+import FeaturedProducts from "@/components/globals/FeaturedProducts";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import HeroCarousel from '@/components/globals/HeroCarousel';
+import HeroCarousel from "@/components/globals/HeroCarousel";
 import { getTireSizesForSearch, getCarDataForSearch } from "@/actions";
 
 const Page = async () => {
@@ -35,6 +36,15 @@ const Page = async () => {
         </div>
       </div>
       <section className="pt-6 sm:pt-8 md:pt-10 bg-[#f5f5f5] pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6">
+        <h3 className="text-primary text-center text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+          Featured Products
+        </h3>
+        <p className="text-primary text-lg sm:text-xl md:text-2xl mt-2 text-center">
+          discover our latest tire collections
+        </p>
+        <FeaturedProducts />
+      </section>
+      <section className="pt-6 sm:pt-8 md:pt-10 bg-white pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6">
         <h3 className="text-primary text-center text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
           Top Tire Brands
         </h3>
@@ -140,9 +150,11 @@ const Page = async () => {
             receives the best service and advice for their car needs. Today, 202
             Mags and Tires continues to grow as a trusted name in the community.
           </p>
-          <Button size="lg" className="mx-auto mt-5 text-center">
-            Learn more
-          </Button>
+          <Link href="/about-us">
+            <Button size="lg" className="mx-auto mt-5 text-center">
+              Learn more
+            </Button>
+          </Link>
         </div>
       </section>
     </div>

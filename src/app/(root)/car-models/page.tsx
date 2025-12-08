@@ -15,14 +15,14 @@ const Page = () => {
       >
         <h3 className="text-white font-bold text-center">CAR MODELS</h3>
       </div>
-      <section className="pt-5 max-w-7xl mx-auto px-8 pb-10">
+      <section className="pt-5 max-w-7xl mx-auto lg:px-8 px-5 pb-10">
         <h3 className="text-primary font-bold text-xl text-center">
           Featured Car Models
         </h3>
         <h3 className="text-primary font-bold text-3xl mt-2 text-center">
           Browse Popular Tires For Your Car
         </h3>
-        <p className="mt-1 text-lg text-muted-foreground">
+        <p className="mt-2 text-lg text-muted-foreground">
           At Tyre2Go, we don’t just provide you tires by size; we also offer it
           based on car models. Here are some of our featured car models to find
           your tires:

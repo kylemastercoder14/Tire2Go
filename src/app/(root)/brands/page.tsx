@@ -138,8 +138,8 @@ const Page = async () => {
         }}>
         <h3 className="text-white font-bold text-center">BRANDS</h3>
       </div>
-      <section className="py-10 max-w-7xl mx-auto">
-        <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
+      <section className="py-10 lg:max-w-7xl px-5 mx-auto">
+        <h3 className="text-primary lg:text-4xl text-2xl font-bold tracking-tight text-center">
           Find The Best Tire Brands In The Philippines
         </h3>
         <p className="mt-5">
@@ -240,7 +240,7 @@ const Page = async () => {
         </div>
       </section>
       <section className="bg-[#f5f5f5] py-10">
-        <div className="px-60">
+        <div className="lg:px-60 px-5">
           <h3 className="text-primary text-4xl font-bold tracking-tight text-center">
             Enjoy the Best Tire Brands at Tyre2Go
           </h3>

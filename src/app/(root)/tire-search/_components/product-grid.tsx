@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { buttonVariants, Button } from "@/components/ui/button";
 import { IconHandClick, IconCube } from "@tabler/icons-react";
@@ -50,11 +50,24 @@ interface ProductGridProps {
 const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
+  const [displayCount, setDisplayCount] = useState(8);
 
   const handleView3D = (product: Product) => {
     setSelectedProduct(product);
     setIs3DViewerOpen(true);
   };
+
+  const handleShowMore = () => {
+    setDisplayCount((prev) => Math.min(prev + 8, products.length));
+  };
+
+  // Reset display count when products change (e.g., new filter/search)
+  useEffect(() => {
+    setDisplayCount(8);
+  }, [products]);
+
+  const displayedProducts = products.slice(0, displayCount);
+  const hasMore = displayCount < products.length;
 
   if (isLoading) {
     return (
@@ -98,8 +111,9 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
   }
 
   return (
-    <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
-      {products.map((product) => {
+    <>
+      <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
+        {displayedProducts.map((product) => {
         // Calculate price range from productSize
         const productSizes = product.productSize || [];
         let priceRange = null;
@@ -239,7 +253,21 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             </div>
           </div>
         );
-      })}
+        })}
+      </div>
+
+      {/* Show More Button */}
+      {hasMore && (
+        <div className="mt-8 flex justify-center">
+          <Button
+            onClick={handleShowMore}
+            variant="outline"
+            className="px-6 py-2 text-sm sm:text-base"
+          >
+            Show More ({products.length - displayCount} more {products.length - displayCount === 1 ? 'product' : 'products'})
+          </Button>
+        </div>
+      )}
 
       {/* 3D Viewer Dialog */}
       <Dialog open={is3DViewerOpen} onOpenChange={setIs3DViewerOpen}>
@@ -296,7 +324,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 

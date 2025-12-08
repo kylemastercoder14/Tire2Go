@@ -12,7 +12,7 @@ const Page = async () => {
   });
   return (
 	<div>
-	  <div className="flex items-center justify-between">
+	  <div className="flex items-center flex-wrap gap-3 justify-between">
 		<Heading
 		  title="Customers"
 		  description="Browse and manage all customers in your store."

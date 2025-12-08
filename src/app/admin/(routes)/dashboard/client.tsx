@@ -403,11 +403,11 @@ const DashboardContent = ({ orders }: { orders: any }) => {
   return (
     <div>
       {/* Header, Print Button and Period Selector */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center flex-wrap gap-3 justify-between mb-5">
         <h2 className="text-2xl font-bold">Dashboard Overview</h2>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <label className="font-semibold">Select Period:</label>
+            <label className="font-semibold lg:block hidden">Select Period:</label>
             <Select value={period} onValueChange={(val) => setPeriod(val as Period)}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select period" />

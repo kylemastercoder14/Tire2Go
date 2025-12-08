@@ -2,17 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import { useUser, useAuth } from "@clerk/nextjs";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 
 /**
  * Component to sync OAuth users to database after authentication
  * Runs after OAuth redirect to ensure user data is saved
+ * Note: Redirects are handled by AuthRedirectHandler, not here
  */
 export const OAuthSyncHandler = () => {
   const { user, isLoaded: userLoaded } = useUser();
   const { isSignedIn, sessionId } = useAuth();
   const searchParams = useSearchParams();
-  const hasSyncedRef = useRef(false);
+  const pathname = usePathname();
+  const isSyncingRef = useRef(false);
   const oauthCallback = searchParams.get("__clerk_redirect_url") || searchParams.get("__clerk_handshake");
 
   useEffect(() => {
@@ -20,8 +22,28 @@ export const OAuthSyncHandler = () => {
     // 1. User is loaded
     // 2. User is signed in
     // 3. Session exists
-    // 4. We haven't synced this user yet
-    if (!userLoaded || !isSignedIn || !user || !sessionId || hasSyncedRef.current) {
+    if (!userLoaded || !isSignedIn || !user || !sessionId) {
+      return;
+    }
+
+    // Skip if already syncing
+    if (isSyncingRef.current) {
+      return;
+    }
+
+    // Check if we've already synced this user in this session
+    const storageKey = `oauth_synced_${user.id}`;
+    let hasSynced = false;
+
+    try {
+      if (typeof window !== "undefined") {
+        hasSynced = !!sessionStorage.getItem(storageKey);
+      }
+    } catch {
+      // sessionStorage might not be available
+    }
+
+    if (hasSynced) {
       return;
     }
 
@@ -44,11 +66,29 @@ export const OAuthSyncHandler = () => {
       return;
     }
 
-    // Sync user to database and redirect based on userType
+    // Skip if we're on auth pages - let them handle their own logic
+    if (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up") ||
+        pathname.startsWith("/complete-profile")) {
+      return;
+    }
+
+    // Sync user to database (without redirecting - let AuthRedirectHandler handle that)
     const syncUser = async () => {
+      // Prevent concurrent syncs
+      if (isSyncingRef.current) {
+        return;
+      }
+      isSyncingRef.current = true;
+
       try {
-        // Mark as syncing to prevent duplicate calls
-        hasSyncedRef.current = true;
+        // Mark as syncing in sessionStorage immediately
+        try {
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(`oauth_syncing_${user.id}`, Date.now().toString());
+          }
+        } catch {
+          // Ignore sessionStorage errors
+        }
 
         const response = await fetch("/api/user/oauth-sync", {
           method: "POST",
@@ -60,8 +100,15 @@ export const OAuthSyncHandler = () => {
         if (!response.ok) {
           const error = await response.json();
           console.error("OAuth sync error:", error);
-          // Reset flag on error so we can retry
-          hasSyncedRef.current = false;
+          // Clear syncing flag on error so we can retry
+          try {
+            if (typeof window !== "undefined") {
+              sessionStorage.removeItem(`oauth_syncing_${user.id}`);
+            }
+          } catch {
+            // Ignore sessionStorage errors
+          }
+          isSyncingRef.current = false;
           return;
         }
 
@@ -69,36 +116,51 @@ export const OAuthSyncHandler = () => {
         if (data.success) {
           console.log("OAuth user synced successfully");
 
-          // After sync, check user type and redirect accordingly
+          // Mark as synced in sessionStorage
           try {
-            const typeResponse = await fetch("/api/user/check-type");
-            const typeData = await typeResponse.json();
-
-            if (typeData.success) {
-              // ADMIN: Redirect to admin dashboard
-              if (typeData.userType === "ADMIN") {
-                window.location.href = "/admin/dashboard";
-              }
-              // CUSTOMER: Redirect to root page
-              else {
-                window.location.href = "/";
-              }
+            if (typeof window !== "undefined") {
+              sessionStorage.removeItem(`oauth_syncing_${user.id}`);
+              sessionStorage.setItem(storageKey, "synced");
             }
-          } catch (err) {
-            console.error("Error redirecting after OAuth sync:", err);
-            // Default to home on error
-            window.location.href = "/";
+          } catch {
+            // Ignore sessionStorage errors
           }
+
+          // Don't redirect here - let AuthRedirectHandler handle redirects
+          // This prevents infinite loops from window.location.href
         }
       } catch (error) {
         console.error("Failed to sync OAuth user:", error);
-        // Reset flag on error so we can retry
-        hasSyncedRef.current = false;
+        // Clear flags on error so we can retry
+        try {
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem(`oauth_syncing_${user.id}`);
+          }
+        } catch {
+          // Ignore sessionStorage errors
+        }
+        isSyncingRef.current = false;
+      } finally {
+        isSyncingRef.current = false;
       }
     };
 
+    // Check if another sync is in progress
+    try {
+      if (typeof window !== "undefined") {
+        const syncingKey = `oauth_syncing_${user.id}`;
+        const isSyncing = sessionStorage.getItem(syncingKey);
+        if (isSyncing) {
+          // Another sync is in progress, skip
+          return;
+        }
+      }
+    } catch {
+      // Ignore sessionStorage errors
+    }
+
     syncUser();
-  }, [userLoaded, isSignedIn, user, sessionId, oauthCallback]);
+  }, [userLoaded, isSignedIn, user, sessionId, oauthCallback, pathname]);
 
   return null; // This component doesn't render anything
 };

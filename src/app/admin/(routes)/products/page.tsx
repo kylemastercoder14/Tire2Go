@@ -23,7 +23,7 @@ const Page = async () => {
   });
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center flex-wrap gap-3 justify-between">
         <Heading
           title="Product Catalog"
           description="Browse and manage all tire and mag products in your catalog."

@@ -23,7 +23,7 @@ const CarModelsTable = ({ data, carMakes }: CarModelsTableProps) => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center flex-wrap gap-3 justify-between mb-4">
 	  <Heading
           title="Car Models"
           description="Manage car models for tire compatibility."

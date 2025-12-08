@@ -13,8 +13,8 @@ const Page = async () => {
   const date = items?.createdAt || items?.updatedAt;
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
-      <div className="pt-36 px-24">
-        <h3 className="text-black text-4xl font-bold tracking-tight text-center">
+      <div className="max-w-7xl mx-auto px-5 pt-36">
+        <h3 className="text-black lg:text-4xl text-3xl font-bold tracking-tight text-center">
           Privacy Policy
         </h3>
         <Separator className="mt-5 mb-10 bg-primary rouned-lg !h-[5px]" />

@@ -83,24 +83,24 @@ const Page = () => {
 
 
   return (
-    <div className="min-h-screen flex w-full flex-col items-center bg-[#f5f5f5]">
-      <div className="pt-50 max-w-3xl mx-auto w-full">
-        <div className="bg-primary rounded-tl-md rounded-tr-md py-3 px-3 w-full">
-          <h3 className="text-white w-full text-2xl font-bold tracking-tight">
+    <div className="min-h-screen flex w-full flex-col items-center bg-[#f5f5f5] pt-20 sm:pt-24 lg:pt-32 pb-8 sm:pb-10">
+      <div className="px-4 sm:px-6 max-w-3xl mx-auto w-full">
+        <div className="bg-primary rounded-tl-md rounded-tr-md py-3 sm:py-4 px-4 sm:px-6 w-full">
+          <h3 className="text-white w-full text-xl sm:text-2xl font-bold tracking-tight">
             Reset your password
           </h3>
         </div>
-        <div className="bg-white border shadow rounded-bl-md rounded-br-md py-3 px-3 w-full">
+        <div className="bg-white border shadow rounded-bl-md rounded-br-md py-4 sm:py-6 px-4 sm:px-6 w-full">
           <form
             onSubmit={handleSubmit}
             className="mt-2 flex flex-col space-y-4 w-full"
           >
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Enter your email address and we&apos;ll send you a code to reset
               your password.
             </p>
             <div className="space-y-2">
-              <Label>Email Address</Label>
+              <Label className="text-sm sm:text-base">Email Address</Label>
               <Input
                 type="email"
                 placeholder="Enter email address"
@@ -108,16 +108,17 @@ const Page = () => {
                 required
                 disabled={!isLoaded || isLoading}
                 onChange={(e) => setEmail(e.target.value)}
+                className="text-sm sm:text-base"
               />
             </div>
             <Button
               disabled={!isLoaded || isLoading}
               type="submit"
-              className="w-full"
+              className="w-full text-sm sm:text-base"
             >
               {isLoading ? "Sending..." : "Send Reset Code"}
             </Button>
-            <p className="text-center mx-auto">
+            <p className="text-center mx-auto text-xs sm:text-sm">
               Remember your password?{" "}
               <Link
                 href="/sign-in"

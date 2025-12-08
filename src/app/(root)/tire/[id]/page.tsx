@@ -58,42 +58,70 @@ const Page = async (props: {
     },
   });
 
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-[#f5f5f5] flex flex-col items-center justify-center text-center px-4 sm:px-6 py-8 sm:py-12">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+          Tire not found
+        </h1>
+        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+          The tire you&apos;re looking for may not exist or has been removed.
+        </p>
+        <Link
+          href="/tire"
+          className="px-4 py-2 text-sm sm:text-base bg-primary text-white rounded-lg hover:bg-primary/90 transition"
+        >
+          Back to Tires
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       <div
-        className="w-full pt-24 h-[20vh] flex items-center justify-center bg-cover bg-center"
+        className="w-full pt-24 sm:pt-30 h-[15vh] sm:h-[20vh] flex items-center justify-center bg-cover bg-center px-4"
         style={{
           backgroundImage:
             "url('https://gogulong.ph/_nuxt/img/breadcrumbs-bg.f31fb0b.png')",
         }}
       >
         <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
+          <BreadcrumbList className="flex-wrap justify-center">
+            <BreadcrumbItem className="hidden sm:block">
               <BreadcrumbLink
-                className="text-white hover:text-white/90 font-bold"
+                className="text-white hover:text-white/90 font-bold text-sm sm:text-base"
                 asChild
               >
-                <Link href="/clearance-sale">CLEARANCE SALE</Link>
+                <Link href="/tire">TIRE BRANDS</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="text-white" />
+            <BreadcrumbSeparator className="text-white hidden sm:block" />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-primary font-bold uppercase">
-                Tire Details
+              <BreadcrumbLink
+                className="text-white hover:text-white/90 font-bold text-sm sm:text-base"
+                asChild
+              >
+                <Link href={`/brands/${data.brandId}`}>{data.brand.name}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-white hidden sm:block" />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-primary font-bold uppercase text-xs sm:text-sm md:text-base truncate max-w-[250px] sm:max-w-none">
+                {data.name}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <section className="pt-8 pb-12 px-10 lg:px-24">
-        <TireDetails data={data!} />
+      <section className="pt-4 sm:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12 px-4 sm:px-6 lg:px-10 xl:px-24">
+        <TireDetails data={data} />
       </section>
       {otherProducts.length > 0 && (
-        <section className="pb-16 px-10 lg:px-24">
-          <div className="flex flex-col items-center mb-5">
-            <h3 className="text-xl font-bold border-b-2 pb-1 border-primary inline-block text-center tracking-tight">
-              More tires from {data?.brand.name}
+        <section className="pb-12 sm:pb-16 px-4 sm:px-6 lg:px-10 xl:px-24">
+          <div className="flex flex-col items-center mb-4 sm:mb-5">
+            <h3 className="text-lg sm:text-xl font-bold border-b-2 pb-1 border-primary inline-block text-center tracking-tight">
+              More tires from {data.brand.name}
             </h3>
           </div>
           <ProductGrid
