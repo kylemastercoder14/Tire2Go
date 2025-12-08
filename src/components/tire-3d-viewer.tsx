@@ -68,6 +68,7 @@ interface WheelInfo {
 
 // Load and display the car model, extract wheel positions
 function CarModel({ onWheelsFound }: { onWheelsFound: (wheels: WheelInfo[]) => void }) {
+  // useGLTF will throw if the file doesn't exist, ErrorBoundary will catch it
   const { scene } = useGLTF("/car-model-3d.glb");
   const carRef = useRef<Group>(null);
   const onWheelsFoundRef = useRef(onWheelsFound);
@@ -637,22 +638,28 @@ function usePreprocessedTireScene(tireScene: THREE.Group | null) {
   }, [tireScene]);
 }
 
-// Hook to get signed URL for private S3 files
+// Hook to get signed URL for private S3 files or proxy URL to bypass CORS
 function useSignedUrl(tirePath: string): string {
   const [actualPath, setActualPath] = React.useState<string>(tirePath);
 
   React.useEffect(() => {
-    // Automatically get signed URL for S3 files in ecr/ folder (private files)
-    if (tirePath && tirePath.includes('/ecr/')) {
+    // For S3 files in ecr/ folder (private files), use proxy API to bypass CORS
+    if (tirePath && (tirePath.includes('/ecr/') || tirePath.includes('s3.amazonaws.com'))) {
+      // Use proxy API route that fetches from S3 and serves it through Next.js (bypasses CORS)
+      const proxyUrl = `/api/s3/proxy-glb?url=${encodeURIComponent(tirePath)}`;
+      setActualPath(proxyUrl);
+
+      // Also try to get signed URL as fallback (though CORS may still block it)
       fetch(`/api/s3/signed-url?url=${encodeURIComponent(tirePath)}`)
         .then((res) => res.json())
         .then((data) => {
+          // Keep proxy URL as primary, signed URL as backup if proxy fails
           if (data.signedUrl) {
-            setActualPath(data.signedUrl);
+            // Optionally use signed URL, but proxy should be better for CORS
           }
         })
         .catch(() => {
-          // If signed URL fails, use original path (will show error)
+          // If signed URL fails, continue using proxy URL
         });
     }
   }, [tirePath]);
@@ -663,6 +670,7 @@ function useSignedUrl(tirePath: string): string {
 // Component that loads and renders a single tire model with error handling
 function LoadedTireWheels({ tirePath, wheelInfos, onLoad, tireName }: { tirePath: string; wheelInfos: WheelInfo[]; onLoad?: () => void; tireName: string }) {
   const actualPath = useSignedUrl(tirePath);
+  // useGLTF will throw on CORS errors - ErrorBoundary will catch it
   const { scene: tireScene } = useGLTF(actualPath);
   const preprocessed = usePreprocessedTireScene(tireScene);
   const onLoadRef = React.useRef(onLoad);
@@ -719,7 +727,7 @@ function LoadedTireWheels({ tirePath, wheelInfos, onLoad, tireName }: { tirePath
   );
 }
 
-// Load and display tire model at specific positions
+// Load and display tire model at specific positions with error handling
 function TireWheels({ tireName, wheelInfos, onLoad, threeDModel }: { tireName: string; wheelInfos: WheelInfo[]; onLoad?: () => void; threeDModel?: string | null }) {
   const tirePath = getTireModelPath(tireName, threeDModel);
 
@@ -728,14 +736,21 @@ function TireWheels({ tireName, wheelInfos, onLoad, threeDModel }: { tireName: s
     return null;
   }
 
-  // Render the loaded tire wheels component
+  // Render the loaded tire wheels component with error boundary to handle CORS errors
   return (
-    <LoadedTireWheels
-      tirePath={tirePath}
-      wheelInfos={wheelInfos}
-      onLoad={onLoad}
-      tireName={tireName}
-    />
+    <Suspense fallback={null}>
+      <ModelErrorBoundary
+        onLoad={onLoad}
+        fallback={null} // Silently fail - tire just won't show
+      >
+        <LoadedTireWheels
+          tirePath={tirePath}
+          wheelInfos={wheelInfos}
+          onLoad={onLoad}
+          tireName={tireName}
+        />
+      </ModelErrorBoundary>
+    </Suspense>
   );
 }
 
@@ -765,7 +780,16 @@ function FordRangerWithTires({ tireName, onCarLoad, onTiresLoad, threeDModel }: 
 
   return (
     <group>
-      <CarModel onWheelsFound={handleWheelsFound} />
+      <ModelErrorBoundary
+        onLoad={onCarLoad}
+        fallback={
+          <Html center>
+            <div className="text-xs text-muted-foreground">Car model unavailable</div>
+          </Html>
+        }
+      >
+        <CarModel onWheelsFound={handleWheelsFound} />
+      </ModelErrorBoundary>
       {tirePath && (
         <Suspense fallback={null}>
           {wheelInfos.length >= 0 && (
@@ -785,9 +809,48 @@ function FordRangerWithTires({ tireName, onCarLoad, onTiresLoad, threeDModel }: 
 // Preload models for better performance - only preload essential models
 // Removed global preloads to reduce initial load time - models will be loaded on demand
 
+// Generic error boundary wrapper for 3D model loading
+class ModelErrorBoundary extends React.Component<{ children: React.ReactNode; onLoad?: () => void; fallback?: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode; onLoad?: () => void; fallback?: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Silently handle 404 and CORS errors for missing/inaccessible GLB files - these are expected fallbacks
+    const isExpectedError =
+      error?.message?.includes('404') ||
+      error?.message?.includes('Could not load') ||
+      error?.message?.includes('CORS') ||
+      error?.message?.includes('Access-Control-Allow-Origin') ||
+      error?.message?.includes('blocked by CORS policy') ||
+      error?.message?.includes('ERR_FAILED');
+
+    if (!isExpectedError) {
+      console.error("3D model loading error:", error);
+    }
+    // Still call onLoad so viewer can continue
+    if (this.props.onLoad) {
+      setTimeout(() => {
+        this.props.onLoad?.();
+      }, 100);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || null;
+    }
+    return this.props.children;
+  }
+}
+
 // Garage background component using 3D GLB model
 function GarageBackground({ onLoad }: { onLoad?: () => void }) {
-  const { scene } = useGLTF("/car-garage-bg.glb");
   const onLoadRef = React.useRef(onLoad);
   const hasLoadedRef = React.useRef(false);
 
@@ -795,6 +858,10 @@ function GarageBackground({ onLoad }: { onLoad?: () => void }) {
   React.useEffect(() => {
     onLoadRef.current = onLoad;
   }, [onLoad]);
+
+  // Load the garage model - hooks must be called unconditionally
+  // Errors will be caught by ErrorBoundary
+  const { scene } = useGLTF("/car-garage-bg.glb");
 
   React.useEffect(() => {
     if (scene && onLoadRef.current && !hasLoadedRef.current) {
@@ -805,13 +872,26 @@ function GarageBackground({ onLoad }: { onLoad?: () => void }) {
       }, 100);
       return () => clearTimeout(timer);
     }
+    // If scene is null (file failed to load), still call onLoad so viewer continues
+    if (!scene && onLoadRef.current && !hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      const timer = setTimeout(() => {
+        onLoadRef.current?.();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
   }, [scene]); // Only depend on scene, not onLoad
   const garageRef = useRef<THREE.Group>(null);
 
   // Clone the scene to avoid modifying the original
   const clonedGarage = useMemo(() => {
-    const cloned = scene.clone();
-    return cloned;
+    try {
+      const cloned = scene.clone();
+      return cloned;
+    } catch (err) {
+      console.error("Error cloning garage scene:", err);
+      return null;
+    }
   }, [scene]);
 
   // Position and scale the garage appropriately
@@ -924,10 +1004,9 @@ function GarageBackground({ onLoad }: { onLoad?: () => void }) {
     }
   }, [clonedGarage]);
 
+  // If no garage model loaded, return null (fallback to plane background)
   if (!clonedGarage) {
-    // Debug: Uncomment for debugging
-    // console.log('Garage: clonedGarage is null');
-    return null;
+    return null; // Fallback to plane background walls defined in Scene component
   }
 
   // Ensure the garage is added to the scene
@@ -1038,21 +1117,34 @@ function Scene({ tireName, onLoadComplete, brightness = 1.0, controlsRef, threeD
       </group>
 
       {/* Garage 3D Background - loaded first so it appears behind the car */}
+      {/* Note: If car-garage-bg.glb fails to load, ErrorBoundary catches it and falls back to plane background */}
       <group renderOrder={0}>
         <Suspense fallback={null}>
-          <GarageBackground onLoad={() => setModelsLoaded(prev => ({ ...prev, garage: true }))} />
+          <ModelErrorBoundary onLoad={() => setModelsLoaded(prev => ({ ...prev, garage: true }))}>
+            <GarageBackground onLoad={() => setModelsLoaded(prev => ({ ...prev, garage: true }))} />
+          </ModelErrorBoundary>
         </Suspense>
       </group>
 
       {/* Ford Ranger with selected tire - render after garage */}
+      {/* Note: If car-model-3d.glb fails to load, ErrorBoundary catches it and shows fallback */}
       <group renderOrder={1}>
         <Suspense fallback={null}>
-          <FordRangerWithTires
-            tireName={tireName}
-            onCarLoad={() => setModelsLoaded(prev => ({ ...prev, car: true }))}
-            onTiresLoad={() => setModelsLoaded(prev => ({ ...prev, tires: true }))}
-            threeDModel={threeDModel}
-          />
+          <ModelErrorBoundary
+            onLoad={() => setModelsLoaded(prev => ({ ...prev, car: true }))}
+            fallback={
+              <Html center>
+                <div className="text-xs text-muted-foreground bg-white/80 px-3 py-2 rounded">3D model unavailable</div>
+              </Html>
+            }
+          >
+            <FordRangerWithTires
+              tireName={tireName}
+              onCarLoad={() => setModelsLoaded(prev => ({ ...prev, car: true }))}
+              onTiresLoad={() => setModelsLoaded(prev => ({ ...prev, tires: true }))}
+              threeDModel={threeDModel}
+            />
+          </ModelErrorBoundary>
         </Suspense>
       </group>
 

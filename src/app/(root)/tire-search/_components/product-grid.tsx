@@ -76,6 +76,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           <div
             key={`skeleton-${index}`}
             className="border border-primary shadow rounded-md"
+            data-skeleton="true"
           >
             <Skeleton className="w-full h-60" />
             <Skeleton className="h-10 w-full" />
@@ -170,6 +171,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
         return (
           <div
             key={product.id}
+            data-product-card="true"
             className="border border-primary shadow rounded-md"
           >
             <div className="relative w-full h-60">

@@ -8,6 +8,7 @@ import { LoaderOne } from "@/components/globals/Loader";
 import ChatApp from '@/components/globals/ChatApp';
 import { OAuthSyncHandler } from "@/components/globals/OAuthSyncHandler";
 import { AuthRedirectHandler } from "@/components/globals/AuthRedirectHandler";
+import { PageLoadingOverlay } from "@/components/globals/PageLoadingOverlay";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const { loading } = useCheckProfile();
@@ -23,6 +24,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <div>
       <OAuthSyncHandler />
       <AuthRedirectHandler />
+      <PageLoadingOverlay />
       <Navbar />
       <main>{children}</main>
       <Footer />

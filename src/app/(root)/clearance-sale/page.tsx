@@ -15,12 +15,13 @@ interface PageProps {
     ratio?: string;
     diameter?: string;
     brandIds?: string;
+    sortBy?: string; // Added sortBy param
   }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
-  const { brand, model, year, width, ratio, diameter, brandIds } = params;
+  const { brand, model, year, width, ratio, diameter, brandIds, sortBy } = params;
 
   // Fetch search data for FilterSidebar
   const [tireSizesResult, carDataResult] = await Promise.all([
@@ -244,6 +245,64 @@ const Page = async ({ searchParams }: PageProps) => {
     // No clearance sale found - exclude this product
     return false;
   });
+
+  // Apply sorting
+  if (sortBy) {
+    products.sort((a: any, b: any) => {
+      switch (sortBy) {
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "newest":
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case "oldest":
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case "price-asc": {
+          // Get minimum price from productSize for each product
+          const getMinPrice = (product: any) => {
+            if (product.productSize && product.productSize.length > 0) {
+              const prices = product.productSize.map((ps: any) => {
+                const effectivePrice = ps.isClearanceSale && ps.discountedPrice && ps.discountedPrice < ps.price
+                  ? ps.discountedPrice
+                  : ps.price;
+                return effectivePrice;
+              });
+              return Math.min(...prices);
+            }
+            // Fallback to product price
+            const effectivePrice = product.isClearanceSale && product.discountedPrice && product.discountedPrice < (product.price || 0)
+              ? product.discountedPrice
+              : product.price || 0;
+            return effectivePrice;
+          };
+          return getMinPrice(a) - getMinPrice(b);
+        }
+        case "price-desc": {
+          // Get maximum price from productSize for each product
+          const getMaxPrice = (product: any) => {
+            if (product.productSize && product.productSize.length > 0) {
+              const prices = product.productSize.map((ps: any) => {
+                const effectivePrice = ps.isClearanceSale && ps.discountedPrice && ps.discountedPrice < ps.price
+                  ? ps.discountedPrice
+                  : ps.price;
+                return effectivePrice;
+              });
+              return Math.max(...prices);
+            }
+            // Fallback to product price
+            const effectivePrice = product.isClearanceSale && product.discountedPrice && product.discountedPrice < (product.price || 0)
+              ? product.discountedPrice
+              : product.price || 0;
+            return effectivePrice;
+          };
+          return getMaxPrice(b) - getMaxPrice(a);
+        }
+        default:
+          return 0;
+      }
+    });
+  }
 
   // Build search criteria display text
   let searchCriteria = "Clearance Sale Products";

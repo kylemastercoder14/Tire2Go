@@ -49,10 +49,10 @@ const Page = async () => {
         </div>
         <div className="relative w-full h-[500px]">
           <Image
-            src="/shop.jpg"
+            src="/about.jpg"
             alt="Tyre2Go"
             fill
-            className="object-contain"
+            className="object-cover"
           />
         </div>
       </section>
