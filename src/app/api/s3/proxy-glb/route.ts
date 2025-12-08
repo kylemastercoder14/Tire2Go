@@ -50,34 +50,25 @@ export async function GET(req: NextRequest) {
     }).promise();
 
     // Return the file with proper headers to bypass CORS
-    // Convert S3 Body to ArrayBuffer for NextResponse (it accepts ArrayBuffer, Buffer, Blob, etc.)
-    let fileData: ArrayBuffer;
+    // Convert S3 Body to Buffer, then to ArrayBuffer for NextResponse
+    let buffer: Buffer;
     if (Buffer.isBuffer(s3Object.Body)) {
-      fileData = s3Object.Body.buffer.slice(
-        s3Object.Body.byteOffset,
-        s3Object.Body.byteOffset + s3Object.Body.byteLength
-      );
+      buffer = s3Object.Body;
     } else if (s3Object.Body instanceof Uint8Array) {
-      fileData = s3Object.Body.buffer.slice(
-        s3Object.Body.byteOffset,
-        s3Object.Body.byteOffset + s3Object.Body.byteLength
-      );
+      buffer = Buffer.from(s3Object.Body);
     } else if (typeof s3Object.Body === 'string') {
-      const buffer = Buffer.from(s3Object.Body, 'binary');
-      fileData = buffer.buffer.slice(
-        buffer.byteOffset,
-        buffer.byteOffset + buffer.byteLength
-      );
+      buffer = Buffer.from(s3Object.Body, 'binary');
     } else {
-      // Fallback: convert to Buffer then ArrayBuffer
-      const buffer = Buffer.from(s3Object.Body as any);
-      fileData = buffer.buffer.slice(
-        buffer.byteOffset,
-        buffer.byteOffset + buffer.byteLength
-      );
+      // Fallback: convert to Buffer
+      buffer = Buffer.from(s3Object.Body as any);
     }
 
-    return new NextResponse(fileData, {
+    // Create a new ArrayBuffer from the Buffer to avoid SharedArrayBuffer issues
+    const arrayBuffer = new ArrayBuffer(buffer.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    uint8Array.set(buffer);
+
+    return new NextResponse(arrayBuffer, {
       headers: {
         "Content-Type": "model/gltf-binary",
         "Content-Disposition": `inline; filename="${key.split('/').pop()}"`,
