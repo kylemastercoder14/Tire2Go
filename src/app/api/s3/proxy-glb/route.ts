@@ -50,18 +50,31 @@ export async function GET(req: NextRequest) {
     }).promise();
 
     // Return the file with proper headers to bypass CORS
-    // Convert S3 Body to Uint8Array for NextResponse (it accepts Uint8Array, ArrayBuffer, or Buffer)
-    let fileData: Uint8Array;
+    // Convert S3 Body to ArrayBuffer for NextResponse (it accepts ArrayBuffer, Buffer, Blob, etc.)
+    let fileData: ArrayBuffer;
     if (Buffer.isBuffer(s3Object.Body)) {
-      fileData = new Uint8Array(s3Object.Body);
+      fileData = s3Object.Body.buffer.slice(
+        s3Object.Body.byteOffset,
+        s3Object.Body.byteOffset + s3Object.Body.byteLength
+      );
     } else if (s3Object.Body instanceof Uint8Array) {
-      fileData = s3Object.Body;
+      fileData = s3Object.Body.buffer.slice(
+        s3Object.Body.byteOffset,
+        s3Object.Body.byteOffset + s3Object.Body.byteLength
+      );
     } else if (typeof s3Object.Body === 'string') {
-      fileData = new Uint8Array(Buffer.from(s3Object.Body, 'binary'));
+      const buffer = Buffer.from(s3Object.Body, 'binary');
+      fileData = buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength
+      );
     } else {
-      // Fallback: convert to Uint8Array
+      // Fallback: convert to Buffer then ArrayBuffer
       const buffer = Buffer.from(s3Object.Body as any);
-      fileData = new Uint8Array(buffer);
+      fileData = buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength
+      );
     }
 
     return new NextResponse(fileData, {
