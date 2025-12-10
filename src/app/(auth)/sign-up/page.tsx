@@ -82,13 +82,29 @@ const Page = () => {
   };
 
   const handleOAuth = async (provider: "oauth_google" | "oauth_facebook") => {
-    if (!signUp) return;
+    if (!signUp || !isLoaded) return;
 
-    await signUp.authenticateWithRedirect({
-      strategy: provider,
-      redirectUrl: "/", // 👈 user will land here after auth
-      redirectUrlComplete: "/", // 👈 final redirect after they finish
-    });
+    try {
+      // Store in sessionStorage that we're starting OAuth sign-up
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("oauth_signup_in_progress", "true");
+      }
+
+      // For sign-up, Clerk will handle the OAuth flow
+      // redirectUrl is where Clerk redirects during the flow
+      // redirectUrlComplete is where Clerk redirects after sign-up is complete
+      await signUp.authenticateWithRedirect({
+        strategy: provider,
+        redirectUrl: "/sso-callback", // Intermediate callback page to handle completion
+        redirectUrlComplete: "/", // Final redirect after everything is complete
+      });
+    } catch (error: any) {
+      console.error("OAuth error:", error);
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("oauth_signup_in_progress");
+      }
+      toast.error("Failed to authenticate with Google. Please try again.");
+    }
   };
 
   return (

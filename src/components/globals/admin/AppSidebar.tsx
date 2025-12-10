@@ -94,6 +94,11 @@ const navMainData = [
     icon: IconFileText,
   },
   {
+    title: "Product Reviews",
+    url: "/admin/product-reviews",
+    icon: IconMessageCircle,
+  },
+  {
     title: "FAQs",
     url: "/admin/faqs",
     icon: IconZoomQuestion,

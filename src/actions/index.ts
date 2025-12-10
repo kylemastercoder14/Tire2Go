@@ -15,6 +15,7 @@ import {
   CarModelValidators,
   TireSizeValidators,
   FeedbackValidators,
+  ReviewValidators,
 } from "@/validators";
 import db from "@/lib/db";
 import { InventoryResponse, OrderWithOrderItem } from "@/types";
@@ -1855,6 +1856,186 @@ export const submitFeedback = async (
   } catch (error) {
     console.error("Error submitting feedback:", error);
     return { error: "Failed to submit feedback" };
+  }
+};
+
+// Check if user can review a product (has completed and paid order)
+export const canUserReviewProduct = async (productId: string) => {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { canReview: false, error: "You must be logged in to review a product" };
+    }
+
+    const user = await db.users.findUnique({ where: { authId: userId } });
+
+    if (!user) {
+      return { canReview: false, error: "User not found" };
+    }
+
+    // Check if user has a completed and paid order with this product
+    const hasValidOrder = await db.order.findFirst({
+      where: {
+        userId: user.id,
+        status: "COMPLETED",
+        paymentStatus: "PAID",
+        orderItem: {
+          some: {
+            productId: productId,
+          },
+        },
+      },
+    });
+
+    if (!hasValidOrder) {
+      return {
+        canReview: false,
+        error: "You can only review products from orders that are completed and paid",
+      };
+    }
+
+    // Check if user already reviewed this product
+    const existingReview = await db.review.findFirst({
+      where: {
+        productId: productId,
+        userId: user.id,
+      },
+    });
+
+    if (existingReview) {
+      return { canReview: false, error: "You have already reviewed this product" };
+    }
+
+    return { canReview: true };
+  } catch (error) {
+    console.error("Error checking review eligibility:", error);
+    return { canReview: false, error: "Failed to check review eligibility" };
+  }
+};
+
+// Review CRUD
+export const submitReview = async (
+  values: z.infer<typeof ReviewValidators>
+) => {
+  const parseValues = ReviewValidators.parse(values);
+
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return { error: "You must be logged in to submit a review" };
+    }
+
+    const user = await db.users.findUnique({ where: { authId: userId } });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    // Check if user can review this product
+    const canReview = await canUserReviewProduct(parseValues.productId);
+    if (!canReview.canReview) {
+      return { error: canReview.error || "You cannot review this product" };
+    }
+
+    const review = await db.review.create({
+      data: {
+        productId: parseValues.productId,
+        userId: user.id,
+        rating: parseValues.rating,
+        comment: parseValues.comment || null,
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return {
+      success: "Review submitted successfully! Thank you for your feedback.",
+      review,
+    };
+  } catch (error) {
+    console.error("Error submitting review:", error);
+    return { error: "Failed to submit review" };
+  }
+};
+
+export const getProductReviews = async (productId: string) => {
+  try {
+    const reviews = await db.review.findMany({
+      where: {
+        productId,
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Calculate average rating
+    const averageRating =
+      reviews.length > 0
+        ? reviews.reduce((sum, review) => sum + review.rating, 0) /
+          reviews.length
+        : 0;
+
+    // Count ratings
+    const ratingCounts = {
+      5: reviews.filter((r) => r.rating === 5).length,
+      4: reviews.filter((r) => r.rating === 4).length,
+      3: reviews.filter((r) => r.rating === 3).length,
+      2: reviews.filter((r) => r.rating === 2).length,
+      1: reviews.filter((r) => r.rating === 1).length,
+    };
+
+    return {
+      reviews,
+      averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+      totalReviews: reviews.length,
+      ratingCounts,
+    };
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return { error: "Failed to fetch reviews" };
+  }
+};
+
+// Delete Review
+export const deleteReview = async (id: string) => {
+  try {
+    // Check if review exists
+    const review = await db.review.findUnique({
+      where: { id },
+    });
+
+    if (!review) {
+      return { error: "Review not found" };
+    }
+
+    // Delete review
+    await db.review.delete({
+      where: { id },
+    });
+
+    return { success: "Review deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    return { error: "Failed to delete review" };
   }
 };
 

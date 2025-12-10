@@ -142,10 +142,18 @@ const Page = () => {
                         className="min-h-[120px] resize-none"
                         {...field}
                         disabled={isSubmitting}
+                        onChange={(e) => {
+                          // Only allow alphanumeric, spaces, and: .,!?()
+                          const value = e.target.value;
+                          const allowedPattern = /^[a-zA-Z0-9\s.,!?()]*$/;
+                          if (allowedPattern.test(value)) {
+                            field.onChange(e);
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormDescription>
-                      Your feedback helps us improve our service and products
+                      Your feedback helps us improve our service and products. Only letters, numbers, spaces, and these characters are allowed: . , ! ? ( )
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

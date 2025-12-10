@@ -61,6 +61,15 @@ const Page = () => {
     setDetails({ ...details, phone: limitedValue });
   };
 
+  // Handle input validation - only allow alphanumeric, spaces, and: .,!?()
+  const handleRestrictedInputChange = (field: "firstName" | "lastName" | "remarks", value: string) => {
+    // Only allow alphanumeric, spaces, and: .,!?()
+    const allowedPattern = /^[a-zA-Z0-9\s.,!?()]*$/;
+    if (allowedPattern.test(value)) {
+      setDetails({ ...details, [field]: value });
+    }
+  };
+
   // Format phone number for display: (+63) XXXXXXXXXX
   const formatPhoneNumber = (phone: string) => {
     if (!phone) return "";
@@ -234,7 +243,7 @@ const Page = () => {
                       <Input
                         value={details.firstName}
                         onChange={(e) =>
-                          setDetails({ ...details, firstName: e.target.value })
+                          handleRestrictedInputChange("firstName", e.target.value)
                         }
                         required
                         placeholder="Enter your first name"
@@ -247,7 +256,7 @@ const Page = () => {
                       <Input
                         value={details.lastName}
                         onChange={(e) =>
-                          setDetails({ ...details, lastName: e.target.value })
+                          handleRestrictedInputChange("lastName", e.target.value)
                         }
                         required
                         placeholder="Enter your last name"
@@ -318,10 +327,13 @@ const Page = () => {
                     <Textarea
                       value={details.remarks}
                       onChange={(e) =>
-                        setDetails({ ...details, remarks: e.target.value })
+                        handleRestrictedInputChange("remarks", e.target.value)
                       }
                       placeholder="Any additional information or requests"
                     />
+                    <p className="text-xs text-muted-foreground">
+                      Only letters, numbers, spaces, and these characters are allowed: . , ! ? ( )
+                    </p>
                   </div>
 
                   <div className="flex items-start mt-3 gap-3">

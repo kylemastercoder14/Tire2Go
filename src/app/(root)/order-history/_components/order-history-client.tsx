@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Package, Calendar, MapPin, Eye, CopyIcon, XCircle } from "lucide-react";
+import { Package, Calendar, MapPin, Eye, CopyIcon, XCircle, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -214,6 +214,16 @@ const OrderHistoryClient = ({ orders }: OrderHistoryClientProps) => {
                       <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                       View Details
                     </Button>
+                    {order.status === "COMPLETED" && order.paymentStatus === "PAID" && order.orderItem.length > 0 && (
+                      <Button
+                        onClick={() => router.push(`/tire/${order.orderItem[0].productId}?tab=reviews`)}
+                        className="w-full text-xs sm:text-sm bg-primary hover:bg-primary/90"
+                        size="sm"
+                      >
+                        <Star className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                        Write Review
+                      </Button>
+                    )}
                     {order.status === "PENDING" && (
                       <Button
                         onClick={() => handleCancelClick(order.id)}

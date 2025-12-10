@@ -206,7 +206,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
 
       {/* ---- MODAL ---- */}
       {isOpen.toggle && (
-        <div className="bg-primary fixed inset-0 flex flex-col items-center pt-30 w-full overflow-hidden h-screen z-50">
+        <div className="bg-primary fixed inset-0 flex flex-col items-center pt-20 sm:pt-30 w-full overflow-y-auto h-screen z-50">
           <div
             onClick={() => setIsOpen({ toggle: false, key: null })}
             className="absolute size-10 sm:size-12 top-4 right-4 sm:top-7 sm:right-7 border border-white rounded-full flex items-center justify-center cursor-pointer z-10"
@@ -216,7 +216,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
 
           {/* ---- SIZE FLOW ---- */}
           {isOpen.key === "size" && (
-            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0">
+            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0 py-4 pb-8">
               {/* Left preview */}
               <div className="bg-[#c02b2b] w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8">
                 <h3 className="font-semibold text-white text-lg mb-5">
@@ -285,9 +285,9 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                   <span className="text-sm sm:text-base">Reset my search</span>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-start -mt-5 sm:-mt-5 justify-between gap-4 sm:gap-0">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-4 mb-4">
                   {/* Step Title */}
-                  <h3 className="font-semibold mt-4 sm:mt-14 text-white text-lg sm:text-xl lg:text-2xl">
+                  <h3 className="font-semibold text-white text-lg sm:text-xl lg:text-2xl">
                     {selectedWidth === ""
                       ? "Please enter the width..."
                       : selectedAspect === ""
@@ -297,18 +297,18 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                           : "All set!"}
                   </h3>
 
-                  <div className="relative w-full sm:w-48 lg:w-60 h-48 sm:h-48 lg:h-60">
+                  <div className="relative w-full sm:w-48 lg:w-60 h-32 sm:h-48 lg:h-60 flex-shrink-0">
                     <Image
                       src="https://adzktgbqdq.cloudimg.io/https://dgaddcosprod.blob.core.windows.net/cxf-multisite/clsnd2leu002711ow8tgx7mfc/attachments/g1op4dopzho9s4qrm03ynut2-ts-ref-tyre-4w-step-02.one-third.png"
                       alt="Tire Size"
                       fill
-                      className="object-contain size-full"
+                      className="object-contain"
                     />
                   </div>
                 </div>
 
                 {/* Search input */}
-                <div className="flex items-center w-full -mt-13 bg-white rounded-2xl px-5 py-4">
+                <div className="flex items-center w-full bg-white rounded-2xl px-5 py-4 relative z-10 shadow-lg">
                   <input
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
@@ -319,13 +319,15 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                           ? "ratio"
                           : "diameter"
                     }...`}
-                    className="w-full border-none outline-none"
+                    className="w-full border-none outline-none text-base sm:text-lg"
+                    autoFocus={false}
+                    type="text"
                   />
-                  <SearchIcon className="ml-auto size-5" />
+                  <SearchIcon className="ml-auto size-5 text-gray-400" />
                 </div>
 
                 {/* Options list */}
-                <div className="space-y-3 overflow-y-auto mt-5 pr-5 max-h-[50vh]">
+                <div className="space-y-3 overflow-y-auto mt-5 pr-5 max-h-[40vh] sm:max-h-[50vh]">
                   {selectedWidth === "" &&
                     filterList(widthOptions, searchInput).map((item) => (
                       <OptionItem
@@ -377,7 +379,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
 
           {/* ---- CAR FLOW ---- */}
           {isOpen.key === "car" && (
-            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0">
+            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0 py-4 pb-8">
               {/* Left preview */}
               <div className="bg-[#c02b2b] w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8">
                 <h3 className="font-semibold text-white text-lg mb-5">
@@ -445,8 +447,8 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                   <span className="text-sm sm:text-base">Reset my search</span>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-start -mt-5 sm:-mt-5 justify-between gap-4 sm:gap-0">
-                  <h3 className="font-semibold mt-4 sm:mt-14 text-white text-lg sm:text-xl lg:text-2xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-4 mb-4">
+                  <h3 className="font-semibold text-white text-lg sm:text-xl lg:text-2xl">
                     {selectedBrand === ""
                       ? "Please select the brand..."
                       : selectedModel === ""
@@ -455,18 +457,18 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                           ? "Please select the year..."
                           : "All set!"}
                   </h3>
-                  <div className="relative w-full sm:w-52 lg:w-64 h-52 sm:h-52 lg:h-64">
+                  <div className="relative w-full sm:w-52 lg:w-64 h-32 sm:h-52 lg:h-64 flex-shrink-0">
                     <Image
                       src="/car.png"
                       alt="Car"
                       fill
-                      className="object-contain size-full"
+                      className="object-contain"
                     />
                   </div>
                 </div>
 
                 {/* Search input */}
-                <div className="flex items-center w-full -mt-22 bg-white rounded-2xl px-5 py-4">
+                <div className="flex items-center w-full bg-white rounded-2xl px-5 py-4 relative z-10 shadow-lg">
                   <input
                     value={searchCarInput}
                     onChange={(e) => setSearchCarInput(e.target.value)}
@@ -477,13 +479,15 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                           ? "model"
                           : "year"
                     }...`}
-                    className="w-full border-none outline-none"
+                    className="w-full border-none outline-none text-base sm:text-lg"
+                    autoFocus={false}
+                    type="text"
                   />
-                  <SearchIcon className="ml-auto size-5" />
+                  <SearchIcon className="ml-auto size-5 text-gray-400" />
                 </div>
 
                 {/* Options */}
-                <div className="space-y-3 overflow-y-auto mt-5 pr-5 max-h-[50vh]">
+                <div className="space-y-3 overflow-y-auto mt-5 pr-5 max-h-[40vh] sm:max-h-[50vh]">
                   {selectedBrand === "" &&
                     filterList(brandOptions, searchCarInput).map((item) => (
                       <OptionItem

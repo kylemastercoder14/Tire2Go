@@ -115,5 +115,31 @@ export const TireSizeValidators = z.object({
 
 export const FeedbackValidators = z.object({
   rating: z.number().min(1, { message: "Rating is required." }).max(5, { message: "Rating must be between 1 and 5." }),
-  comment: z.string().optional(),
+  comment: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true; // Optional field, empty is allowed
+        // Allow only alphanumeric, spaces, and the characters: .,!?()
+        return /^[a-zA-Z0-9\s.,!?()]*$/.test(val);
+      },
+      { message: "Comment can only contain letters, numbers, spaces, and these characters: . , ! ? ( )" }
+    ),
+});
+
+export const ReviewValidators = z.object({
+  productId: z.string().min(1, { message: "Product ID is required." }),
+  rating: z.number().min(1, { message: "Rating is required." }).max(5, { message: "Rating must be between 1 and 5." }),
+  comment: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true; // Optional field, empty is allowed
+        // Allow only alphanumeric, spaces, and the characters: .,!?()
+        return /^[a-zA-Z0-9\s.,!?()]*$/.test(val);
+      },
+      { message: "Comment can only contain letters, numbers, spaces, and these characters: . , ! ? ( )" }
+    ),
 });

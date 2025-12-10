@@ -67,8 +67,9 @@ export const OAuthSyncHandler = () => {
     }
 
     // Skip if we're on auth pages - let them handle their own logic
-    if (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up") ||
-        pathname.startsWith("/complete-profile")) {
+    // BUT allow sso-callback page to sync
+    if ((pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up") ||
+        pathname.startsWith("/complete-profile")) && !pathname.startsWith("/sso-callback")) {
       return;
     }
 

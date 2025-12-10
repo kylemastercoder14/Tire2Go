@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { convertToModelMessages, streamText } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
 import { initialPrompt } from "@/constants/prompt";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_API_KEY || "",
+const openai = createOpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 export const runtime = "nodejs";
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
   // Run the model with streaming
   const result = streamText({
-    model: google("gemini-2.5-pro"),
+    model: openai("gpt-4o-mini"),
     messages: [initialPrompt, ...convertToModelMessages(messages)],
     temperature: 0.5,
   });

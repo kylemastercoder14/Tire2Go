@@ -30,6 +30,7 @@ model Users {
   systemLogs   SystemLogs[]
   order        Order[]
   conversation Conversation[]
+  reviews      Review[]
 }
 
 model Staff {
@@ -83,6 +84,7 @@ model Products {
   orderItem            OrderItem[]
   productCompatibility ProductCompatibility[]
   productSize          ProductSize[]
+  reviews              Review[]
 }
 
 model TireSize {
@@ -379,4 +381,19 @@ model BackupHistory {
   filename  String
   status    String
   createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  productId String
+  product   Products @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
+  rating    Int      // 1 to 5
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([userId])
 }
