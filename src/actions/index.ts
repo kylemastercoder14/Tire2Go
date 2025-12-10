@@ -2015,6 +2015,103 @@ export const getProductReviews = async (productId: string) => {
   }
 };
 
+// Get average ratings for multiple products (batch query)
+export const getProductsRatings = async (productIds: string[]) => {
+  try {
+    if (productIds.length === 0) {
+      return {};
+    }
+
+    const reviews = await db.review.groupBy({
+      by: ["productId"],
+      where: {
+        productId: {
+          in: productIds,
+        },
+      },
+      _avg: {
+        rating: true,
+      },
+      _count: {
+        rating: true,
+      },
+    });
+
+    // Convert to a map for easy lookup
+    const ratingsMap: Record<string, { averageRating: number; totalReviews: number }> = {};
+
+    reviews.forEach((review) => {
+      ratingsMap[review.productId] = {
+        averageRating: review._avg.rating ? Math.round(review._avg.rating * 10) / 10 : 0,
+        totalReviews: review._count.rating || 0,
+      };
+    });
+
+    // Ensure all product IDs have an entry (even if they have no reviews)
+    productIds.forEach((id) => {
+      if (!ratingsMap[id]) {
+        ratingsMap[id] = {
+          averageRating: 0,
+          totalReviews: 0,
+        };
+      }
+    });
+
+    return ratingsMap;
+  } catch (error) {
+    console.error("Error fetching products ratings:", error);
+    return {};
+  }
+};
+
+// Get sold counts for multiple products (only COMPLETED and PAID orders)
+export const getProductsSoldCounts = async (productIds: string[]) => {
+  try {
+    if (productIds.length === 0) {
+      return {};
+    }
+
+    // Get all order items for these products where order is COMPLETED and PAID
+    const orderItems = await db.orderItem.findMany({
+      where: {
+        productId: {
+          in: productIds,
+        },
+        order: {
+          status: "COMPLETED",
+          paymentStatus: "PAID",
+        },
+      },
+      select: {
+        productId: true,
+        quantity: true,
+      },
+    });
+
+    // Sum up quantities by productId
+    const soldCountsMap: Record<string, number> = {};
+
+    orderItems.forEach((item) => {
+      if (!soldCountsMap[item.productId]) {
+        soldCountsMap[item.productId] = 0;
+      }
+      soldCountsMap[item.productId] += item.quantity;
+    });
+
+    // Ensure all product IDs have an entry (even if they have no sales)
+    productIds.forEach((id) => {
+      if (!soldCountsMap[id]) {
+        soldCountsMap[id] = 0;
+      }
+    });
+
+    return soldCountsMap;
+  } catch (error) {
+    console.error("Error fetching products sold counts:", error);
+    return {};
+  }
+};
+
 // Delete Review
 export const deleteReview = async (id: string) => {
   try {

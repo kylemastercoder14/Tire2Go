@@ -782,11 +782,7 @@ function FordRangerWithTires({ tireName, onCarLoad, onTiresLoad, threeDModel }: 
     <group>
       <ModelErrorBoundary
         onLoad={onCarLoad}
-        fallback={
-          <Html center>
-            <div className="text-xs text-muted-foreground">Car model unavailable</div>
-          </Html>
-        }
+        fallback={null} // Silently fail - car model is optional
       >
         <CarModel onWheelsFound={handleWheelsFound} />
       </ModelErrorBoundary>
@@ -1458,23 +1454,8 @@ export function Tire3DViewer({ tireName, tireImage, threeDModel }: Tire3DViewerP
     return () => clearTimeout(timeout);
   }, []);
 
-  // Check if model URL is accessible before loading
-  React.useEffect(() => {
-    const tirePath = getTireModelPath(tireName, threeDModel);
-    if (tirePath && tirePath.startsWith('http')) {
-      // Check if S3 URL is accessible (async check)
-      fetch(tirePath, { method: 'HEAD' })
-        .then((response) => {
-          if (!response.ok && response.status === 403) {
-            setLoadError(new Error('3D model file is not publicly accessible (403 Forbidden). Please check S3 bucket permissions.'));
-            setIsLoading(false);
-          }
-        })
-        .catch(() => {
-          // CORS or network error - will show when GLTF loader fails
-        });
-    }
-  }, [tireName, threeDModel]);
+  // Remove the HEAD check - it causes CORS issues and isn't necessary
+  // The ErrorBoundary will handle loading failures gracefully
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);

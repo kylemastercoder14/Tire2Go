@@ -3,6 +3,8 @@ import db from "@/lib/db";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { StarRating } from "@/components/ui/star-rating";
+import { getProductsRatings, getProductsSoldCounts } from "@/actions";
 
 const FeaturedProducts = async () => {
   // Fetch latest 8 products as featured products
@@ -18,6 +20,13 @@ const FeaturedProducts = async () => {
       },
     },
   });
+
+  // Fetch ratings and sold counts for all products
+  const productIds = products.map(p => p.id);
+  const [ratings, soldCounts] = await Promise.all([
+    getProductsRatings(productIds),
+    getProductsSoldCounts(productIds),
+  ]);
 
   if (products.length === 0) {
     return null;
@@ -109,6 +118,25 @@ const FeaturedProducts = async () => {
                 <h4 className="font-bold text-sm sm:text-base line-clamp-2 min-h-[2.5rem]">
                   {product.name}
                 </h4>
+                <div className="flex items-center gap-1.5 mt-1">
+                  {ratings[product.id] && ratings[product.id].totalReviews > 0 ? (
+                    <>
+                      <StarRating rating={ratings[product.id].averageRating} readonly size="sm" />
+                      <span className="text-xs text-muted-foreground">
+                        ({ratings[product.id].averageRating.toFixed(1)}) • {ratings[product.id].totalReviews}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">No review</span>
+                  )}
+                </div>
+                {soldCounts[product.id] !== undefined && (
+                  <div className="mt-1">
+                    <span className="text-xs text-muted-foreground">
+                      {soldCounts[product.id] > 0 ? `${soldCounts[product.id]} sold` : 'No sales yet'}
+                    </span>
+                  </div>
+                )}
                 {uniqueTireSizes.length > 0 ? (
                   <div className="mt-1">
                     <p className="text-xs text-muted-foreground">

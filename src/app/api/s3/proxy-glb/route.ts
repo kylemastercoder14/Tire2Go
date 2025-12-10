@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import AWS from "aws-sdk";
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;

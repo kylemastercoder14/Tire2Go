@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import AWS from "aws-sdk";
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
@@ -25,14 +27,23 @@ export async function GET(req: NextRequest) {
 
     // Extract the key from the full URL
     const bucketUrl = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/`;
-    if (!fileUrl.startsWith(bucketUrl)) {
+    let key: string;
+
+    if (fileUrl.startsWith(bucketUrl)) {
+      key = fileUrl.replace(bucketUrl, "");
+    } else if (fileUrl.includes('/ecr/')) {
+      // Extract key from path like /ecr/filename.glb
+      key = fileUrl.includes('s3.amazonaws.com')
+        ? fileUrl.split('.s3.amazonaws.com/')[1]
+        : fileUrl.startsWith('/')
+          ? fileUrl.substring(1)
+          : fileUrl;
+    } else {
       return NextResponse.json(
         { error: "Invalid S3 URL" },
         { status: 400 }
       );
     }
-
-    const key = fileUrl.replace(bucketUrl, "");
 
     // Generate signed URL (valid for 1 hour)
     const signedUrl = s3.getSignedUrl("getObject", {
