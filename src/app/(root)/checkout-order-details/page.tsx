@@ -51,12 +51,27 @@ const Page = () => {
   });
 
   // Handle phone number input - only numbers, max 10 digits
+  // Must start with 9 (not 0) after +63, then 8 more digits
   const handlePhoneChange = (value: string) => {
     // Remove all non-numeric characters
     const numericValue = value.replace(/\D/g, "");
 
     // Limit to 10 digits
-    const limitedValue = numericValue.slice(0, 10);
+    let limitedValue = numericValue.slice(0, 10);
+
+    // If the first digit is 0, replace it with 9 or remove it
+    if (limitedValue.length > 0 && limitedValue[0] === "0") {
+      // If user enters 0 as first digit, remove it or replace with 9
+      limitedValue = limitedValue.length > 1 ? limitedValue.slice(1) : "";
+    }
+
+    // Ensure first digit is 9 if value exists
+    if (limitedValue.length > 0 && limitedValue[0] !== "9") {
+      // If first digit is not 9, replace it with 9
+      limitedValue = "9" + limitedValue.slice(1);
+      // Limit to 10 digits after adding 9
+      limitedValue = limitedValue.slice(0, 10);
+    }
 
     setDetails({ ...details, phone: limitedValue });
   };
@@ -85,6 +100,9 @@ const Page = () => {
   // Email validation state
   const [emailError, setEmailError] = React.useState<string>("");
 
+  // Preferred schedule validation state
+  const [scheduleError, setScheduleError] = React.useState<string>("");
+
   // Policy modal states
   const [isTermsOpen, setIsTermsOpen] = React.useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = React.useState(false);
@@ -104,6 +122,14 @@ const Page = () => {
   }
 
   const handleContinue = () => {
+    // Validate preferred schedule is selected
+    if (!preferredSchedule) {
+      setScheduleError("Please select a preferred schedule date.");
+      toast.error("Please select a preferred schedule date before continuing.");
+      return;
+    }
+    setScheduleError(""); // Clear error if valid
+
     if (!details.acceptedTerms) {
       toast.error(
         "You must accept the terms and conditions before continuing."
@@ -130,9 +156,15 @@ const Page = () => {
     }
     setEmailError(""); // Clear error if valid
 
-    // Validate phone number length
+    // Validate phone number length and format
     if (details.phone.length !== 10) {
       toast.error("Phone number must be exactly 10 digits.");
+      return;
+    }
+
+    // Validate that phone number starts with 9 (not 0)
+    if (details.phone[0] !== "9") {
+      toast.error("Phone number must start with 9 after +63 (e.g., +639123456789).");
       return;
     }
 
@@ -211,13 +243,17 @@ const Page = () => {
                 {/* Preferred Schedule */}
                 <div className="space-y-2">
                   <h3 className="text-primary font-medium">
-                    Preferred schedule details
+                    Preferred schedule details <span className="text-destructive">*</span>
                   </h3>
                   <DatePicker
                     value={preferredSchedule ?? undefined}
-                    onChange={(date?: Date) =>
-                      setPreferredSchedule(date ?? null)
-                    }
+                    onChange={(date?: Date) => {
+                      setPreferredSchedule(date ?? null);
+                      // Clear error when user selects a date
+                      if (date) {
+                        setScheduleError("");
+                      }
+                    }}
                     fromDate={minDate}
                     descriptionText={
                       preferredSchedule
@@ -226,7 +262,11 @@ const Page = () => {
                           )}.`
                         : "Select your preferred date for tire delivery or installation (today or later, 2025 and onwards)."
                     }
+                    required
                   />
+                  {scheduleError && (
+                    <p className="text-sm text-destructive">{scheduleError}</p>
+                  )}
                 </div>
 
                 <Separator />

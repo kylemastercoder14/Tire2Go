@@ -30,23 +30,23 @@ const Page = () => {
       const signInAttempt = await signIn.create({
         identifier: email,
         password,
-      })
+      });
 
       // If sign-in process is complete, set the created session as active
       // and redirect the user based on their userType
-      if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId })
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId });
 
         // Wait a moment for session to be fully established
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         // Check user type and redirect accordingly
         try {
-          const response = await fetch('/api/user/check-type');
+          const response = await fetch("/api/user/check-type");
 
           if (!response.ok) {
             console.error("Failed to check user type:", response.statusText);
-            router.replace('/');
+            router.replace("/");
             return;
           }
 
@@ -54,27 +54,29 @@ const Page = () => {
 
           if (data.success && data.userType) {
             // ADMIN: Redirect to admin dashboard
-            if (data.userType === 'ADMIN') {
-              router.replace('/admin/dashboard');
+            if (data.userType === "ADMIN") {
+              router.replace("/admin/dashboard");
+            } else if (data.userType === "OWNER") {
+              router.replace("/owner/dashboard");
             }
             // CUSTOMER: Redirect to root page
             else {
-              router.replace('/');
+              router.replace("/");
             }
           } else {
             // Default to home if check fails
-            router.replace('/');
+            router.replace("/");
           }
         } catch (err) {
           console.error("Error checking user type:", err);
           // Default to home if check fails
-          router.replace('/');
+          router.replace("/");
         }
       } else {
         // If the status isn't complete, check why. User might need to
         // complete further steps.
-        console.error(JSON.stringify(signInAttempt, null, 2))
-        toast.error("Sign in not complete. Please try again.")
+        console.error(JSON.stringify(signInAttempt, null, 2));
+        toast.error("Sign in not complete. Please try again.");
       }
     } catch (err: any) {
       console.error("Sign in error:", err);

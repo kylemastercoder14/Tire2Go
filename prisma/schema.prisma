@@ -373,6 +373,7 @@ enum TicketPriority {
 enum UserType {
   ADMIN
   CUSTOMER
+  OWNER
 }
 
 model BackupHistory {
