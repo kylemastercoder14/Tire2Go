@@ -262,7 +262,6 @@ const Page = () => {
                           )}.`
                         : "Select your preferred date for tire delivery or installation (today or later, 2025 and onwards)."
                     }
-                    required
                   />
                   {scheduleError && (
                     <p className="text-sm text-destructive">{scheduleError}</p>
