@@ -2,6 +2,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/db";
+import { UserType } from "@prisma/client";
 import DashboardContent from "./client";
 
 const Page = async () => {
@@ -18,7 +19,7 @@ const Page = async () => {
       select: { userType: true },
     });
 
-    if (!user || user.userType !== "ADMIN") {
+    if (!user || user.userType !== UserType.ADMIN) {
       redirect("/?error=access_denied");
     }
   } catch (error) {
