@@ -27,6 +27,7 @@ import { sendMail } from "@/lib/nodemailer";
 import { OrderStatusEmailHTML } from "@/components/email-template/order-status";
 import { OrderRejectionEmailHTML } from "@/components/email-template/order-rejection";
 import { OrderCancellationEmailHTML } from "@/components/email-template/order-cancellation";
+import { revalidatePath } from "next/cache";
 
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
@@ -1087,6 +1088,8 @@ export async function updateOrderStatus(orderId: string, status: string) {
   // ✅ send email notification
   await sendOrderStatusEmail(order, order.email);
 
+  revalidatePath("/admin/orders");
+
   return order;
 }
 
@@ -1865,7 +1868,10 @@ export const canUserReviewProduct = async (productId: string) => {
     const { userId } = await auth();
 
     if (!userId) {
-      return { canReview: false, error: "You must be logged in to review a product" };
+      return {
+        canReview: false,
+        error: "You must be logged in to review a product",
+      };
     }
 
     const user = await db.users.findUnique({ where: { authId: userId } });
@@ -1891,7 +1897,8 @@ export const canUserReviewProduct = async (productId: string) => {
     if (!hasValidOrder) {
       return {
         canReview: false,
-        error: "You can only review products from orders that are completed and paid",
+        error:
+          "You can only review products from orders that are completed and paid",
       };
     }
 
@@ -1904,7 +1911,10 @@ export const canUserReviewProduct = async (productId: string) => {
     });
 
     if (existingReview) {
-      return { canReview: false, error: "You have already reviewed this product" };
+      return {
+        canReview: false,
+        error: "You have already reviewed this product",
+      };
     }
 
     return { canReview: true };
@@ -2038,11 +2048,16 @@ export const getProductsRatings = async (productIds: string[]) => {
     });
 
     // Convert to a map for easy lookup
-    const ratingsMap: Record<string, { averageRating: number; totalReviews: number }> = {};
+    const ratingsMap: Record<
+      string,
+      { averageRating: number; totalReviews: number }
+    > = {};
 
     reviews.forEach((review) => {
       ratingsMap[review.productId] = {
-        averageRating: review._avg.rating ? Math.round(review._avg.rating * 10) / 10 : 0,
+        averageRating: review._avg.rating
+          ? Math.round(review._avg.rating * 10) / 10
+          : 0,
         totalReviews: review._count.rating || 0,
       };
     });
