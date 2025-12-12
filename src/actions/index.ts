@@ -1022,6 +1022,9 @@ export const placeOrder = async (data: {
       data.customerDetails.email
     );
 
+    revalidatePath("/");
+    revalidatePath("/admin/orders");
+
     return { success: "Order placed successfully", order: orderWithItems };
   } catch (error) {
     console.error("Error placing order:", error);
