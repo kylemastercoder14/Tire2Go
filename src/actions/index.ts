@@ -1129,6 +1129,9 @@ export async function toggleOrderPayment(
       data: { paymentStatus: status },
     });
 
+    revalidatePath("/admin/orders");
+    revalidatePath("/order-history");
+
     return { success: true, order };
   } catch (error) {
     console.error(error);
@@ -1154,6 +1157,9 @@ export const deleteOrder = async (id: string) => {
       where: { orderId: id },
     });
 
+    revalidatePath("/admin/orders");
+    revalidatePath("/order-history");
+
     return { success: "Order deleted successfully" };
   } catch (error) {
     console.error("Error deleting order:", error);
@@ -1168,6 +1174,7 @@ export const archiveOrdersManually = async () => {
     const cronModule = await import("@/lib/cron");
     if (typeof cronModule.archiveOldOrders === "function") {
       await cronModule.archiveOldOrders();
+      revalidatePath("/admin/orders");
       return { success: "Orders archived successfully" };
     } else {
       return { error: "Archive function not available" };
@@ -1322,6 +1329,9 @@ export async function rejectOrder(orderId: string, reason: string) {
 
     await sendOrderRejectionEmail(order, order.email);
 
+    revalidatePath("/admin/orders");
+    revalidatePath("/order-history");
+
     return { success: true, order };
   } catch (error) {
     console.error(error);
@@ -1409,6 +1419,9 @@ export async function cancelOrder(orderId: string, reason: string) {
 
     // Send cancellation confirmation email
     await sendOrderCancellationEmail(cancelledOrder, order.email);
+
+    revalidatePath("/admin/orders");
+    revalidatePath("/order-history");
 
     return { success: "Order cancelled successfully", order: cancelledOrder };
   } catch (error) {
