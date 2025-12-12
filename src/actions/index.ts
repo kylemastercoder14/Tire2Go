@@ -375,6 +375,8 @@ export const createInventory = async (
       },
     });
 
+    revalidatePath("/admin/inventory-management");
+
     return { success: "Inventory created successfully", inventory };
   } catch (error) {
     console.error("Error creating inventory:", error);
@@ -456,6 +458,8 @@ export const updateInventory = async (
       },
     });
 
+    revalidatePath("/admin/inventory-management");
+
     return {
       success: "Inventory updated successfully",
       inventory: updatedInventory,
@@ -479,6 +483,8 @@ export const deleteInventory = async (id: string) => {
     await db.inventory.delete({
       where: { id },
     });
+
+    revalidatePath("/admin/inventory-management");
 
     return { success: "Inventory deleted successfully" };
   } catch (error) {
@@ -510,6 +516,8 @@ export const updateStockQuantity = async (
     },
   });
 
+  revalidatePath("/admin/inventory-management");
+
   return {
     success: "Stock updated successfully",
     inventory: updatedInventory,
@@ -538,6 +546,8 @@ export const updateMinimumStock = async (
       status: getStockStatus(existingInventory.quantity, minStock),
     },
   });
+
+  revalidatePath("/admin/inventory-management");
 
   return {
     success: "Minimum stock updated successfully",
@@ -570,6 +580,8 @@ export const updateMaximumStock = async (
       ),
     },
   });
+
+  revalidatePath("/admin/inventory-management");
 
   return {
     success: "Maximum stock updated successfully",

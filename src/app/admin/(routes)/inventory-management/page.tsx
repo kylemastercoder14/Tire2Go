@@ -6,8 +6,15 @@ import Link from "next/link";
 import { IconPlus } from "@tabler/icons-react";
 import { DataTable } from "@/components/globals/DataTable";
 import { columns } from "./_components/columns";
+import { unstable_noStore as noStore } from "next/cache";
+
+// Force dynamic rendering to prevent caching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const Page = async () => {
+  // Prevent static caching
+  noStore();
   const data = await db.inventory.findMany({
     orderBy: {
       createdAt: "desc",
