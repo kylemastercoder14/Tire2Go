@@ -334,44 +334,15 @@ export const createInventory = async (
       return { error: "Inventory for this product already exists" };
     }
 
-    // check if the quantity is more than maxStock
-    if (
-      parseValues.maxStock !== undefined &&
-      parseValues.quantity > parseValues.maxStock
-    ) {
-      return { error: "Quantity cannot be more than max stock" };
-    }
-
-    // check if the quantity is less than minStock
-    if (parseValues.quantity < parseValues.minStock) {
-      return { error: "Quantity cannot be less than min stock" };
-    }
-
-    // check if the minStock is more than maxStock
-    if (
-      parseValues.maxStock !== undefined &&
-      parseValues.minStock > parseValues.maxStock
-    ) {
-      return { error: "Min stock cannot be more than max stock" };
-    }
-
-    // check if the minStock is less than 0
-    if (parseValues.minStock < 0) {
-      return { error: "Min stock cannot be less than 0" };
-    }
-
-    // check if the quantity is less than 0
-    if (parseValues.quantity < 0) {
-      return { error: "Quantity cannot be less than 0" };
-    }
+    // Allow negative quantities for critical stock tracking
+    // Critical stock status will be determined based on sales trends and usage
 
     const inventory = await db.inventory.create({
       data: {
         productId: parseValues.productId,
         quantity: parseValues.quantity,
-        minStock: parseValues.minStock,
-        maxStock: parseValues.maxStock,
         sku: parseValues.sku,
+        minStock: 0, // Default value - not used for critical stock determination
       },
     });
 
@@ -416,45 +387,17 @@ export const updateInventory = async (
       }
     }
 
-    // check if the quantity is more than maxStock
-    if (
-      parseValues.maxStock !== undefined &&
-      parseValues.quantity > parseValues.maxStock
-    ) {
-      return { error: "Quantity cannot be more than max stock" };
-    }
-
-    // check if the quantity is less than minStock
-    if (parseValues.quantity < parseValues.minStock) {
-      return { error: "Quantity cannot be less than min stock" };
-    }
-
-    // check if the minStock is more than maxStock
-    if (
-      parseValues.maxStock !== undefined &&
-      parseValues.minStock > parseValues.maxStock
-    ) {
-      return { error: "Min stock cannot be more than max stock" };
-    }
-
-    // check if the minStock is less than 0
-    if (parseValues.minStock < 0) {
-      return { error: "Min stock cannot be less than 0" };
-    }
-
-    // check if the quantity is less than 0
-    if (parseValues.quantity < 0) {
-      return { error: "Quantity cannot be less than 0" };
-    }
+    // Allow negative quantities for critical stock tracking
+    // Critical stock status will be determined based on sales trends and usage
 
     const updatedInventory = await db.inventory.update({
       where: { id },
       data: {
         productId: parseValues.productId,
         quantity: parseValues.quantity,
-        minStock: parseValues.minStock,
-        maxStock: parseValues.maxStock,
         sku: parseValues.sku,
+        // Status will be determined by sales trends and usage, not fixed thresholds
+        status: parseValues.quantity <= 0 ? "OUT_OF_STOCK" : "IN_STOCK",
       },
     });
 
@@ -500,19 +443,15 @@ export const updateStockQuantity = async (
   const existingInventory = await db.inventory.findUnique({ where: { id } });
   if (!existingInventory) throw new Error("Inventory not found");
 
-  if (quantity < 0) throw new Error("Quantity cannot be less than 0");
-  if (
-    existingInventory.maxStock != null &&
-    quantity > existingInventory.maxStock
-  ) {
-    throw new Error("Quantity cannot be more than max stock");
-  }
+  // Allow negative quantities for critical stock tracking
+  // Critical stock status will be determined based on sales trends and usage
 
   const updatedInventory = await db.inventory.update({
     where: { id },
     data: {
       quantity,
-      status: getStockStatus(quantity, existingInventory.minStock),
+      // Status will be determined by sales trends and usage, not fixed thresholds
+      status: quantity <= 0 ? "OUT_OF_STOCK" : "IN_STOCK",
     },
   });
 
@@ -994,6 +933,20 @@ export const placeOrder = async (data: {
 
     const fullName = `${data.customerDetails.firstName} ${data.customerDetails.lastName}`;
 
+    // Generate tracking number in MMDDYYYYHMSS format
+    // Example: 011220268226 = 01/12/2026 8:22:26 (month=01, day=12, year=2026, hour=8, minutes=22, seconds=26)
+    // Note: Hour is single digit (0-9) or two digits (10-23) without leading zero for single digits
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // MM (01-12)
+    const day = String(now.getDate()).padStart(2, "0"); // DD (01-31)
+    const year = String(now.getFullYear()); // YYYY (2026)
+    const hour = now.getHours(); // H (0-23, will be 1 digit for 0-9, 2 digits for 10-23)
+    const minutes = String(now.getMinutes()).padStart(2, "0"); // MM (00-59)
+    const seconds = String(now.getSeconds()).padStart(2, "0"); // SS (00-59)
+
+    // Format: MMDDYYYYHMSS (hour without leading zero for single digits, with 2 digits for 10-23)
+    const trackingNumber = `${month}${day}${year}${hour}${minutes}${seconds}`;
+
     // Create order
     const response = await db.order.create({
       data: {
@@ -1006,6 +959,7 @@ export const placeOrder = async (data: {
         orderOption: data.deliveryOption,
         preferredDate: data.preferredSchedule || new Date(),
         remarks: data.customerDetails.remarks,
+        trackingNumber: trackingNumber,
       },
     });
 
@@ -1056,7 +1010,7 @@ export const sendOrderCompletedEmail = async (
     await sendMail(
       email,
       `Your order has been completed`,
-      `Your order "${order.id}" has been completed.`,
+      `Your order "${order.trackingNumber}" has been completed.`,
       htmlContent
     );
 
@@ -1240,11 +1194,11 @@ export const getOrdersToArchiveSoon = async () => {
 };
 
 // Get order by ID and email for tracking (public access)
-export const getOrderForTracking = async (orderId: string, email: string) => {
+export const getOrderForTracking = async (orderTrackingNumber: string, email: string) => {
   try {
     const order = await db.order.findFirst({
       where: {
-        id: orderId,
+        trackingNumber: orderTrackingNumber.trim(),
         email: email.toLowerCase().trim(),
       },
       include: {
@@ -1262,7 +1216,7 @@ export const getOrderForTracking = async (orderId: string, email: string) => {
 
     if (!order) {
       return {
-        error: "Order not found. Please check your order ID and email.",
+        error: "Order not found. Please check your order tracking number and email address.",
       };
     }
 

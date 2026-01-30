@@ -63,6 +63,11 @@ export const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   });
 
+// Format price with proper spacing and right alignment
+export const formatPrice = (value: number): string => {
+  return `₱ ${formatCurrency(value)}`;
+};
+
 export const backupTables = [
   "users",
   "staff",

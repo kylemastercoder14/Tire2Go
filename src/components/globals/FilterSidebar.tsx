@@ -11,10 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BrandWithProducts, SearchBySize, SearchByCar } from "@/types";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, RotateCcw } from "lucide-react";
 
 interface FilterSidebarProps {
   brands: BrandWithProducts[];
@@ -35,7 +35,7 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
   const currentCarBrand = searchParams.get("brand") || "";
   const currentCarModel = searchParams.get("model") || "";
   const currentYear = searchParams.get("year") || "";
-  const selectedBrandIds = searchParams.get("brandIds")?.split(",") || [];
+  const selectedBrandId = searchParams.get("brandId") || "";
 
   // Track loading state when URL changes - only on actual navigation
   const searchParamsString = searchParams.toString();
@@ -75,8 +75,8 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
   const [selectedModel, setSelectedModel] = React.useState(currentCarModel);
   const [selectedYear, setSelectedYear] = React.useState(currentYear);
 
-  // --- STATE FOR BRAND FILTER ---
-  const [selectedBrandIdsState, setSelectedBrandIdsState] = React.useState<string[]>(selectedBrandIds);
+  // --- STATE FOR BRAND FILTER (single selection only) ---
+  const [selectedBrandIdState, setSelectedBrandIdState] = React.useState<string>(selectedBrandId);
 
   // --- DERIVED OPTIONS FOR SIZE ---
   const widthOptions = Object.keys(searchBySize);
@@ -145,17 +145,38 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
     }
   };
 
-  const handleBrandFilter = (brandId: string, checked: boolean) => {
-    let newSelectedBrandIds: string[];
-    if (checked) {
-      newSelectedBrandIds = [...selectedBrandIdsState, brandId];
-    } else {
-      newSelectedBrandIds = selectedBrandIdsState.filter((id) => id !== brandId);
-    }
-    setSelectedBrandIdsState(newSelectedBrandIds);
+  const handleBrandFilter = (brandId: string) => {
+    // If clicking the same brand, deselect it. Otherwise, select the new brand.
+    const newSelectedBrandId = selectedBrandIdState === brandId ? "" : brandId;
+    setSelectedBrandIdState(newSelectedBrandId);
 
     const updates: Record<string, string | null> = {
-      brandIds: newSelectedBrandIds.length > 0 ? newSelectedBrandIds.join(",") : null,
+      brandId: newSelectedBrandId || null,
+    };
+    updateSearchParams(updates);
+  };
+
+  const handleResetFilters = () => {
+    // Reset all state
+    setSelectedValue("size");
+    setSelectedWidth("");
+    setSelectedAspect("");
+    setSelectedRim("");
+    setSelectedBrand("");
+    setSelectedModel("");
+    setSelectedYear("");
+    setSelectedBrandIdState("");
+
+    // Clear all URL parameters
+    const updates: Record<string, string | null> = {
+      width: null,
+      ratio: null,
+      diameter: null,
+      brand: null,
+      model: null,
+      year: null,
+      brandId: null,
+      sortBy: null,
     };
     updateSearchParams(updates);
   };
@@ -173,6 +194,11 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWidth, selectedAspect, selectedRim, selectedValue, currentWidth, currentRatio, currentDiameter]);
+
+  // Sync brand filter state with URL params
+  React.useEffect(() => {
+    setSelectedBrandIdState(selectedBrandId);
+  }, [selectedBrandId]);
 
   // Auto-apply car filter when all fields are selected
   React.useEffect(() => {
@@ -196,6 +222,18 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
           <span>Filtering...</span>
         </div>
       )}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-lg">Filters</h3>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleResetFilters}
+          className="gap-2"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Reset
+        </Button>
+      </div>
       <RadioGroup
         defaultValue={selectedValue}
         onValueChange={setSelectedValue}
@@ -352,17 +390,17 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
         </div>
       )}
       <h3 className="font-bold mt-5">Filter by Brand</h3>
-      <div className="mt-5 space-y-4">
+      <RadioGroup
+        value={selectedBrandIdState}
+        onValueChange={handleBrandFilter}
+        className="mt-5 space-y-4"
+      >
         {brands.map((brand) => {
-          const isChecked = selectedBrandIdsState.includes(brand.id);
+          const isSelected = selectedBrandIdState === brand.id;
           return (
             <div key={brand.id} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Checkbox
-                  id={brand.id}
-                  checked={isChecked}
-                  onCheckedChange={(checked) => handleBrandFilter(brand.id, checked as boolean)}
-                />
+                <RadioGroupItem value={brand.id} id={brand.id} />
                 <Label htmlFor={brand.id} className="uppercase cursor-pointer">
                   {brand.name}
                 </Label>
@@ -371,7 +409,7 @@ const FilterSidebar = ({ brands, searchBySize, searchByCar }: FilterSidebarProps
             </div>
           );
         })}
-      </div>
+      </RadioGroup>
     </div>
   );
 };

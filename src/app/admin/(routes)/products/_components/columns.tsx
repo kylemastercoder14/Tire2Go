@@ -8,6 +8,7 @@ import { useState } from "react";
 import CellActions from "./cell-action";
 import Image from "next/image";
 import { ProductWithBrand } from "@/types";
+import { formatCurrency } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -142,12 +143,12 @@ export const columns: ColumnDef<ProductWithBrand>[] = [
             {discountedPrice && discountedPrice < price ? (
               <>
                 <span className="text-sm text-muted-foreground line-through">
-                  ₱{price.toLocaleString()}
+                  ₱ {formatCurrency(price)}
                 </span>
-                <span>₱{discountedPrice.toLocaleString()}</span>
+                <span>₱ {formatCurrency(discountedPrice)}</span>
               </>
             ) : (
-              <span>₱{price.toLocaleString() || "N/A"}</span>
+              <span>₱ {formatCurrency(price || 0)}</span>
             )}
           </div>
         );
@@ -170,14 +171,14 @@ export const columns: ColumnDef<ProductWithBrand>[] = [
       const maxPrice = Math.max(...prices);
 
       if (minPrice === maxPrice) {
-        return <span className="ml-3.5">₱{minPrice.toLocaleString()}</span>;
+        return <span className="ml-3.5">₱ {formatCurrency(minPrice)}</span>;
       }
 
       return (
         <div className="ml-3.5">
-          <span className="font-medium">₱{minPrice.toLocaleString()}</span>
+          <span className="font-medium">₱ {formatCurrency(minPrice)}</span>
           <span className="text-muted-foreground mx-1">-</span>
-          <span className="font-medium">₱{maxPrice.toLocaleString()}</span>
+          <span className="font-medium">₱ {formatCurrency(maxPrice)}</span>
         </div>
       );
     },
@@ -306,15 +307,15 @@ export const columns: ColumnDef<ProductWithBrand>[] = [
                           {item.isClearanceSale && item.discountedPrice && item.discountedPrice < item.originalPrice ? (
                             <>
                               <span className="text-xs text-muted-foreground line-through">
-                                ₱{item.originalPrice.toLocaleString()}
+                                ₱ {formatCurrency(item.originalPrice)}
                               </span>
                               <span className="text-sm font-medium text-red-600">
-                                ₱{item.discountedPrice.toLocaleString()}
+                                ₱ {formatCurrency(item.discountedPrice)}
                               </span>
                             </>
                           ) : (
                             <span className="text-sm font-medium">
-                              ₱{item.price.toLocaleString()}
+                              ₱ {formatCurrency(item.price)}
                             </span>
                           )}
                         </div>

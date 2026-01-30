@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import useCart from '@/hooks/use-cart';
 import { useRouter, usePathname } from 'next/navigation';
 import { toast } from 'sonner';
+import { formatCurrency } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -101,8 +102,6 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
       brand: data.brand.name,
       tireSize: tireSizeDisplay,
     });
-
-    router.push('/cart');
   };
 
   const handleShare = async () => {
@@ -241,15 +240,15 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
                             {ts.isClearanceSale && ts.discountedPrice ? (
                               <>
                                 <span className="text-sm font-semibold text-primary">
-                                  ₱{ts.discountedPrice.toLocaleString()}
+                                  ₱ {formatCurrency(ts.discountedPrice)}
                                 </span>
                                 <span className="text-xs line-through text-muted-foreground">
-                                  ₱{ts.price.toLocaleString()}
+                                  ₱ {formatCurrency(ts.price)}
                                 </span>
                               </>
                             ) : (
                               <span className="text-sm font-semibold">
-                                ₱{ts.price.toLocaleString()}
+                                ₱ {formatCurrency(ts.price)}
                               </span>
                             )}
                           </div>
@@ -271,7 +270,7 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
             <div className="flex items-center gap-2">
               {displayDiscountedPrice && displayDiscountedPrice < displayPrice && (
                 <p className="font-bold text-3xl text-primary">
-                  ₱{displayDiscountedPrice.toLocaleString()}
+                  ₱ {formatCurrency(displayDiscountedPrice)}
                 </p>
               )}
               <p className={`font-medium mt-2 ${
@@ -279,13 +278,13 @@ const TireDetails = ({ data }: { data: ProductWithBrand }) => {
                   ? "line-through text-muted-foreground text-lg"
                   : "text-3xl text-primary font-bold"
               }`}>
-                ₱{displayPrice.toLocaleString()}
+                ₱ {formatCurrency(displayPrice)}
               </p>
             </div>
           </div>
           {displayDiscountedPrice !== null && displayDiscountedPrice < displayPrice && (
             <p className="text-green-900 font-bold mt-3">
-              SAVE ₱{(displayPrice - displayDiscountedPrice).toLocaleString()}!
+              SAVE ₱ {formatCurrency(displayPrice - displayDiscountedPrice)}!
             </p>
           )}
           <Separator className="my-3 !h-[2px]" />

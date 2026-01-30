@@ -178,15 +178,31 @@ const Page = () => {
     router.push("/checkout-review");
   };
 
-  const item = items[0]; // since you allow only one product
-  const srpPrice = item.unitPrice;
-  const srpTotal = item.unitPrice * item.quantity;
-  // Use discountedPrice if it exists and is greater than 0, otherwise use unitPrice
-  const effectivePrice = (item.discountedPrice && item.discountedPrice > 0)
-    ? item.discountedPrice
-    : item.unitPrice;
-  const discountedTotal = effectivePrice * item.quantity;
-  const discountAmount = srpTotal - discountedTotal;
+  // Calculate totals for all items
+  const calculateTotals = () => {
+    let totalSrp = 0;
+    let totalDiscounted = 0;
+
+    items.forEach((item) => {
+      const srp = item.unitPrice * item.quantity;
+      const effectivePrice = (item.discountedPrice && item.discountedPrice > 0)
+        ? item.discountedPrice
+        : item.unitPrice;
+      const discounted = effectivePrice * item.quantity;
+
+      totalSrp += srp;
+      totalDiscounted += discounted;
+    });
+
+    return {
+      totalSrp,
+      totalDiscounted,
+      totalDiscount: totalSrp - totalDiscounted,
+      totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+    };
+  };
+
+  const totals = calculateTotals();
 
   return (
     <div className="min-h-screen">
@@ -466,32 +482,28 @@ const Page = () => {
               </div>
               <div className="space-y-2 pb-5 px-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-base">SRP</h3>
-                  <h3 className="font-medium text-base">
-                    ₱{formatCurrency(srpPrice)}
+                  <h3 className="font-medium text-base">Subtotal</h3>
+                  <h3 className="font-medium text-base text-right">
+                    ₱ {formatCurrency(totals.totalSrp)}
                   </h3>
                 </div>
+                {totals.totalDiscount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium text-base">Gross Discount</h3>
+                    <h3 className="font-medium text-base text-primary text-right">
+                      -₱ {formatCurrency(totals.totalDiscount)}
+                    </h3>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-base">Tire Discount</h3>
-                  <h3 className="font-medium text-base text-primary">
-                    (₱{formatCurrency(discountAmount)})
-                  </h3>
-                </div>
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-base">Discounted Price</h3>
-                  <h3 className="font-medium text-base">
-                    ₱{formatCurrency(discountedTotal)}
-                  </h3>
-                </div>
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-base">Quantity</h3>
-                  <h3 className="font-medium text-base">{item.quantity}</h3>
+                  <h3 className="font-medium text-base">Total Quantity</h3>
+                  <h3 className="font-medium text-base">{totals.totalQuantity} {totals.totalQuantity === 1 ? 'tire' : 'tires'}</h3>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-lg">Total</h3>
-                  <h3 className="font-medium text-primary text-lg">
-                    ₱{formatCurrency(discountedTotal)}
+                  <h3 className="font-medium text-primary text-lg text-right">
+                    ₱ {formatCurrency(totals.totalDiscounted)}
                   </h3>
                 </div>
                 <p className="mt-3 text-sm text-gray-500">

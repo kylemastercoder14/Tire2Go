@@ -3,12 +3,17 @@ import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { ChevronDown, LifeBuoy, User } from "lucide-react";
+import { ChevronDown, LifeBuoy, User, ShoppingCart } from "lucide-react";
+import useCart from "@/hooks/use-cart";
+import { Badge } from "@/components/ui/badge";
 
 const Navbar = () => {
   const { isSignedIn } = useUser();
+  const { items } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+  
+  const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const menuItems = [
     {
@@ -171,6 +176,18 @@ const Navbar = () => {
 
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/cart"
+                className="relative bg-white hover:bg-gray-50 text-primary border border-primary px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center gap-2"
+              >
+                <ShoppingCart className="size-4" />
+                Cart
+                {cartItemCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary text-white border-0">
+                    {cartItemCount > 99 ? "99+" : cartItemCount}
+                  </Badge>
+                )}
+              </Link>
               <Link
                 href="/tire-selector"
                 className="bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center gap-2"

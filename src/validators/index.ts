@@ -50,9 +50,7 @@ export const ProductValidators = z.object({
 
 export const InventoryValidators = z.object({
   productId: z.string().min(2, { message: "Product is required." }),
-  quantity: z.number().min(0, { message: "Quantity must be at least 0." }),
-  minStock: z.number().min(0, { message: "Minimum stock must be at least 0." }),
-  maxStock: z.number().optional(),
+  quantity: z.number(), // Allow negative values for critical stock tracking
   sku: z.string().optional(),
 });
 

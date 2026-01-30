@@ -5,6 +5,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { StarRating } from "@/components/ui/star-rating";
 import { getProductsRatings, getProductsSoldCounts } from "@/actions";
+import { formatCurrency } from "@/lib/utils";
 
 const FeaturedProducts = async () => {
   // Fetch latest 8 products as featured products
@@ -57,9 +58,9 @@ const FeaturedProducts = async () => {
             const maxPrice = Math.max(...prices);
 
             if (minPrice === maxPrice) {
-              priceRange = `₱${minPrice.toLocaleString()}`;
+              priceRange = `₱ ${formatCurrency(minPrice)}`;
             } else {
-              priceRange = `₱${minPrice.toLocaleString()} - ₱${maxPrice.toLocaleString()}`;
+              priceRange = `₱ ${formatCurrency(minPrice)} - ₱ ${formatCurrency(maxPrice)}`;
             }
 
             // Also check product-level clearance sale
@@ -72,7 +73,7 @@ const FeaturedProducts = async () => {
               product.discountedPrice < (product.price || 0)
                 ? product.discountedPrice
                 : product.price || 0;
-            priceRange = `₱${effectivePrice.toLocaleString()}`;
+            priceRange = `₱ ${formatCurrency(effectivePrice)}`;
             hasClearanceSale = product.isClearanceSale || false;
           }
 

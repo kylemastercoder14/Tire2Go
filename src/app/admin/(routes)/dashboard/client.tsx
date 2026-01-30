@@ -5,6 +5,8 @@ import { SoldChart } from "./_components/orders-chart";
 import { BrandChart } from "./_components/brand-chart";
 import { ProductChart } from "./_components/product-chart";
 import StatsDashboard from "./_components/stats-dashboard";
+import { PendingOrdersSection } from "./_components/pending-orders";
+import { InventoryAlertBanner } from "./_components/inventory-alert-banner";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from 'react';
 import {
@@ -25,7 +27,15 @@ const periods: Period[] = [
   "Annually",
 ];
 
-const DashboardContent = ({ orders }: { orders: any }) => {
+const DashboardContent = ({
+  orders,
+  pendingOrders,
+  criticalInventory,
+}: {
+  orders: any;
+  pendingOrders: any[];
+  criticalInventory: any[];
+}) => {
   const { user } = useUser();
   const [statData, setStatData] = useState<any[]>([]);
   const [period, setPeriod] = useState<Period>("Monthly");
@@ -322,8 +332,8 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       </thead>
       <tbody>
         ${chartData.salesStateData.length > 0 ? chartData.salesStateData
-          .map(
-            (day) => `
+        .map(
+          (day) => `
           <tr>
             <td>${new Date(day.date).toLocaleDateString()}</td>
             <td>${day.completed}</td>
@@ -331,8 +341,8 @@ const DashboardContent = ({ orders }: { orders: any }) => {
             <td>₱${day.profit.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
           </tr>
         `
-          )
-          .join("") : `<tr><td colspan="4" class="text-center">No sales data for the ${period.toLowerCase()} period</td></tr>`}
+        )
+        .join("") : `<tr><td colspan="4" class="text-center">No sales data for the ${period.toLowerCase()} period</td></tr>`}
         <tr style="background-color: #f5f5f5; font-weight: bold;">
           <td>Total</td>
           <td>${chartData.salesStateData.reduce((sum, day) => sum + day.completed, 0)}</td>
@@ -349,15 +359,15 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       </thead>
       <tbody>
         ${chartData.topBrands
-          .map(
-            (item) => `
+        .map(
+          (item) => `
           <tr>
             <td>${item.brand}</td>
             <td>${item.sold}</td>
           </tr>
         `
-          )
-          .join("")}
+        )
+        .join("")}
       </tbody>
     </table>
 
@@ -368,15 +378,15 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       </thead>
       <tbody>
         ${chartData.topProducts
-          .map(
-            (item) => `
+        .map(
+          (item) => `
           <tr>
             <td>${item.product}</td>
             <td>${item.sold}</td>
           </tr>
         `
-          )
-          .join("")}
+        )
+        .join("")}
       </tbody>
     </table>
 
@@ -402,6 +412,9 @@ const DashboardContent = ({ orders }: { orders: any }) => {
 
   return (
     <div>
+      {/* Inventory Alert Banner */}
+      <InventoryAlertBanner inventory={criticalInventory} userRole="admin" />
+
       {/* Header, Print Button and Period Selector */}
       <div className="flex items-center flex-wrap gap-3 justify-between mb-5">
         <h2 className="text-2xl font-bold">Dashboard Overview</h2>
@@ -433,8 +446,13 @@ const DashboardContent = ({ orders }: { orders: any }) => {
       {/* Printable Section */}
       <div data-printable="true">
         <StatsDashboard onDataChange={setStatData} period={period} />
-        <div className="mt-5">
-          <SoldChart orders={orders} />
+        <div className="grid lg:grid-cols-5 mt-5 grid-cols-1 gap-5">
+          <div className="lg:col-span-3">
+            <SoldChart orders={orders} />
+          </div>
+          <div className="lg:col-span-2">
+            <PendingOrdersSection orders={pendingOrders} />
+          </div>
         </div>
         <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 gap-5">
           <BrandChart orders={orders} />

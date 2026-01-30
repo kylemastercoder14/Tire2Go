@@ -13,9 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tire3DViewer } from "@/components/tire-3d-viewer";
 import { StarRating } from "@/components/ui/star-rating";
 import { getProductsRatings, getProductsSoldCounts } from "@/actions";
+import { formatCurrency } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -50,16 +50,9 @@ interface ProductGridProps {
 }
 
 const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
   const [displayCount, setDisplayCount] = useState(8);
   const [ratings, setRatings] = useState<Record<string, { averageRating: number; totalReviews: number }>>({});
   const [soldCounts, setSoldCounts] = useState<Record<string, number>>({});
-
-  const handleView3D = (product: Product) => {
-    setSelectedProduct(product);
-    setIs3DViewerOpen(true);
-  };
 
   const handleShowMore = () => {
     setDisplayCount((prev) => Math.min(prev + 8, products.length));
@@ -91,7 +84,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
 
   if (isLoading) {
     return (
-      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-7">
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-7">
         {Array.from({ length: 8 }).map((_, index) => (
           <div
             key={`skeleton-${index}`}
@@ -133,7 +126,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
 
   return (
     <>
-      <div className="mt-5 grid lg:grid-cols-4 grid-cols-1 gap-7">
+      <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-7">
         {displayedProducts.map((product) => {
         // Calculate price range from productSize
         const productSizes = product.productSize || [];
@@ -156,9 +149,9 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           const maxPrice = Math.max(...prices);
 
           if (minPrice === maxPrice) {
-            priceRange = `₱${minPrice.toLocaleString()}`;
+            priceRange = `₱ ${formatCurrency(minPrice)}`;
           } else {
-            priceRange = `₱${minPrice.toLocaleString()} - ₱${maxPrice.toLocaleString()}`;
+            priceRange = `₱ ${formatCurrency(minPrice)} - ₱ ${formatCurrency(maxPrice)}`;
           }
 
           // Also check product-level clearance sale
@@ -171,7 +164,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             product.discountedPrice < (product.price || 0)
               ? product.discountedPrice
               : product.price || 0;
-          priceRange = `₱${effectivePrice.toLocaleString()}`;
+          priceRange = `₱ ${formatCurrency(effectivePrice)}`;
           hasClearanceSale = product.isClearanceSale || false;
         }
 
@@ -192,7 +185,7 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           <div
             key={product.id}
             data-product-card="true"
-            className="border border-primary shadow rounded-md"
+            className="border border-primary shadow pb-3 rounded-md"
           >
             <div className="relative w-full h-60">
               <img
@@ -200,16 +193,6 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
                 alt={product.name}
                 className="object-contain size-full"
               />
-              {product.threeDModel && (
-                <Button
-                  variant="default"
-                  className='absolute top-2 left-2'
-                  size="icon"
-                  onClick={() => handleView3D(product)}
-                >
-                  <IconCube className="size-4" />
-                </Button>
-              )}
               <div className="absolute top-2 right-2 size-15">
                 <img
                   src={product.brand.logo}
@@ -252,8 +235,8 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
                 </div>
               )}
               {uniqueTireSizes.length > 0 ? (
-                <div className="mt-1">
-                  <p className="text-xs text-muted-foreground">
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground">
                     Available Sizes:
                   </p>
                   <p className="font-semibold text-sm">
@@ -310,61 +293,6 @@ const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
         </div>
       )}
 
-      {/* 3D Viewer Dialog */}
-      <Dialog open={is3DViewerOpen} onOpenChange={setIs3DViewerOpen}>
-        <DialogContent className="max-w-7xl! max-h-[95vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedProduct?.name} - 3D Preview on Ford Ranger
-            </DialogTitle>
-            <DialogDescription>
-              Rotate, zoom, and explore how this tire looks on a Ford Ranger.
-              {selectedProduct?.productSize &&
-                selectedProduct.productSize.length > 0 && (
-                  <span className="block mt-1">
-                    Available sizes:{" "}
-                    {selectedProduct.productSize
-                      .map((ps) => {
-                        const ts = ps.tireSize;
-                        if (ts.ratio && ts.diameter) {
-                          return `${ts.width}/${ts.ratio} R${ts.diameter}`;
-                        } else if (ts.diameter) {
-                          return `${ts.width} R${ts.diameter}`;
-                        } else {
-                          return `${ts.width}`;
-                        }
-                      })
-                      .join(", ")}
-                  </span>
-                )}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4">
-            {selectedProduct && (
-              <Tire3DViewer
-                tireImage={selectedProduct.images[0]}
-                tireName={selectedProduct.name}
-                tireSize={
-                  selectedProduct.productSize &&
-                  selectedProduct.productSize.length > 0
-                    ? (() => {
-                        const ts = selectedProduct.productSize[0].tireSize;
-                        if (ts.ratio && ts.diameter) {
-                          return `${ts.width}/${ts.ratio} R${ts.diameter}`;
-                        } else if (ts.diameter) {
-                          return `${ts.width} R${ts.diameter}`;
-                        } else {
-                          return `${ts.width}`;
-                        }
-                      })()
-                    : selectedProduct.tireSize || undefined
-                }
-                threeDModel={selectedProduct.threeDModel}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

@@ -30,6 +30,12 @@ const SortOptions = () => {
         return "Highest Price";
       case "price-asc":
         return "Lowest Price";
+      case "popularity":
+        return "Most Popular";
+      case "discount-desc":
+        return "Highest Discount";
+      case "discount-asc":
+        return "Lowest Discount";
       default:
         return "Sort by";
     }
@@ -49,8 +55,8 @@ const SortOptions = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="bg-primary lg:w-[500px] w-full px-3 py-1.5 flex items-center justify-between rounded-md text-white text-sm sm:text-base">
-        <span>{getSortLabel()}</span>
+      <DropdownMenuTrigger className="bg-primary lg:w-[500px] w-full px-3 py-1.5 flex items-center justify-between rounded-md text-white text-sm sm:text-base font-bold">
+        <span className="font-bold">{getSortLabel()}</span>
         <IconSortAscendingLetters className="size-4 sm:size-5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[300px]">
@@ -89,6 +95,24 @@ const SortOptions = () => {
           className={currentSort === "price-asc" ? "bg-accent" : ""}
         >
           Lowest Price
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => handleSort("popularity")}
+          className={currentSort === "popularity" ? "bg-accent" : ""}
+        >
+          Most Popular
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => handleSort("discount-desc")}
+          className={currentSort === "discount-desc" ? "bg-accent" : ""}
+        >
+          Highest Discount
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => handleSort("discount-asc")}
+          className={currentSort === "discount-asc" ? "bg-accent" : ""}
+        >
+          Lowest Discount
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

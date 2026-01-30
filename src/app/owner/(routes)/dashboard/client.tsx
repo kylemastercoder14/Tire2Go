@@ -5,6 +5,8 @@ import { SoldChart } from "./_components/orders-chart";
 import { BrandChart } from "./_components/brand-chart";
 import { ProductChart } from "./_components/product-chart";
 import StatsDashboard from "./_components/stats-dashboard";
+import { PendingOrdersSection } from "./_components/pending-orders";
+import { InventoryAlertBanner } from "./_components/inventory-alert-banner";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from 'react';
 import {
@@ -25,7 +27,15 @@ const periods: Period[] = [
   "Annually",
 ];
 
-const DashboardContent = ({ orders }: { orders: any }) => {
+const DashboardContent = ({
+  orders,
+  pendingOrders,
+  criticalInventory,
+}: {
+  orders: any;
+  pendingOrders: any[];
+  criticalInventory: any[];
+}) => {
   const { user } = useUser();
   const [statData, setStatData] = useState<any[]>([]);
   const [period, setPeriod] = useState<Period>("Monthly");
@@ -402,6 +412,9 @@ const DashboardContent = ({ orders }: { orders: any }) => {
 
   return (
     <div>
+      {/* Inventory Alert Banner */}
+      <InventoryAlertBanner inventory={criticalInventory} userRole="owner" />
+
       {/* Header, Print Button and Period Selector */}
       <div className="flex items-center flex-wrap gap-3 justify-between mb-5">
         <h2 className="text-2xl font-bold">Dashboard Overview</h2>
@@ -428,6 +441,11 @@ const DashboardContent = ({ orders }: { orders: any }) => {
             Print Report
           </Button>
         </div>
+      </div>
+
+      {/* Pending Orders */}
+      <div className="mb-5">
+        <PendingOrdersSection orders={pendingOrders} />
       </div>
 
       {/* Printable Section */}

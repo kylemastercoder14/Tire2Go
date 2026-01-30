@@ -32,30 +32,7 @@ export const columns: ColumnDef<CarMakeWithModels>[] = [
       const [copied, setCopied] = useState(false);
       return (
         <div className="flex items-center gap-2 ml-2.5">
-          <div>
-            <span className="font-semibold">{raw.name}</span>
-            <div
-              title={raw.id}
-              className="text-xs cursor-pointer text-primary gap-2 flex items-center"
-            >
-              <span className="w-[180px] hover:underline truncate overflow-hidden whitespace-nowrap">
-                {raw.id}
-              </span>
-              {copied ? (
-                <CheckIcon className="size-3 text-green-600" />
-              ) : (
-                <CopyIcon
-                  onClick={() => {
-                    navigator.clipboard.writeText(raw.id || "");
-                    toast.success("Car make ID copied to clipboard");
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                  }}
-                  className="size-3 text-muted-foreground cursor-pointer"
-                />
-              )}
-            </div>
-          </div>
+          <span className="font-semibold">{raw.name}</span>
         </div>
       );
     },

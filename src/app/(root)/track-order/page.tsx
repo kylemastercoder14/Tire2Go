@@ -23,7 +23,7 @@ const Page = () => {
     e.preventDefault();
 
     if (!orderId.trim() || !email.trim()) {
-      setError("Please enter both Order ID and Email");
+      setError("Please enter both tracking number and email address");
       return;
     }
 
@@ -32,7 +32,7 @@ const Page = () => {
     setOrder(null);
 
     try {
-      const result = await getOrderForTracking(orderId.trim(), email.trim());
+      const result = await getOrderForTracking(orderId, email.trim());
 
       if (result.error) {
         setError(result.error);
@@ -115,7 +115,7 @@ const Page = () => {
         <div className="text-center mb-6 sm:mb-10">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-2 sm:mb-4">Track Your Order</h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Enter your order ID and email address to track your order status
+            Enter your order tracking number and email address to track your order status
           </p>
         </div>
 
@@ -124,12 +124,12 @@ const Page = () => {
           <form onSubmit={handleSearch} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="orderId" className="text-sm sm:text-base">Order ID</Label>
+                <Label htmlFor="orderId" className="text-sm sm:text-base">Order Tracking Number</Label>
                 <Input
                   id="orderId"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
-                  placeholder="Enter your order ID"
+                  placeholder="Enter your order tracking number"
                   disabled={isLoading}
                   className="text-sm sm:text-base"
                 />
@@ -220,17 +220,6 @@ const Page = () => {
               <Card className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <h2 className="text-lg sm:text-xl font-bold">Order Items</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs sm:text-sm text-muted-foreground truncate">Order #{order.id.slice(0, 12)}...</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(order.id)}
-                      className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0"
-                    >
-                      <CopyIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-                    </Button>
-                  </div>
                 </div>
                 {/* Desktop Table View */}
                 <div className="hidden sm:block overflow-x-auto">

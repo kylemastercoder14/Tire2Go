@@ -4,7 +4,7 @@ import React from "react";
 import FilterSidebar from "@/components/globals/FilterSidebar";
 import SearchResults from "../tire-search/_components/search-results";
 import db from "@/lib/db";
-import { getTireSizesForSearch, getCarDataForSearch } from "@/actions";
+import { getTireSizesForSearch, getCarDataForSearch, getProductsSoldCounts } from "@/actions";
 
 interface PageProps {
   searchParams: Promise<{
@@ -14,14 +14,14 @@ interface PageProps {
     width?: string;
     ratio?: string;
     diameter?: string;
-    brandIds?: string;
+    brandId?: string; // Changed to singular - only one brand selection allowed
     sortBy?: string; // Added sortBy param
   }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
-  const { brand, model, year, width, ratio, diameter, brandIds, sortBy } = params;
+  const { brand, model, year, width, ratio, diameter, brandId, sortBy } = params;
 
   // Fetch search data for FilterSidebar
   const [tireSizesResult, carDataResult] = await Promise.all([
@@ -32,16 +32,40 @@ const Page = async ({ searchParams }: PageProps) => {
   const searchBySize = tireSizesResult.data || {};
   const searchByCar = carDataResult.data || [];
 
-  // Parse brandIds filter
-  const brandIdsArray = brandIds ? brandIds.split(",").filter(Boolean) : [];
+  // Parse brandId filter - only single brand selection allowed
+  const selectedBrandId = brandId ? brandId.trim() : "";
 
   const brands = await db.brands.findMany({
     orderBy: {
       name: "asc",
     },
     include: {
-      products: true,
+      products: {
+        include: {
+          productSize: true,
+        },
+      },
     },
+  });
+
+  // Filter brands to only show products that have clearance sale
+  // This ensures the count in the sidebar is accurate for clearance sale page
+  const brandsWithClearanceSale = brands.map((brand) => {
+    const clearanceSaleProducts = brand.products.filter((product) => {
+      // Check product level clearance sale
+      if (product.isClearanceSale === true) {
+        return true;
+      }
+      // Check if at least one productSize has clearance sale
+      if (product.productSize && product.productSize.length > 0) {
+        return product.productSize.some((ps) => ps.isClearanceSale === true);
+      }
+      return false;
+    });
+    return {
+      ...brand,
+      products: clearanceSaleProducts,
+    };
   });
 
   let products = [];
@@ -93,8 +117,7 @@ const Page = async ({ searchParams }: PageProps) => {
       productSizes.forEach((ps) => {
         if (
           ps.product &&
-          (!brandIdsArray.length ||
-            brandIdsArray.includes(ps.product.brandId))
+          (!selectedBrandId || ps.product.brandId === selectedBrandId)
         ) {
           // Check if product has clearance sale at product level or any productSize level (must be explicitly true)
           const hasProductClearance = ps.product.isClearanceSale === true;
@@ -162,8 +185,7 @@ const Page = async ({ searchParams }: PageProps) => {
         compatibilities.forEach((comp) => {
           if (
             comp.product &&
-            (!brandIdsArray.length ||
-              brandIdsArray.includes(comp.product.brandId))
+            (!selectedBrandId || comp.product.brandId === selectedBrandId)
           ) {
             // Check if product has clearance sale (must be explicitly true)
             const hasProductClearance = comp.product.isClearanceSale === true;
@@ -188,11 +210,9 @@ const Page = async ({ searchParams }: PageProps) => {
     // Get all products first, then filter for clearance sale
     // We need to fetch all to check both product level and productSize level clearance sale
     const allProducts = await db.products.findMany({
-      where: brandIdsArray.length > 0
+      where: selectedBrandId
         ? {
-            brandId: {
-              in: brandIdsArray,
-            },
+            brandId: selectedBrandId,
           }
         : {},
       orderBy: { createdAt: "desc" },
@@ -246,6 +266,10 @@ const Page = async ({ searchParams }: PageProps) => {
     return false;
   });
 
+  // Fetch sold counts for popularity sorting
+  const productIds = products.map((p: any) => p.id);
+  const soldCounts = productIds.length > 0 ? await getProductsSoldCounts(productIds) : {};
+
   // Apply sorting
   if (sortBy) {
     products.sort((a: any, b: any) => {
@@ -298,6 +322,54 @@ const Page = async ({ searchParams }: PageProps) => {
           };
           return getMaxPrice(b) - getMaxPrice(a);
         }
+        case "popularity": {
+          // Sort by sold count (popularity)
+          const countA = soldCounts[a.id] || 0;
+          const countB = soldCounts[b.id] || 0;
+          return countB - countA; // Descending (most popular first)
+        }
+        case "discount-desc": {
+          // Calculate maximum discount percentage for each product
+          const getMaxDiscount = (product: any) => {
+            let maxDiscount = 0;
+            if (product.productSize && product.productSize.length > 0) {
+              product.productSize.forEach((ps: any) => {
+                if (ps.isClearanceSale && ps.discountedPrice && ps.price > 0) {
+                  const discount = ((ps.price - ps.discountedPrice) / ps.price) * 100;
+                  maxDiscount = Math.max(maxDiscount, discount);
+                }
+              });
+            }
+            // Check product level discount
+            if (product.isClearanceSale && product.discountedPrice && product.price > 0) {
+              const discount = ((product.price - product.discountedPrice) / product.price) * 100;
+              maxDiscount = Math.max(maxDiscount, discount);
+            }
+            return maxDiscount;
+          };
+          return getMaxDiscount(b) - getMaxDiscount(a); // Descending (highest discount first)
+        }
+        case "discount-asc": {
+          // Calculate minimum discount percentage for each product
+          const getMinDiscount = (product: any) => {
+            let minDiscount = Infinity;
+            if (product.productSize && product.productSize.length > 0) {
+              product.productSize.forEach((ps: any) => {
+                if (ps.isClearanceSale && ps.discountedPrice && ps.price > 0) {
+                  const discount = ((ps.price - ps.discountedPrice) / ps.price) * 100;
+                  minDiscount = Math.min(minDiscount, discount);
+                }
+              });
+            }
+            // Check product level discount
+            if (product.isClearanceSale && product.discountedPrice && product.price > 0) {
+              const discount = ((product.price - product.discountedPrice) / product.price) * 100;
+              minDiscount = Math.min(minDiscount, discount);
+            }
+            return minDiscount === Infinity ? 0 : minDiscount;
+          };
+          return getMinDiscount(a) - getMinDiscount(b); // Ascending (lowest discount first)
+        }
         default:
           return 0;
       }
@@ -334,7 +406,7 @@ const Page = async ({ searchParams }: PageProps) => {
       <section className="pt-5 px-4 sm:px-6 md:px-12 lg:px-24 pb-10 grid lg:grid-cols-10 grid-cols-1 gap-6 lg:gap-10">
         <div className="lg:col-span-2 p-3 sm:p-4 lg:p-5">
           <FilterSidebar
-            brands={brands}
+            brands={brandsWithClearanceSale}
             searchBySize={searchBySize}
             searchByCar={searchByCar}
           />

@@ -32,11 +32,11 @@ export const OrderComplete = ({ order }: OrderCompleteProps) => (
           <Row>
             <Column>
               <Text style={global.paragraphWithBold}>Tracking Number</Text>
-              <Text style={track.number}>{order.id}</Text>
+              <Text style={track.number}>{order.trackingNumber}</Text>
             </Column>
             <Column align="right">
               <Link
-                href={`https://tire2-go.vercel.app/track-order/${order.id}`}
+                href={`https://tire2-go.vercel.app/track-order`}
                 style={global.button}
               >
                 Track Order

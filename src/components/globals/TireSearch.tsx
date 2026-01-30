@@ -196,30 +196,146 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
     <>
       {/* Full-screen loading overlay */}
       {isFullScreenLoading && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center">
-          <div className="bg-white rounded-lg p-8 flex flex-col items-center gap-4 shadow-xl">
-            <Loader className="size-8 text-primary animate-spin" />
-            <p className="text-lg font-medium text-gray-700">Loading search results...</p>
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center"
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border border-gray-100"
+          >
+            <Loader className="size-10 text-primary animate-spin" />
+            <p className="text-lg font-semibold text-gray-800">Loading search results...</p>
+            <p className="text-sm text-gray-500">Please wait a moment</p>
+          </motion.div>
+        </motion.div>
       )}
 
       {/* ---- MODAL ---- */}
       {isOpen.toggle && (
-        <div className="bg-primary fixed inset-0 flex flex-col items-center pt-20 sm:pt-30 w-full overflow-y-auto h-screen z-50">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 flex flex-col items-center pt-20 sm:pt-30 w-full overflow-y-auto z-50"
+          style={{
+            background: 'linear-gradient(135deg, #c02b2b 0%, #8b1a1a 25%, #6b0f0f 50%, #8b1a1a 75%, #a02020 100%)',
+            minHeight: '100vh',
+            height: 'auto',
+            paddingBottom: '2rem',
+          }}
+        >
+          {/* Multi-layer gradient overlay for depth */}
           <div
-            onClick={() => setIsOpen({ toggle: false, key: null })}
-            className="absolute size-10 sm:size-12 top-4 right-4 sm:top-7 sm:right-7 border border-white rounded-full flex items-center justify-center cursor-pointer z-10"
-          >
-            <XIcon className="size-5 sm:size-7 text-white" />
+            className="fixed inset-0 w-full"
+            style={{
+              background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.8) 0%, rgba(185, 28, 28, 0.9) 30%, rgba(153, 27, 27, 1) 60%, rgba(127, 29, 29, 0.9) 100%)',
+              minHeight: '100vh',
+              height: '100%',
+              zIndex: -1,
+            }}
+          ></div>
+
+          {/* Complementary color accents */}
+          <div
+            className="fixed inset-0 w-full opacity-30"
+            style={{
+              background: 'radial-gradient(circle at 20% 30%, rgba(251, 146, 60, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.2) 0%, transparent 50%)',
+              minHeight: '100vh',
+              height: '100%',
+              zIndex: -1,
+            }}
+          ></div>
+
+          {/* Animated background pattern overlay */}
+          <div className="fixed inset-0 w-full opacity-10" style={{ minHeight: '100vh', height: '100%', zIndex: -1 }}>
+            <div className="absolute inset-0 w-full h-full" style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+              backgroundSize: '40px 40px',
+            }}></div>
           </div>
+
+          {/* Animated gradient orbs with complementary colors */}
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.1, 0.2, 0.1],
+              x: [0, 50, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="fixed top-20 left-10 w-96 h-96 rounded-full blur-3xl pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, rgba(251, 146, 60, 0.4) 0%, rgba(220, 38, 38, 0.2) 50%, transparent 100%)',
+              zIndex: 0,
+            }}
+          ></motion.div>
+          <motion.div
+            animate={{
+              scale: [1, 1.4, 1],
+              opacity: [0.1, 0.25, 0.1],
+              x: [0, -30, 0],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="fixed bottom-20 right-10 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, rgba(185, 28, 28, 0.2) 50%, transparent 100%)',
+              zIndex: 0,
+            }}
+          ></motion.div>
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.05, 0.15, 0.05],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, rgba(153, 27, 27, 0.1) 50%, transparent 100%)',
+              zIndex: 0,
+            }}
+          ></motion.div>
+          <motion.button
+            onClick={() => setIsOpen({ toggle: false, key: null })}
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.95 }}
+            className="fixed size-10 sm:size-12 top-4 right-4 sm:top-7 sm:right-7 border-2 border-white/80 rounded-full flex items-center justify-center cursor-pointer z-[100] bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all shadow-xl hover:shadow-2xl"
+          >
+            <XIcon className="size-5 sm:size-7 text-white font-bold" />
+          </motion.button>
 
           {/* ---- SIZE FLOW ---- */}
           {isOpen.key === "size" && (
-            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0 py-4 pb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0 py-4 pb-8 relative z-10"
+            >
               {/* Left preview */}
-              <div className="bg-[#c02b2b] w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8">
-                <h3 className="font-semibold text-white text-lg mb-5">
+              <div className="w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-red-700 via-[#c02b2b] to-red-800 shadow-2xl border border-white/10 backdrop-blur-sm relative overflow-hidden">
+                {/* Decorative gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none"></div>
+                <div className="relative z-10">
+                <h3 className="font-bold text-white text-xl mb-6 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-white/30 rounded-full"></div>
                   About your Dimension
                 </h3>
                 {/* Steps preview */}
@@ -239,104 +355,149 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                     value: selectedRim,
                     loading: isLoadingRim
                   },
-                ].map(({ label, value, loading }) => (
-                  <div
+                ].map(({ label, value, loading }, index) => (
+                  <motion.div
                     key={label}
-                    className="flex items-center justify-between mb-5 last:mb-0"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center justify-between mb-5 last:mb-0 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all"
                   >
-                    <span className="text-zinc-200">{label}</span>
+                    <span className="text-white font-medium text-base">{label}</span>
                     {value ? (
-                      <div className="bg-[#e8f5e5] rounded-full py-1 px-2 gap-1 flex items-center">
-                        <span className="text-[#2e7d32] text-sm">{value}</span>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="bg-gradient-to-r from-green-400 to-green-500 rounded-full py-1.5 px-4 gap-2 flex items-center shadow-lg"
+                      >
+                        <span className="text-white text-sm font-semibold">{value}</span>
                         {loading ? (
-                          <Loader className="text-[#2e7d32] size-4 animate-spin" />
+                          <Loader className="text-white size-4 animate-spin" />
                         ) : (
-                          <IconCircleCheckFilled className="text-[#2e7d32] size-4" />
+                          <IconCircleCheckFilled className="text-white size-4" />
                         )}
-                      </div>
+                      </motion.div>
                     ) : loading ? (
-                      <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
-                        <Loader className="text-red-500 size-4 animate-spin" />
-                      </div>
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="bg-white/20 size-10 rounded-full flex items-center justify-center"
+                      >
+                        <Loader className="text-white size-5 animate-spin" />
+                      </motion.div>
                     ) : (
-                      <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
-                        <Loader className="text-red-500 size-4" />
+                      <div className="bg-white/10 size-10 rounded-full flex items-center justify-center border-2 border-white/20">
+                        <div className="size-2 bg-white/40 rounded-full"></div>
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
+                </div>
               </div>
 
-              {/* Right side content */}
+              {/* Right side content - Wizard Style */}
               <div className="w-full lg:w-[700px]">
-                {/* Reset */}
-                <div
-                  className="flex cursor-pointer text-white items-center gap-2 mb-4 lg:mb-0"
-                  onClick={() => {
-                    setSelectedWidth("");
-                    setSelectedAspect("");
-                    setSelectedRim("");
-                    setIsLoadingWidth(false);
-                    setIsLoadingAspect(false);
-                    setIsLoadingRim(false);
-                  }}
-                >
-                  <ChevronLeft className="size-5 sm:size-7" />
-                  <span className="text-sm sm:text-base">Reset my search</span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-4 mb-4">
-                  {/* Step Title */}
-                  <h3 className="font-semibold text-white text-lg sm:text-xl lg:text-2xl">
-                    {selectedWidth === ""
-                      ? "Please enter the width..."
-                      : selectedAspect === ""
-                        ? "Please enter the ratio..."
-                        : selectedRim === ""
-                          ? "Please enter the diameter..."
-                          : "All set!"}
-                  </h3>
-
-                  <div className="relative w-full sm:w-48 lg:w-60 h-32 sm:h-48 lg:h-60 flex-shrink-0">
-                    <Image
-                      src="https://adzktgbqdq.cloudimg.io/https://dgaddcosprod.blob.core.windows.net/cxf-multisite/clsnd2leu002711ow8tgx7mfc/attachments/g1op4dopzho9s4qrm03ynut2-ts-ref-tyre-4w-step-02.one-third.png"
-                      alt="Tire Size"
-                      fill
-                      className="object-contain"
-                    />
+                {/* Wizard Progress Steps */}
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    {[
+                      { label: "Width", value: selectedWidth, step: 1 },
+                      { label: "Ratio", value: selectedAspect, step: 2 },
+                      { label: "Diameter", value: selectedRim, step: 3 },
+                    ].map(({ label, value, step }, index, array) => (
+                      <React.Fragment key={step}>
+                        <div className="flex flex-col items-center flex-1">
+                          <div
+                            className={`size-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+                              value
+                                ? "bg-gradient-to-r from-green-400 to-green-500 text-white shadow-lg scale-110"
+                                : selectedWidth && step === 2
+                                ? "bg-white/20 text-white border-2 border-white/40"
+                                : selectedAspect && step === 3
+                                ? "bg-white/20 text-white border-2 border-white/40"
+                                : step === 1
+                                ? "bg-white/20 text-white border-2 border-white/40"
+                                : "bg-white/10 text-white/50 border-2 border-white/20"
+                            }`}
+                          >
+                            {value ? (
+                              <IconCircleCheckFilled className="size-6" />
+                            ) : (
+                              step
+                            )}
+                          </div>
+                          <span className="text-white text-xs mt-2 font-medium text-center">
+                            {label}
+                          </span>
+                        </div>
+                        {index < array.length - 1 && (
+                          <div
+                            className={`h-0.5 flex-1 mx-2 transition-all ${
+                              value || (step === 1 && selectedWidth) || (step === 2 && selectedAspect)
+                                ? "bg-gradient-to-r from-green-400 to-green-500"
+                                : "bg-white/20"
+                            }`}
+                          ></div>
+                        )}
+                      </React.Fragment>
+                    ))}
                   </div>
                 </div>
 
-                {/* Search input */}
-                <div className="flex items-center w-full bg-white rounded-2xl px-5 py-4 relative z-10 shadow-lg">
-                  <input
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    placeholder={`Select your tire ${
-                      selectedWidth === ""
-                        ? "width"
-                        : selectedAspect === ""
-                          ? "ratio"
-                          : "diameter"
-                    }...`}
-                    className="w-full border-none outline-none text-base sm:text-lg"
-                    autoFocus={false}
-                    type="text"
-                  />
-                  <SearchIcon className="ml-auto size-5 text-gray-400" />
-                </div>
+                {/* Step Title */}
+                <motion.h3
+                  key={selectedWidth + selectedAspect + selectedRim}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="font-bold text-white text-2xl sm:text-3xl lg:text-4xl drop-shadow-lg mb-6 text-center"
+                >
+                  {selectedWidth === ""
+                    ? "Select Tire Width"
+                    : selectedAspect === ""
+                      ? "Select Aspect Ratio"
+                      : selectedRim === ""
+                        ? "Select Rim Diameter"
+                        : "All set! ✨"}
+                </motion.h3>
 
-                {/* Options list */}
-                <div className="space-y-3 overflow-y-auto mt-5 pr-5 max-h-[40vh] sm:max-h-[50vh]">
+                {/* Search input */}
+                {(selectedWidth === "" || selectedAspect === "" || selectedRim === "") && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileFocus={{ scale: 1.02 }}
+                    className="flex items-center w-full bg-white/95 backdrop-blur-sm rounded-2xl px-6 py-5 mb-6 shadow-xl border-2 border-white/30 hover:border-white/50 hover:shadow-2xl transition-all"
+                  >
+                    <SearchIcon className="size-5 text-gray-400 mr-3 flex-shrink-0" />
+                    <input
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      placeholder={`Search ${
+                        selectedWidth === ""
+                          ? "width"
+                          : selectedAspect === ""
+                            ? "ratio"
+                            : "diameter"
+                      }...`}
+                      className="w-full border-none outline-none text-base sm:text-lg bg-transparent placeholder:text-gray-400 focus:placeholder:text-gray-300"
+                      autoFocus={false}
+                      type="text"
+                    />
+                  </motion.div>
+                )}
+
+                {/* Paper-like Options Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 max-h-[50vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-white/10 [&::-webkit-scrollbar-track]:rounded-lg [&::-webkit-scrollbar-thumb]:bg-white/30 [&::-webkit-scrollbar-thumb]:rounded-lg [&::-webkit-scrollbar-thumb]:hover:bg-white/50">
                   {selectedWidth === "" &&
                     filterList(widthOptions, searchInput).map((item) => (
-                      <OptionItem
+                      <PaperCard
                         key={item}
                         label={item}
                         loading={isLoadingWidth}
                         onClick={() => {
                           setIsLoadingWidth(true);
                           setSelectedWidth(item);
+                          setSearchInput("");
                         }}
                       />
                     ))}
@@ -344,13 +505,14 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                   {selectedWidth !== "" &&
                     selectedAspect === "" &&
                     filterList(aspectOptions, searchInput).map((item) => (
-                      <OptionItem
+                      <PaperCard
                         key={item}
                         label={item}
                         loading={isLoadingAspect}
                         onClick={() => {
                           setIsLoadingAspect(true);
                           setSelectedAspect(item);
+                          setSearchInput("");
                         }}
                       />
                     ))}
@@ -358,31 +520,62 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                   {selectedWidth !== "" &&
                     selectedAspect !== "" &&
                     selectedRim === "" &&
-                    filterList(rimOptions.map(String), searchInput).map(
-                      (item) => (
-                        <OptionItem
-                          key={item}
-                          label={item}
-                          loading={isLoadingRim}
-                          onClick={() => {
-                            setIsLoadingRim(true);
-                            setSelectedRim(item);
-                          }}
-                        />
-                      )
-                    )}
+                    filterList(rimOptions.map(String), searchInput).map((item) => (
+                      <PaperCard
+                        key={item}
+                        label={item}
+                        loading={isLoadingRim}
+                        onClick={() => {
+                          setIsLoadingRim(true);
+                          setSelectedRim(item);
+                          setSearchInput("");
+                        }}
+                      />
+                    ))}
                 </div>
 
+                {/* Reset button */}
+                {(selectedWidth || selectedAspect || selectedRim) && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    whileHover={{ x: -5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex cursor-pointer text-white items-center gap-2 mt-6 group mx-auto"
+                    onClick={() => {
+                      setSelectedWidth("");
+                      setSelectedAspect("");
+                      setSelectedRim("");
+                      setIsLoadingWidth(false);
+                      setIsLoadingAspect(false);
+                      setIsLoadingRim(false);
+                      setSearchInput("");
+                    }}
+                  >
+                    <ChevronLeft className="size-5 group-hover:translate-x-[-4px] transition-transform" />
+                    <span className="text-sm font-medium group-hover:underline">Reset</span>
+                  </motion.button>
+                )}
+
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ---- CAR FLOW ---- */}
           {isOpen.key === "car" && (
-            <div className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0 py-4 pb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col lg:flex-row max-w-7xl gap-6 lg:gap-20 mx-auto items-start px-4 sm:px-6 lg:px-0 py-4 pb-16 relative z-10"
+            >
               {/* Left preview */}
-              <div className="bg-[#c02b2b] w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8">
-                <h3 className="font-semibold text-white text-lg mb-5">
+              <div className="w-full lg:w-[400px] rounded-2xl p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-red-700 via-[#c02b2b] to-red-800 shadow-2xl border border-white/10 backdrop-blur-sm relative overflow-hidden">
+                {/* Decorative gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none"></div>
+                <div className="relative z-10">
+                <h3 className="font-bold text-white text-xl mb-6 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-white/30 rounded-full"></div>
                   About your Car
                 </h3>
                 {[
@@ -401,159 +594,260 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                     value: selectedYear,
                     loading: isLoadingYear
                   },
-                ].map(({ label, value, loading }) => (
-                  <div
+                ].map(({ label, value, loading }, index) => (
+                  <motion.div
                     key={label}
-                    className="flex items-center justify-between mb-5 last:mb-0"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center justify-between mb-5 last:mb-0 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all"
                   >
-                    <span className="text-zinc-200">{label}</span>
+                    <span className="text-white font-medium text-base">{label}</span>
                     {value ? (
-                      <div className="bg-[#e8f5e5] rounded-full py-1 px-2 gap-1 flex items-center">
-                        <span className="text-[#2e7d32] text-sm">{value}</span>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="bg-gradient-to-r from-green-400 to-green-500 rounded-full py-1.5 px-4 gap-2 flex items-center shadow-lg"
+                      >
+                        <span className="text-white text-sm font-semibold">{value}</span>
                         {loading ? (
-                          <Loader className="text-[#2e7d32] size-4 animate-spin" />
+                          <Loader className="text-white size-4 animate-spin" />
                         ) : (
-                          <IconCircleCheckFilled className="text-[#2e7d32] size-4" />
+                          <IconCircleCheckFilled className="text-white size-4" />
                         )}
-                      </div>
+                      </motion.div>
                     ) : loading ? (
-                      <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
-                        <Loader className="text-red-500 size-4 animate-spin" />
-                      </div>
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="bg-white/20 size-10 rounded-full flex items-center justify-center"
+                      >
+                        <Loader className="text-white size-5 animate-spin" />
+                      </motion.div>
                     ) : (
-                      <div className="bg-zinc-200 size-8 rounded-full flex items-center justify-center">
-                        <Loader className="text-red-500 size-4" />
+                      <div className="bg-white/10 size-10 rounded-full flex items-center justify-center border-2 border-white/20">
+                        <div className="size-2 bg-white/40 rounded-full"></div>
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
+                </div>
               </div>
 
-              {/* Right side */}
-              <div className="w-full lg:w-[700px]">
-                {/* Reset */}
-                <div
-                  className="flex cursor-pointer text-white items-center gap-2 mb-4 lg:mb-0"
-                  onClick={() => {
-                    setSelectedBrand("");
-                    setSelectedModel("");
-                    setSelectedYear("");
-                    setIsLoadingBrand(false);
-                    setIsLoadingModel(false);
-                    setIsLoadingYear(false);
-                  }}
-                >
-                  <ChevronLeft className="size-5 sm:size-7" />
-                  <span className="text-sm sm:text-base">Reset my search</span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-4 mb-4">
-                  <h3 className="font-semibold text-white text-lg sm:text-xl lg:text-2xl">
-                    {selectedBrand === ""
-                      ? "Please select the brand..."
-                      : selectedModel === ""
-                        ? "Please select the model..."
-                        : selectedYear === ""
-                          ? "Please select the year..."
-                          : "All set!"}
-                  </h3>
-                  <div className="relative w-full sm:w-52 lg:w-64 h-32 sm:h-52 lg:h-64 flex-shrink-0">
-                    <Image
-                      src="/car.png"
-                      alt="Car"
-                      fill
-                      className="object-contain"
-                    />
+              {/* Right side - Wizard Style */}
+              <div className="w-full lg:w-[700px] relative z-10">
+                {/* Wizard Progress Steps */}
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    {[
+                      { label: "Brand", value: selectedBrand, step: 1 },
+                      { label: "Model", value: selectedModel, step: 2 },
+                      { label: "Year", value: selectedYear, step: 3 },
+                    ].map(({ label, value, step }, index, array) => (
+                      <React.Fragment key={step}>
+                        <div className="flex flex-col items-center flex-1">
+                          <div
+                            className={`size-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+                              value
+                                ? "bg-gradient-to-r from-green-400 to-green-500 text-white shadow-lg scale-110"
+                                : selectedBrand && step === 2
+                                ? "bg-white/20 text-white border-2 border-white/40"
+                                : selectedModel && step === 3
+                                ? "bg-white/20 text-white border-2 border-white/40"
+                                : step === 1
+                                ? "bg-white/20 text-white border-2 border-white/40"
+                                : "bg-white/10 text-white/50 border-2 border-white/20"
+                            }`}
+                          >
+                            {value ? (
+                              <IconCircleCheckFilled className="size-6" />
+                            ) : (
+                              step
+                            )}
+                          </div>
+                          <span className="text-white text-xs mt-2 font-medium text-center">
+                            {label}
+                          </span>
+                        </div>
+                        {index < array.length - 1 && (
+                          <div
+                            className={`h-0.5 flex-1 mx-2 transition-all ${
+                              value || (step === 1 && selectedBrand) || (step === 2 && selectedModel)
+                                ? "bg-gradient-to-r from-green-400 to-green-500"
+                                : "bg-white/20"
+                            }`}
+                          ></div>
+                        )}
+                      </React.Fragment>
+                    ))}
                   </div>
                 </div>
 
-                {/* Search input */}
-                <div className="flex items-center w-full bg-white rounded-2xl px-5 py-4 relative z-10 shadow-lg">
-                  <input
-                    value={searchCarInput}
-                    onChange={(e) => setSearchCarInput(e.target.value)}
-                    placeholder={`Select your car ${
-                      selectedBrand === ""
-                        ? "brand"
-                        : selectedModel === ""
-                          ? "model"
-                          : "year"
-                    }...`}
-                    className="w-full border-none outline-none text-base sm:text-lg"
-                    autoFocus={false}
-                    type="text"
-                  />
-                  <SearchIcon className="ml-auto size-5 text-gray-400" />
-                </div>
+                {/* Step Title */}
+                <motion.h3
+                  key={selectedBrand + selectedModel + selectedYear}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="font-bold text-white text-2xl sm:text-3xl lg:text-4xl drop-shadow-lg mb-6 text-center"
+                >
+                  {selectedBrand === ""
+                    ? "Select Car Brand"
+                    : selectedModel === ""
+                      ? "Select Car Model"
+                      : selectedYear === ""
+                        ? "Select Year"
+                        : "All set! ✨"}
+                </motion.h3>
 
-                {/* Options */}
-                <div className="space-y-3 overflow-y-auto mt-5 pr-5 max-h-[40vh] sm:max-h-[50vh]">
+                {/* Search input */}
+                {(selectedBrand === "" || selectedModel === "" || selectedYear === "") && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileFocus={{ scale: 1.02 }}
+                    className="flex items-center w-full bg-white/95 backdrop-blur-sm rounded-2xl px-6 py-5 mb-6 shadow-xl border-2 border-white/30 hover:border-white/50 hover:shadow-2xl transition-all"
+                  >
+                    <SearchIcon className="size-5 text-gray-400 mr-3 flex-shrink-0" />
+                    <input
+                      value={searchCarInput}
+                      onChange={(e) => setSearchCarInput(e.target.value)}
+                      placeholder={`Search ${
+                        selectedBrand === ""
+                          ? "brand"
+                          : selectedModel === ""
+                            ? "model"
+                            : "year"
+                      }...`}
+                      className="w-full border-none outline-none text-base sm:text-lg bg-transparent placeholder:text-gray-400 focus:placeholder:text-gray-300"
+                      autoFocus={false}
+                      type="text"
+                    />
+                  </motion.div>
+                )}
+
+                {/* Paper-like Options Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 max-h-[50vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-white/10 [&::-webkit-scrollbar-track]:rounded-lg [&::-webkit-scrollbar-thumb]:bg-white/30 [&::-webkit-scrollbar-thumb]:rounded-lg [&::-webkit-scrollbar-thumb]:hover:bg-white/50">
                   {selectedBrand === "" &&
                     filterList(brandOptions, searchCarInput).map((item) => (
-                      <OptionItem
+                      <PaperCard
                         key={item}
                         label={item}
                         loading={isLoadingBrand}
                         onClick={() => {
                           setIsLoadingBrand(true);
                           setSelectedBrand(item);
+                          setSearchCarInput("");
                         }}
                       />
                     ))}
 
                   {selectedBrand !== "" &&
                     selectedModel === "" &&
-                    filterList(Object.keys(modelOptions), searchCarInput).map(
-                      (item) => (
-                        <OptionItem
-                          key={item}
-                          label={item}
-                          loading={isLoadingModel}
-                          onClick={() => {
-                            setIsLoadingModel(true);
-                            setSelectedModel(item);
-                          }}
-                        />
-                      )
-                    )}
+                    filterList(Object.keys(modelOptions), searchCarInput).map((item) => (
+                      <PaperCard
+                        key={item}
+                        label={item}
+                        loading={isLoadingModel}
+                        onClick={() => {
+                          setIsLoadingModel(true);
+                          setSelectedModel(item);
+                          setSearchCarInput("");
+                        }}
+                      />
+                    ))}
 
                   {selectedModel !== "" &&
                     selectedYear === "" &&
                     yearOptions.length > 0 &&
-                    filterList(yearOptions.map(String), searchCarInput).map(
-                      (item) => (
-                        <OptionItem
-                          key={item}
-                          label={item}
-                          loading={isLoadingYear}
-                          onClick={() => {
-                            setIsLoadingYear(true);
-                            setSelectedYear(item);
-                          }}
-                        />
-                      )
-                    )}
+                    filterList(yearOptions.map(String), searchCarInput).map((item) => (
+                      <PaperCard
+                        key={item}
+                        label={item}
+                        loading={isLoadingYear}
+                        onClick={() => {
+                          setIsLoadingYear(true);
+                          setSelectedYear(item);
+                          setSearchCarInput("");
+                        }}
+                      />
+                    ))}
                 </div>
+
+                {/* Reset button */}
+                {(selectedBrand || selectedModel || selectedYear) && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    whileHover={{ x: -5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex cursor-pointer text-white items-center gap-2 mt-6 group mx-auto"
+                    onClick={() => {
+                      setSelectedBrand("");
+                      setSelectedModel("");
+                      setSelectedYear("");
+                      setIsLoadingBrand(false);
+                      setIsLoadingModel(false);
+                      setIsLoadingYear(false);
+                      setSearchCarInput("");
+                    }}
+                  >
+                    <ChevronLeft className="size-5 group-hover:translate-x-[-4px] transition-transform" />
+                    <span className="text-sm font-medium group-hover:underline">Reset</span>
+                  </motion.button>
+                )}
+
               </div>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* ---- MAIN CARD ---- */}
-      <div className={`w-full h-[200px] max-w-4xl mx-auto ${className}`}>
-        <div className="w-full px-5 h-full bg-primary shadow-xl rounded-2xl py-5 overflow-hidden">
-          {/* Tabs */}
-          <div className="flex w-full border-b gap-5 items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={`w-full h-[200px] max-w-4xl mx-auto ${className}`}
+      >
+        <div className="w-full px-5 h-full bg-gradient-to-br from-primary via-primary/95 to-red-700 shadow-2xl rounded-2xl py-5 overflow-hidden relative border border-white/10 hover:shadow-3xl transition-shadow duration-300">
+          {/* Decorative elements */}
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl"
+          ></motion.div>
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-2xl"
+          ></motion.div>
+          <div className="relative z-10">
+            {/* Tabs */}
+            <div className="flex w-full border-b border-white/20 gap-5 items-center">
             {TABS.map((tab) => {
               const isActive = tab.id === activeTab;
               return (
                 <div
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as "size" | "car")}
-                  className={`py-2 px-5 cursor-pointer ${
-                    isActive ? "border-b-2" : "bg-transparent"
-                  } flex items-center gap-2.5`}
+                  className={`py-2 px-5 cursor-pointer transition-all ${
+                    isActive ? "border-b-2 border-white shadow-sm" : "bg-transparent hover:bg-white/5"
+                  } flex items-center gap-2.5 rounded-t-lg`}
                 >
                   <tab.icon
                     className={`size-7 ${
@@ -572,10 +866,15 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                 </div>
               );
             })}
-          </div>
+            </div>
 
-          {/* Animated Tab Content */}
-          <div className="relative bg-white mt-5 w-full px-5 py-5 rounded-2xl">
+            {/* Animated Tab Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="relative bg-white/95 backdrop-blur-sm mt-5 w-full px-5 py-5 rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-shadow"
+            >
             <AnimatePresence mode="wait">
               {activeTab === "size" && (
                 <motion.div
@@ -584,7 +883,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: 50, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full cursor-pointer flex items-center justify-between"
+                  className="w-full cursor-pointer flex items-center justify-between group"
                   onClick={() => {
                     redirectedRef.current = "";
                     setIsLoadingWidth(false);
@@ -603,7 +902,7 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -50, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full cursor-pointer flex items-center justify-between"
+                  className="w-full cursor-pointer flex items-center justify-between group"
                   onClick={() => {
                     redirectedRef.current = "";
                     setIsLoadingBrand(false);
@@ -616,9 +915,10 @@ const TireSearch = ({ className, searchBySize, searchByCar }: TireSearchProps) =
                 </motion.div>
               )}
             </AnimatePresence>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
@@ -635,34 +935,91 @@ const OptionItem = ({
   onClick: () => void;
   loading?: boolean;
 }) => (
-  <div
-    className={`flex rounded-2xl cursor-pointer items-center justify-between hover:bg-zinc-200/50 px-3 py-2 ${
+  <motion.div
+    whileHover={{ scale: 1.02, x: 5 }}
+    whileTap={{ scale: 0.98 }}
+    className={`flex rounded-xl cursor-pointer items-center justify-between bg-white/10 hover:bg-white/25 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl px-5 py-4 transition-all group ${
       loading ? "opacity-70 pointer-events-none" : ""
     }`}
     onClick={onClick}
   >
-    <span className="text-white">{label}</span>
+    <span className="text-white font-semibold text-base group-hover:text-white/90">{label}</span>
     {loading ? (
       <Loader className="size-5 text-white animate-spin" />
     ) : (
-      <ChevronRight className="size-5 text-white" />
+      <ChevronRight className="size-5 text-white group-hover:translate-x-1 transition-transform" />
     )}
-  </div>
+  </motion.div>
+);
+
+/* ---- PAPER-LIKE CARD COMPONENT ---- */
+const PaperCard = ({
+  label,
+  onClick,
+  loading,
+}: {
+  label: string;
+  onClick: () => void;
+  loading?: boolean;
+}) => (
+  <motion.button
+    whileHover={{ scale: 1.05, y: -2 }}
+    whileTap={{ scale: 0.95 }}
+    disabled={loading}
+    className={`relative bg-white/95 backdrop-blur-sm rounded-xl p-4 sm:p-5 cursor-pointer border-2 border-white/40 shadow-lg hover:shadow-2xl transition-all group overflow-hidden ${
+      loading ? "opacity-70 pointer-events-none" : "hover:border-white/60"
+    }`}
+    onClick={onClick}
+    style={{
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
+    }}
+  >
+    {/* Paper texture effect */}
+    <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px)`,
+    }}></div>
+
+    {/* Content */}
+    <div className="relative z-10 flex flex-col items-center justify-center min-h-[80px]">
+      {loading ? (
+        <Loader className="size-6 text-primary animate-spin" />
+      ) : (
+        <>
+          <span className="text-gray-800 font-bold text-lg sm:text-xl group-hover:text-primary transition-colors">
+            {label}
+          </span>
+          <div className="mt-2 w-8 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </>
+      )}
+    </div>
+  </motion.button>
 );
 
 const CardItem = ({ label, img }: { label: string; img: string }) => (
   <>
-    <div className="flex items-center gap-5">
-      <div className="relative size-12">
+    <motion.div
+      whileHover={{ x: 5 }}
+      className="flex items-center gap-5"
+    >
+      <motion.div
+        whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+        transition={{ duration: 0.5 }}
+        className="relative size-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl p-3 border-2 border-primary/30 shadow-md"
+      >
         <Image src={img} alt={label} fill className="object-contain" />
-      </div>
+      </motion.div>
       <div>
-        <p className="text-muted-foreground text-sm">Search by</p>
-        <p className="font-medium">{label}</p>
+        <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wide">Search by</p>
+        <p className="font-bold text-xl text-gray-800 mt-1">{label}</p>
       </div>
-    </div>
-    <Button size="icon" className="rounded-full p-5">
-      <ChevronRight className="size-7" />
-    </Button>
+    </motion.div>
+    <motion.div
+      whileHover={{ scale: 1.1, rotate: -5 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Button size="icon" className="rounded-full p-6 bg-gradient-to-r from-primary to-red-600 hover:from-primary/90 hover:to-red-600/90 shadow-lg hover:shadow-xl transition-all">
+        <ChevronRight className="size-7" />
+      </Button>
+    </motion.div>
   </>
 );

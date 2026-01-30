@@ -4,17 +4,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { buttonVariants, Button } from "@/components/ui/button";
-import { IconHandClick, IconCube } from "@tabler/icons-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Tire3DViewer } from "@/components/tire-3d-viewer";
+import { IconHandClick } from "@tabler/icons-react";
 import { StarRating } from "@/components/ui/star-rating";
 import { getProductsRatings, getProductsSoldCounts } from "@/actions";
+import { formatCurrency } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -55,15 +48,8 @@ interface BrandProductGridProps {
 const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
   // Default color scheme if not provided
   const colors = colorScheme || { primary: "#c02b2b", secondary: "#dc2626", accent: "#ef4444" };
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
   const [ratings, setRatings] = useState<Record<string, { averageRating: number; totalReviews: number }>>({});
   const [soldCounts, setSoldCounts] = useState<Record<string, number>>({});
-
-  const handleView3D = (product: Product) => {
-    setSelectedProduct(product);
-    setIs3DViewerOpen(true);
-  };
 
   // Fetch ratings and sold counts for all products
   useEffect(() => {
@@ -124,9 +110,9 @@ const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
             const maxPrice = Math.max(...prices);
 
             if (minPrice === maxPrice) {
-              priceRange = `₱${minPrice.toLocaleString()}`;
+              priceRange = `₱ ${formatCurrency(minPrice)}`;
             } else {
-              priceRange = `₱${minPrice.toLocaleString()} - ₱${maxPrice.toLocaleString()}`;
+              priceRange = `₱ ${formatCurrency(minPrice)} - ₱ ${formatCurrency(maxPrice)}`;
             }
 
             // Also check product-level clearance sale
@@ -139,7 +125,7 @@ const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
               product.discountedPrice < (product.price || 0)
                 ? product.discountedPrice
                 : product.price || 0;
-            priceRange = `₱${effectivePrice.toLocaleString()}`;
+            priceRange = `₱ ${formatCurrency(effectivePrice)}`;
             hasClearanceSale = product.isClearanceSale || false;
           }
 
@@ -168,16 +154,6 @@ const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
                   alt={product.name}
                   className="object-contain size-full"
                 />
-                {product.threeDModel && (
-                  <Button
-                    variant="default"
-                    className="absolute top-2 left-2"
-                    size="icon"
-                    onClick={() => handleView3D(product)}
-                  >
-                    <IconCube className="size-4" />
-                  </Button>
-                )}
                 <div className="absolute top-2 right-2 size-15">
                   <img
                     src={product.brand.logo}
@@ -284,61 +260,6 @@ const BrandProductGrid = ({ products, colorScheme }: BrandProductGridProps) => {
         })}
       </div>
 
-      {/* 3D Viewer Dialog */}
-      <Dialog open={is3DViewerOpen} onOpenChange={setIs3DViewerOpen}>
-        <DialogContent className="max-w-7xl! max-h-[95vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedProduct?.name} - 3D Preview on Ford Ranger
-            </DialogTitle>
-            <DialogDescription>
-              Rotate, zoom, and explore how this tire looks on a Ford Ranger.
-              {selectedProduct?.productSize &&
-                selectedProduct.productSize.length > 0 && (
-                  <span className="block mt-1">
-                    Available sizes:{" "}
-                    {selectedProduct.productSize
-                      .map((ps) => {
-                        const ts = ps.tireSize;
-                        if (ts.ratio && ts.diameter) {
-                          return `${ts.width}/${ts.ratio} R${ts.diameter}`;
-                        } else if (ts.diameter) {
-                          return `${ts.width} R${ts.diameter}`;
-                        } else {
-                          return `${ts.width}`;
-                        }
-                      })
-                      .join(", ")}
-                  </span>
-                )}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4">
-            {selectedProduct && (
-              <Tire3DViewer
-                tireImage={selectedProduct.images[0]}
-                tireName={selectedProduct.name}
-                tireSize={
-                  selectedProduct.productSize &&
-                  selectedProduct.productSize.length > 0
-                    ? (() => {
-                        const ts = selectedProduct.productSize[0].tireSize;
-                        if (ts.ratio && ts.diameter) {
-                          return `${ts.width}/${ts.ratio} R${ts.diameter}`;
-                        } else if (ts.diameter) {
-                          return `${ts.width} R${ts.diameter}`;
-                        } else {
-                          return `${ts.width}`;
-                        }
-                      })()
-                    : selectedProduct.tireSize || undefined
-                }
-                threeDModel={selectedProduct.threeDModel}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

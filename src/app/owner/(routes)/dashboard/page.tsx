@@ -40,7 +40,65 @@ const Page = async () => {
       },
     },
   });
-  return <DashboardContent orders={orders} />;
+
+  // Fetch pending orders
+  const pendingOrders = await db.order.findMany({
+    where: {
+      status: "PENDING",
+      isArchived: false,
+    },
+    include: {
+      orderItem: {
+        include: {
+          product: {
+            include: {
+              brand: true,
+            },
+          },
+        },
+      },
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 10, // Limit to 10 most recent pending orders
+  });
+
+  // Fetch critical inventory items
+  const criticalInventory = await db.inventory.findMany({
+    where: {
+      OR: [
+        { status: "OUT_OF_STOCK" },
+        { quantity: { lte: 0 } },
+      ],
+    },
+    include: {
+      product: {
+        include: {
+          brand: true,
+        },
+      },
+    },
+    orderBy: {
+      quantity: "asc", // Show lowest stock first
+    },
+    take: 10, // Limit to 10 most critical items
+  });
+
+  return (
+    <DashboardContent
+      orders={orders}
+      pendingOrders={pendingOrders}
+      criticalInventory={criticalInventory}
+    />
+  );
 };
 
 export default Page;
