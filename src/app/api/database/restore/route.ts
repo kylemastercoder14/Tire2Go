@@ -3,8 +3,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { backupTables } from "@/lib/utils";
+import { checkAdminPermission } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest) {
+  const permission = await checkAdminPermission("backupRecovery", "update");
+
+  if (!permission.allowed) {
+    return NextResponse.json({ error: permission.error }, { status: permission.status });
+  }
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   // const { userId } = await useUser();
   const fileName = `restore_${new Date()

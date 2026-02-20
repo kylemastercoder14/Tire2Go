@@ -5,8 +5,15 @@ import fs from "fs";
 import path from "path";
 import db from "@/lib/db";
 import { backupTables } from "@/lib/utils";
+import { checkAdminPermission } from "@/lib/admin-auth";
 
 export async function GET() {
+  const permission = await checkAdminPermission("backupRecovery", "view");
+
+  if (!permission.allowed) {
+    return NextResponse.json({ error: permission.error }, { status: permission.status });
+  }
+
   const fileName = `backup_${new Date()
     .toISOString()
     .replace(/[:.]/g, "-")}.json`;

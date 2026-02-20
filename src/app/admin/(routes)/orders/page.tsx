@@ -1,8 +1,6 @@
 import React from "react";
 import db from "@/lib/db";
 import Heading from "@/components/globals/Heading";
-import { DataTable } from "@/components/globals/DataTable";
-import { columns } from "./_components/columns";
 import OrdersTable from "./_components/orders-table";
 import { getArchivedOrdersCount, getOrdersToArchiveSoon } from "@/actions";
 import { unstable_noStore as noStore } from "next/cache";
@@ -88,7 +86,6 @@ const Page = async () => {
         <OrdersTable
           activeOrders={activeOrders}
           archivedOrders={archivedOrders}
-          archivedCount={archivedCount}
         />
       </div>
     </div>

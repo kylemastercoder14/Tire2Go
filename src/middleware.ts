@@ -36,9 +36,8 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
 
-  // For admin routes, just check if user is authenticated
-  // The actual userType check will be done client-side in AuthRedirectHandler
-  // This avoids Prisma Edge runtime issues
+  // For admin routes, check authentication here.
+  // User type and module-level authorization are enforced in server layouts/actions.
   if (isAdminRoute(req)) {
     const { userId } = await auth();
 
@@ -49,8 +48,7 @@ export default clerkMiddleware(async (auth, req) => {
       return NextResponse.redirect(signInUrl);
     }
 
-    // Note: User type check is handled client-side in AuthRedirectHandler
-    // to avoid Prisma Edge runtime limitations
+    // Note: User type checks are handled in app-layer guards.
   }
 });
 

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 /**
  * Component to handle redirects based on user type after authentication
- * - ADMIN users: Redirect to /admin/dashboard
+ * - ADMIN/OWNER users: Redirect to /admin/dashboard
  * - CUSTOMER users: Redirect to / (root page)
  */
 export const AuthRedirectHandler = () => {
@@ -95,9 +95,9 @@ export const AuthRedirectHandler = () => {
             // Ignore storage errors
           }
 
-          // ADMIN users: Redirect to admin dashboard
-          if (userType === "ADMIN") {
-            // If admin is on a customer route (not admin route), redirect to dashboard
+          // ADMIN/OWNER users: Redirect to admin dashboard
+          if (userType === "ADMIN" || userType === "OWNER") {
+            // If privileged user is on a customer route (not admin route), redirect to dashboard
             if (!pathname.startsWith("/admin")) {
               try {
                 if (typeof window !== "undefined") {

@@ -9,20 +9,21 @@ import { Archive, Package, ArchiveRestore } from "lucide-react";
 import { archiveOrdersManually } from "@/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useAdminPermissions } from "@/hooks/use-admin-permissions";
 
 interface OrdersTableProps {
-  activeOrders: any[];
-  archivedOrders: any[];
-  archivedCount: number;
+  activeOrders: unknown[];
+  archivedOrders: unknown[];
 }
 
 const OrdersTable = ({
   activeOrders,
   archivedOrders,
-  archivedCount,
 }: OrdersTableProps) => {
   const router = useRouter();
+  const { can } = useAdminPermissions();
   const [isArchiving, setIsArchiving] = React.useState(false);
+  const canArchiveOrders = can("orders", "delete");
 
   const handleManualArchive = async () => {
     if (
@@ -63,15 +64,17 @@ const OrdersTable = ({
             Archived Orders ({archivedOrders.length})
           </TabsTrigger>
         </TabsList>
-        <Button
-          variant="outline"
-          onClick={handleManualArchive}
-          disabled={isArchiving}
-          className="flex items-center gap-2"
-        >
-          <ArchiveRestore className="h-4 w-4" />
-          {isArchiving ? "Archiving..." : "Archive Old Orders"}
-        </Button>
+        {canArchiveOrders && (
+          <Button
+            variant="outline"
+            onClick={handleManualArchive}
+            disabled={isArchiving}
+            className="flex items-center gap-2"
+          >
+            <ArchiveRestore className="h-4 w-4" />
+            {isArchiving ? "Archiving..." : "Archive Old Orders"}
+          </Button>
+        )}
       </div>
 
       <TabsContent value="active">

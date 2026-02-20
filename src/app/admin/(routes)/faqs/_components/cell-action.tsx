@@ -2,26 +2,22 @@
 
 import React from "react";
 
-import { EditIcon, MoreHorizontal, ArchiveIcon } from "lucide-react";
+import { EditIcon, ArchiveIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import AlertModal from "@/components/globals/AlertModal";
 import { toast } from "sonner";
 import { deleteFaqs } from "@/actions";
-import { Faqs } from '@prisma/client';
+import { Faqs } from "@prisma/client";
+import { useAdminPermissions } from "@/hooks/use-admin-permissions";
 
 const CellActions = ({ topic }: { topic: Faqs }) => {
   const router = useRouter();
+  const { can } = useAdminPermissions();
   const [isOpen, setIsOpen] = React.useState(false);
+  const canDelete = can("faqs", "delete");
+
   const handleDelete = async () => {
     try {
       const response = await deleteFaqs(topic.id);
@@ -45,30 +41,24 @@ const CellActions = ({ topic }: { topic: Faqs }) => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0 ml-2.5">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() =>
-              router.push(`/admin/faqs/${topic.id}`)
-            }
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => router.push(`/admin/faqs/${topic.id}`)}
+        >
+          <EditIcon className="size-4" />
+        </Button>
+        {canDelete && (
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={() => setIsOpen(true)}
           >
-            <EditIcon className="size-4" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsOpen(true)}>
             <ArchiveIcon className="size-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </Button>
+        )}
+      </div>
     </>
   );
 };

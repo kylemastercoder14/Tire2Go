@@ -19,7 +19,10 @@ const Page = async () => {
       select: { userType: true },
     });
 
-    if (!user || user.userType !== UserType.ADMIN) {
+    if (
+      !user ||
+      (user.userType !== UserType.ADMIN && user.userType !== UserType.OWNER)
+    ) {
       redirect("/?error=access_denied");
     }
   } catch (error) {

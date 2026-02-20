@@ -129,7 +129,7 @@ const Page = () => {
                   id="orderId"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
-                  placeholder="Enter your order tracking number"
+                  placeholder="Enter your 6-digit tracking number"
                   disabled={isLoading}
                   className="text-sm sm:text-base"
                 />

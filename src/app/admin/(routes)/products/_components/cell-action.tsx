@@ -36,24 +36,20 @@ const CellActions = ({ product }: { product: ProductWithBrand }) => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
-      <div className="flex items-center gap-2 ml-2.5">
+      <div className="flex items-center gap-2">
         <Button
-          variant="ghost"
-          size="sm"
+          variant="outline"
+          size="icon"
           onClick={() => router.push(`/admin/products/${product.id}`)}
-          className="h-8"
         >
           <EditIcon className="size-4" />
-          Edit
         </Button>
         <Button
-          variant="ghost"
-          size="sm"
+          variant="destructive"
+          size="icon"
           onClick={() => setIsOpen(true)}
-          className="h-8 text-destructive hover:text-destructive"
         >
           <ArchiveIcon className="size-4" />
-          Delete
         </Button>
       </div>
     </>

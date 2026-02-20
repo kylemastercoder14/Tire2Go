@@ -100,13 +100,21 @@ const OrderDetails = ({
       : orderStepsInstallation;
 
   const handleStatusChange = async (value: OrderStatus) => {
+    const previousStatus = orderStatus;
     setOrderStatus(value);
     setLoading(true);
 
-    await updateOrderStatus(initialData.id, value);
-    router.refresh();
-	toast.success("Order status updated");
-    setLoading(false);
+    try {
+      await updateOrderStatus(initialData.id, value);
+      router.refresh();
+      toast.success("Order status updated");
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      setOrderStatus(previousStatus);
+      toast.error("You don't have permission to update this order.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

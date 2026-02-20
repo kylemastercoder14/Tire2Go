@@ -10,7 +10,6 @@ import {
   IconDatabase,
   IconFileText,
   IconHelpCircle,
-  IconMessageCircle,
   IconScale,
   IconSitemap,
   IconTag,
@@ -22,6 +21,10 @@ import {
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/globals/admin/NavMain";
+import {
+  AdminPanelUserType,
+  canAccessAdminPath,
+} from "@/lib/admin-access";
 import {
   Sidebar,
   SidebarContent,
@@ -68,18 +71,13 @@ const navMainData = [
     url: "/admin/customers",
     icon: IconUsersGroup,
   },
-  // {
-  //   title: "Staff Management",
-  //   url: "/admin/staff-management",
-  //   icon: IconUserCog,
-  // },
   {
     title: "Orders",
     url: "/admin/orders",
     icon: IconWallet,
   },
   {
-    title: "Promotion & Discounts",
+    title: "Promotions & Discounts",
     url: "/admin/promotions-and-discounts",
     icon: IconTag,
   },
@@ -92,11 +90,6 @@ const navMainData = [
     title: "Feedback",
     url: "/admin/feedback",
     icon: IconFileText,
-  },
-  {
-    title: "Product Reviews",
-    url: "/admin/product-reviews",
-    icon: IconMessageCircle,
   },
   {
     title: "FAQs",
@@ -113,9 +106,22 @@ const navMainData = [
     url: "/admin/backup-recovery",
     icon: IconDatabase,
   },
+  {
+    title: "User Management",
+    url: "/admin/staff-management",
+    icon: IconUserCog,
+  },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  userType: AdminPanelUserType;
+};
+
+export function AppSidebar({ userType, ...props }: AppSidebarProps) {
+  const filteredNavItems = navMainData.filter((item) =>
+    canAccessAdminPath(userType, item.url)
+  );
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -137,7 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMainData} />
+        <NavMain items={filteredNavItems} />
       </SidebarContent>
       <SidebarFooter></SidebarFooter>
     </Sidebar>

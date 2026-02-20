@@ -27,13 +27,16 @@ import { Order } from "@prisma/client";
 import { IconWalletOff } from "@tabler/icons-react";
 import { Modal } from "@/components/globals/Modal";
 import { Textarea } from "@/components/ui/textarea";
+import { useAdminPermissions } from "@/hooks/use-admin-permissions";
 
 const CellActions = ({ data }: { data: Order }) => {
   const router = useRouter();
+  const { can } = useAdminPermissions();
   const [isOpen, setIsOpen] = React.useState(false);
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
   const [reason, setReason] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const canDelete = can("orders", "delete");
 
   const handleDelete = async () => {
     try {
@@ -158,11 +161,15 @@ const CellActions = ({ data }: { data: Order }) => {
               </DropdownMenuItem>
             </>
           )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsOpen(true)}>
-            <ArchiveIcon className="size-4" />
-            Delete
-          </DropdownMenuItem>
+          {canDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                <ArchiveIcon className="size-4" />
+                Delete
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

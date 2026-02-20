@@ -2,16 +2,9 @@
 
 import AlertModal from "@/components/globals/AlertModal";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CarMake } from "@prisma/client";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { ArchiveIcon, EditIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -55,6 +48,22 @@ export const CellActions: React.FC<CellActionProps> = ({ carMake }) => {
         onConfirm={onConfirm}
         loading={loading}
       />
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setEditOpen(true)}
+        >
+          <EditIcon className="size-4" />
+        </Button>
+        <Button
+          variant="destructive"
+          size="icon"
+          onClick={() => setOpen(true)}
+        >
+          <ArchiveIcon className="size-4" />
+        </Button>
+      </div>
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <DialogHeader>
@@ -63,23 +72,6 @@ export const CellActions: React.FC<CellActionProps> = ({ carMake }) => {
           <CarMakeForm initialData={carMake} onSuccess={handleEditSuccess} />
         </DialogContent>
       </Dialog>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
-            <Edit className="mr-2 h-4 w-4" /> Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </>
   );
 };

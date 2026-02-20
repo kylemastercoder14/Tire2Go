@@ -71,8 +71,8 @@ const Page = () => {
           const typeData = await typeResponse.json();
 
           if (typeData.success) {
-            // ADMIN: Redirect to admin dashboard
-            if (typeData.userType === "ADMIN") {
+            // ADMIN / OWNER: Redirect to admin dashboard
+            if (typeData.userType === "ADMIN" || typeData.userType === "OWNER") {
               router.replace("/admin/dashboard");
             }
             // CUSTOMER: Redirect to root page

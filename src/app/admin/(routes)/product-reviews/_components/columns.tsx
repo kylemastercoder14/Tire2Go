@@ -10,6 +10,7 @@ import { Review } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import AlertModal from "@/components/globals/AlertModal";
 import { deleteReview } from "@/actions";
+import { useAdminPermissions } from "@/hooks/use-admin-permissions";
 
 type ReviewWithRelations = Review & {
   product: {
@@ -226,6 +227,9 @@ export const columns: ColumnDef<ReviewWithRelations>[] = [
       const [isOpen, setIsOpen] = useState(false);
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [isDeleting, setIsDeleting] = useState(false);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { can } = useAdminPermissions();
+      const canDelete = can("productReviews", "delete");
 
       const handleDelete = async () => {
         try {
@@ -258,14 +262,16 @@ export const columns: ColumnDef<ReviewWithRelations>[] = [
             title="Delete Review"
             description="This action cannot be undone. This will permanently delete this review from the database."
           />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsOpen(true)}
-            className="h-8 w-8 p-0"
-          >
-            <Trash2 className="h-4 w-4 text-destructive" />
-          </Button>
+          {canDelete && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(true)}
+              className="h-8 w-8 p-0"
+            >
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
+          )}
         </>
       );
     },

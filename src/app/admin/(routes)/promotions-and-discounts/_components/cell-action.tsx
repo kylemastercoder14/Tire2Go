@@ -2,17 +2,9 @@
 
 import React from "react";
 
-import { EditIcon, MoreHorizontal, ArchiveIcon } from "lucide-react";
+import { EditIcon, ArchiveIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import AlertModal from "@/components/globals/AlertModal";
 import { toast } from "sonner";
@@ -44,28 +36,22 @@ const CellActions = ({ product }: { product: ProductWithBrand }) => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0 ml-2.5">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/products/${product.id}`)}
-          >
-            <EditIcon className="size-4" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsOpen(true)}>
-            <ArchiveIcon className="size-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => router.push(`/admin/products/${product.id}`)}
+        >
+          <EditIcon className="size-4" />
+        </Button>
+        <Button
+          variant="destructive"
+          size="icon"
+          onClick={() => setIsOpen(true)}
+        >
+          <ArchiveIcon className="size-4" />
+        </Button>
+      </div>
     </>
   );
 };

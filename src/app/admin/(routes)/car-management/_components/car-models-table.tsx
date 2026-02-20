@@ -5,7 +5,7 @@ import { DataTable } from "@/components/globals/DataTable";
 import { createColumns } from "@/app/admin/(routes)/car-models/_components/columns";
 import CreateCarModelButton from "@/app/admin/(routes)/car-models/_components/create-button";
 import { CarMake, CarModel } from "@prisma/client";
-import Heading from '@/components/globals/Heading';
+import Heading from "@/components/globals/Heading";
 
 type CarModelWithMake = CarModel & {
   make: CarMake;
@@ -24,7 +24,7 @@ const CarModelsTable = ({ data, carMakes }: CarModelsTableProps) => {
   return (
     <div>
       <div className="flex items-center flex-wrap gap-3 justify-between mb-4">
-	  <Heading
+        <Heading
           title="Car Models"
           description="Manage car models for tire compatibility."
         />

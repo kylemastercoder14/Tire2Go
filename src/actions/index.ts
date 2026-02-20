@@ -28,11 +28,65 @@ import { OrderStatusEmailHTML } from "@/components/email-template/order-status";
 import { OrderRejectionEmailHTML } from "@/components/email-template/order-rejection";
 import { OrderCancellationEmailHTML } from "@/components/email-template/order-cancellation";
 import { revalidatePath } from "next/cache";
+import { checkAdminPermission } from "@/lib/admin-auth";
+import {
+  AdminPermissionAction,
+  AdminPermissionModule,
+} from "@/lib/admin-access";
+
+const ensureAdminPermission = async (
+  permissionModule: AdminPermissionModule,
+  action: AdminPermissionAction
+) => {
+  const permission = await checkAdminPermission(permissionModule, action);
+  if (!permission.allowed) {
+    return { error: permission.error };
+  }
+  return null;
+};
+
+const ensureAdminPermissionOrThrow = async (
+  permissionModule: AdminPermissionModule,
+  action: AdminPermissionAction
+) => {
+  const permissionError = await ensureAdminPermission(permissionModule, action);
+  if (permissionError) {
+    throw new Error(permissionError.error);
+  }
+};
+
+const generateSixDigitTrackingNumber = () =>
+  Math.floor(Math.random() * 1_000_000)
+    .toString()
+    .padStart(6, "0");
+
+const generateUniqueTrackingNumber = async () => {
+  // Retry to reduce collision risk for 6-digit codes.
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const trackingNumber = generateSixDigitTrackingNumber();
+
+    const existingOrder = await db.order.findFirst({
+      where: { trackingNumber },
+      select: { id: true },
+    });
+
+    if (!existingOrder) {
+      return trackingNumber;
+    }
+  }
+
+  throw new Error("Unable to generate a unique tracking number");
+};
 
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("brands", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     // Check if there is existing brand with the same name
     const existingBrand = await db.brands.findFirst({
       where: { name: parseValues.name },
@@ -60,6 +114,11 @@ export const updateBrand = async (
   const parseValues = BrandValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("brands", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingBrand = await db.brands.findFirst({
       where: { id },
     });
@@ -92,6 +151,11 @@ export const updateBrand = async (
 
 export const deleteBrand = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("brands", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingBrand = await db.brands.findFirst({
       where: { id },
     });
@@ -116,6 +180,11 @@ export const createProduct = async (
   const parseValues = ProductValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("products", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingProduct = await db.products.findFirst({
       where: { name: parseValues.name },
     });
@@ -184,6 +253,11 @@ export const updateProduct = async (
 ) => {
   const parseValues = ProductValidators.parse(values);
   try {
+    const permissionError = await ensureAdminPermission("products", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingProduct = await db.products.findFirst({
       where: { id },
     });
@@ -271,6 +345,11 @@ export const updateProduct = async (
 
 export const deleteProduct = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("products", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingProduct = await db.products.findFirst({
       where: { id },
     });
@@ -318,6 +397,14 @@ export const createInventory = async (
   const parseValues = InventoryValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission(
+      "inventoryManagement",
+      "create"
+    );
+    if (permissionError) {
+      return permissionError;
+    }
+
     const product = await db.products.findFirst({
       where: { id: parseValues.productId },
     });
@@ -361,6 +448,14 @@ export const updateInventory = async (
 ) => {
   const parseValues = InventoryValidators.parse(values);
   try {
+    const permissionError = await ensureAdminPermission(
+      "inventoryManagement",
+      "update"
+    );
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingInventory = await db.inventory.findFirst({
       where: { id },
     });
@@ -415,6 +510,14 @@ export const updateInventory = async (
 
 export const deleteInventory = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission(
+      "inventoryManagement",
+      "delete"
+    );
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingInventory = await db.inventory.findFirst({
       where: { id },
     });
@@ -440,6 +543,8 @@ export const updateStockQuantity = async (
   id: string,
   quantity: number
 ): Promise<InventoryResponse> => {
+  await ensureAdminPermissionOrThrow("inventoryManagement", "update");
+
   const existingInventory = await db.inventory.findUnique({ where: { id } });
   if (!existingInventory) throw new Error("Inventory not found");
 
@@ -467,6 +572,8 @@ export const updateMinimumStock = async (
   id: string,
   minStock: number
 ): Promise<InventoryResponse> => {
+  await ensureAdminPermissionOrThrow("inventoryManagement", "update");
+
   const existingInventory = await db.inventory.findUnique({ where: { id } });
   if (!existingInventory) throw new Error("Inventory not found");
 
@@ -498,6 +605,8 @@ export const updateMaximumStock = async (
   id: string,
   maxStock: number
 ): Promise<InventoryResponse> => {
+  await ensureAdminPermissionOrThrow("inventoryManagement", "update");
+
   const existingInventory = await db.inventory.findUnique({ where: { id } });
   if (!existingInventory) throw new Error("Inventory not found");
 
@@ -534,6 +643,11 @@ export const createTipsGuides = async (
   const parseValues = TipsGuidesValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("tipsGuides", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const tipsGuides = await db.tipsGuides.create({
       data: parseValues,
     });
@@ -552,6 +666,11 @@ export const updateTipsGuides = async (
   const parseValues = TipsGuidesValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("tipsGuides", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingTipsGuides = await db.tipsGuides.findFirst({
       where: { id },
     });
@@ -577,6 +696,11 @@ export const updateTipsGuides = async (
 
 export const deleteTipsGuides = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("tipsGuides", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingTipsGuides = await db.tipsGuides.findFirst({
       where: { id },
     });
@@ -600,6 +724,11 @@ export const createFaqs = async (values: z.infer<typeof FaqsValidators>) => {
   const parseValues = FaqsValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("faqs", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const faqs = await db.faqs.create({
       data: parseValues,
     });
@@ -618,6 +747,11 @@ export const updateFaqs = async (
   const parseValues = FaqsValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("faqs", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingFaqs = await db.faqs.findFirst({
       where: { id },
     });
@@ -643,6 +777,11 @@ export const updateFaqs = async (
 
 export const deleteFaqs = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("faqs", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingFaqs = await db.faqs.findFirst({
       where: { id },
     });
@@ -666,6 +805,11 @@ export const createStaff = async (values: z.infer<typeof StaffValidators>) => {
   const parseValues = StaffValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("userManagement", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     // Check if there is existing staff with the same email
     const existingStaff = await db.staff.findFirst({
       where: { email: parseValues.email },
@@ -693,6 +837,11 @@ export const updateStaff = async (
   const parseValues = StaffValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("userManagement", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingStaff = await db.staff.findFirst({
       where: { id },
     });
@@ -725,6 +874,11 @@ export const updateStaff = async (
 
 export const deleteStaff = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("userManagement", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingStaff = await db.staff.findFirst({
       where: { id },
     });
@@ -750,6 +904,11 @@ export const createPolicy = async (
   const parseValues = PolicyValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("policies", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     // Check if there is existing policy with the same type
     const existingPolicy = await db.policies.findFirst({
       where: { type: parseValues.type },
@@ -777,6 +936,11 @@ export const updatePolicy = async (
   const parseValues = PolicyValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("policies", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingPolicy = await db.policies.findFirst({
       where: { id },
     });
@@ -808,6 +972,11 @@ export const updatePolicy = async (
 
 export const deletePolicy = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("policies", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingPolicy = await db.policies.findFirst({
       where: { id },
     });
@@ -851,6 +1020,11 @@ export const createPromotion = async (
   const parseValues = PromotionValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("promotions", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const promotion = await db.promotions.create({
       data: parseValues,
     });
@@ -867,6 +1041,11 @@ export const updatePromotion = async (
 ) => {
   const parseValues = PromotionValidators.parse(values);
   try {
+    const permissionError = await ensureAdminPermission("promotions", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingPromotion = await db.promotions.findFirst({
       where: { id },
     });
@@ -891,6 +1070,11 @@ export const updatePromotion = async (
 
 export const deletePromotion = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("promotions", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingPromotion = await db.promotions.findFirst({
       where: { id },
     });
@@ -933,19 +1117,8 @@ export const placeOrder = async (data: {
 
     const fullName = `${data.customerDetails.firstName} ${data.customerDetails.lastName}`;
 
-    // Generate tracking number in MMDDYYYYHMSS format
-    // Example: 011220268226 = 01/12/2026 8:22:26 (month=01, day=12, year=2026, hour=8, minutes=22, seconds=26)
-    // Note: Hour is single digit (0-9) or two digits (10-23) without leading zero for single digits
-    const now = new Date();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // MM (01-12)
-    const day = String(now.getDate()).padStart(2, "0"); // DD (01-31)
-    const year = String(now.getFullYear()); // YYYY (2026)
-    const hour = now.getHours(); // H (0-23, will be 1 digit for 0-9, 2 digits for 10-23)
-    const minutes = String(now.getMinutes()).padStart(2, "0"); // MM (00-59)
-    const seconds = String(now.getSeconds()).padStart(2, "0"); // SS (00-59)
-
-    // Format: MMDDYYYYHMSS (hour without leading zero for single digits, with 2 digits for 10-23)
-    const trackingNumber = `${month}${day}${year}${hour}${minutes}${seconds}`;
+    // Generate a unique 6-digit tracking number.
+    const trackingNumber = await generateUniqueTrackingNumber();
 
     // Create order
     const response = await db.order.create({
@@ -1022,6 +1195,11 @@ export const sendOrderCompletedEmail = async (
 };
 
 export async function updateOrderStatus(orderId: string, status: string) {
+  const permissionError = await ensureAdminPermission("orders", "process");
+  if (permissionError) {
+    throw new Error(permissionError.error);
+  }
+
   const now = new Date();
 
   let updateData: any = { status };
@@ -1090,6 +1268,11 @@ export async function toggleOrderPayment(
   status: "PAID" | "FAILED"
 ) {
   try {
+    const permissionError = await ensureAdminPermission("orders", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const order = await db.order.update({
       where: { id: orderId },
       data: { paymentStatus: status },
@@ -1107,6 +1290,11 @@ export async function toggleOrderPayment(
 
 export const deleteOrder = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("orders", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingOrder = await db.order.findFirst({
       where: { id },
     });
@@ -1136,6 +1324,11 @@ export const deleteOrder = async (id: string) => {
 // Archive orders manually (for admin use)
 export const archiveOrdersManually = async () => {
   try {
+    const permissionError = await ensureAdminPermission("orders", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     // Import the function dynamically to avoid circular dependencies
     const cronModule = await import("@/lib/cron");
     if (typeof cronModule.archiveOldOrders === "function") {
@@ -1154,6 +1347,11 @@ export const archiveOrdersManually = async () => {
 // Get archived orders count
 export const getArchivedOrdersCount = async () => {
   try {
+    const permissionError = await ensureAdminPermission("orders", "view");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const count = await db.order.count({
       where: {
         isArchived: true,
@@ -1170,6 +1368,11 @@ export const getArchivedOrdersCount = async () => {
 // Get orders that will be archived soon (within 7 days)
 export const getOrdersToArchiveSoon = async () => {
   try {
+    const permissionError = await ensureAdminPermission("orders", "view");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
@@ -1274,6 +1477,11 @@ export const getUserOrders = async () => {
 
 export async function rejectOrder(orderId: string, reason: string) {
   try {
+    const permissionError = await ensureAdminPermission("orders", "process");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const order = await db.order.update({
       where: { id: orderId },
       data: {
@@ -1426,6 +1634,11 @@ export const createCarMake = async (
   const parseValues = CarMakeValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("carManagement", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingCarMake = await db.carMake.findFirst({
       where: { name: parseValues.name },
     });
@@ -1452,6 +1665,11 @@ export const updateCarMake = async (
   const parseValues = CarMakeValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("carManagement", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingCarMake = await db.carMake.findFirst({
       where: { id },
     });
@@ -1487,6 +1705,11 @@ export const updateCarMake = async (
 
 export const deleteCarMake = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("carManagement", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingCarMake = await db.carMake.findFirst({
       where: { id },
     });
@@ -1513,6 +1736,11 @@ export const createCarModel = async (
   const parseValues = CarModelValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("carManagement", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingCarModel = await db.carModel.findFirst({
       where: {
         name: parseValues.name,
@@ -1541,6 +1769,11 @@ export const updateCarModel = async (
 ) => {
   const parseValues = CarModelValidators.parse(values);
   try {
+    const permissionError = await ensureAdminPermission("carManagement", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingCarModel = await db.carModel.findFirst({
       where: { id },
     });
@@ -1585,6 +1818,11 @@ export const updateCarModel = async (
 
 export const deleteCarModel = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("carManagement", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingCarModel = await db.carModel.findFirst({
       where: { id },
     });
@@ -1611,6 +1849,11 @@ export const createTireSize = async (
   const parseValues = TireSizeValidators.parse(values);
 
   try {
+    const permissionError = await ensureAdminPermission("tireSizes", "create");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingTireSize = await db.tireSize.findFirst({
       where: {
         width: parseValues.width,
@@ -1642,6 +1885,11 @@ export const updateTireSize = async (
 ) => {
   const parseValues = TireSizeValidators.parse(values);
   try {
+    const permissionError = await ensureAdminPermission("tireSizes", "update");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingTireSize = await db.tireSize.findFirst({
       where: { id },
     });
@@ -1682,6 +1930,11 @@ export const updateTireSize = async (
 
 export const deleteTireSize = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("tireSizes", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     const existingTireSize = await db.tireSize.findFirst({
       where: { id },
     });
@@ -2112,6 +2365,11 @@ export const getProductsSoldCounts = async (productIds: string[]) => {
 // Delete Review
 export const deleteReview = async (id: string) => {
   try {
+    const permissionError = await ensureAdminPermission("productReviews", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
+
     // Check if review exists
     const review = await db.review.findUnique({
       where: { id },
@@ -2142,20 +2400,9 @@ export const updateTicket = async (
   }
 ) => {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return { error: "Unauthorized" };
-    }
-
-    // Check if user is admin
-    const user = await db.users.findUnique({
-      where: { authId: userId },
-      select: { userType: true, role: true },
-    });
-
-    if (!user || (user.userType !== "ADMIN" && user.role !== "ADMIN")) {
-      return { error: "Forbidden - Admin access required" };
+    const permissionError = await ensureAdminPermission("inquiries", "update");
+    if (permissionError) {
+      return permissionError;
     }
 
     // Check if ticket exists
@@ -2181,20 +2428,9 @@ export const updateTicket = async (
 
 export const deleteTicket = async (id: string) => {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return { error: "Unauthorized" };
-    }
-
-    // Check if user is admin
-    const user = await db.users.findUnique({
-      where: { authId: userId },
-      select: { userType: true, role: true },
-    });
-
-    if (!user || (user.userType !== "ADMIN" && user.role !== "ADMIN")) {
-      return { error: "Forbidden - Admin access required" };
+    const permissionError = await ensureAdminPermission("inquiries", "delete");
+    if (permissionError) {
+      return permissionError;
     }
 
     // Check if ticket exists
@@ -2221,6 +2457,14 @@ export const deleteTicket = async (id: string) => {
 // Get low stock inventory items for notifications
 export const getLowStockInventory = async () => {
   try {
+    const permissionError = await ensureAdminPermission(
+      "inventoryManagement",
+      "view"
+    );
+    if (permissionError) {
+      return { error: permissionError.error, data: [] };
+    }
+
     const lowStockItems = await db.inventory.findMany({
       where: {
         status: {
@@ -2251,21 +2495,10 @@ export const getLowStockInventory = async () => {
 
 export const deleteFeedback = async (id: string) => {
   try {
-    // const { userId } = await auth();
-
-    // if (!userId) {
-    //   return { error: "Unauthorized" };
-    // }
-
-    // // Check if user is admin
-    // const user = await db.users.findUnique({
-    //   where: { authId: userId },
-    //   select: { role: true },
-    // });
-
-    // if (!user || user.role !== "ADMIN") {
-    //   return { error: "Forbidden - Admin access required" };
-    // }
+    const permissionError = await ensureAdminPermission("feedback", "delete");
+    if (permissionError) {
+      return permissionError;
+    }
 
     // Check if feedback exists
     const feedback = await db.feedback.findUnique({
