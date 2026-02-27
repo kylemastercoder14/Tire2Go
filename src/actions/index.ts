@@ -78,6 +78,11 @@ const generateUniqueTrackingNumber = async () => {
   throw new Error("Unable to generate a unique tracking number");
 };
 
+const getTrackingReference = (order: {
+  id: string;
+  trackingNumber: string | null;
+}) => order.trackingNumber ?? order.id;
+
 export const createBrand = async (values: z.infer<typeof BrandValidators>) => {
   const parseValues = BrandValidators.parse(values);
 
@@ -1176,6 +1181,7 @@ export const sendOrderCompletedEmail = async (
   email: string
 ) => {
   try {
+    const trackingReference = getTrackingReference(order);
     const htmlContent = await OrderCompleteHTML({
       order,
     });
@@ -1183,7 +1189,7 @@ export const sendOrderCompletedEmail = async (
     await sendMail(
       email,
       `Your order has been completed`,
-      `Your order "${order.trackingNumber}" has been completed.`,
+      `Your order "${trackingReference}" has been completed.`,
       htmlContent
     );
 
@@ -1245,6 +1251,7 @@ export const sendOrderStatusEmail = async (
   email: string
 ) => {
   try {
+    const trackingReference = getTrackingReference(order);
     const htmlContent = await OrderStatusEmailHTML({
       order,
     });
@@ -1252,7 +1259,7 @@ export const sendOrderStatusEmail = async (
     await sendMail(
       email,
       `Your order has been ${order.status}`,
-      `Your order "${order.id}" has been ${order.status}.`,
+      `Your order "${trackingReference}" has been ${order.status}.`,
       htmlContent
     );
 
@@ -1518,6 +1525,7 @@ export const sendOrderRejectionEmail = async (
   email: string
 ) => {
   try {
+    const trackingReference = getTrackingReference(order);
     const htmlContent = await OrderRejectionEmailHTML({
       order,
     });
@@ -1525,7 +1533,7 @@ export const sendOrderRejectionEmail = async (
     await sendMail(
       email,
       `Your order has been REJECTED`,
-      `Your order "${order.id}" has been rejected. Reason: ${order.reasonCancelled}`,
+      `Your order "${trackingReference}" has been rejected. Reason: ${order.reasonCancelled}`,
       htmlContent
     );
 
@@ -1609,6 +1617,7 @@ export const sendOrderCancellationEmail = async (
   email: string
 ) => {
   try {
+    const trackingReference = getTrackingReference(order);
     const htmlContent = await OrderCancellationEmailHTML({
       order,
     });
@@ -1616,7 +1625,7 @@ export const sendOrderCancellationEmail = async (
     await sendMail(
       email,
       `Your order has been CANCELLED`,
-      `Your order "${order.id}" has been cancelled. Reason: ${order.reasonCancelled}`,
+      `Your order "${trackingReference}" has been cancelled. Reason: ${order.reasonCancelled}`,
       htmlContent
     );
 

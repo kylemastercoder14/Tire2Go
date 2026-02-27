@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { toast } from "sonner";
 
 export interface CartItem {
@@ -37,62 +38,73 @@ interface CartStore {
   removeAll: () => void;
 }
 
-const useCart = create<CartStore>((set, get) => ({
-  items: [],
-  deliveryOption: null,
-  preferredSchedule: null,
-  customerDetails: null,
-
-  addItem: (data: CartItem) => {
-    const currentItems = get().items;
-    const existingItem = currentItems.find((item) => item.id === data.id);
-
-    if (existingItem) {
-      // Update quantity if already exists
-      set({
-        items: currentItems.map((item) =>
-          item.id === data.id
-            ? { ...item, quantity: item.quantity + data.quantity }
-            : item
-        ),
-      });
-      toast.success(`Updated quantity for ${data.name}`);
-    } else {
-      // Add as new item
-      set({ items: [...currentItems, data] });
-      toast.success(`${data.name} added to cart`);
-    }
-  },
-
-  removeItem: (id: string) => {
-    set({ items: get().items.filter((item) => item.id !== id) });
-    toast.success("Item removed from cart");
-  },
-
-  updateQuantity: (id: string, quantity: number) => {
-    set({
-      items: get().items.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      ),
-    });
-    toast.success("Quantity updated");
-  },
-
-  setDeliveryOption: (option) => {
-    set({ deliveryOption: option });
-  },
-
-  setPreferredSchedule: (date) => set({ preferredSchedule: date }),
-
-  setCustomerDetails: (details) => set({ customerDetails: details }),
-
-  removeAll: () =>
-    set({
+const useCart = create<CartStore>()(
+  persist(
+    (set, get) => ({
       items: [],
       deliveryOption: null,
       preferredSchedule: null,
       customerDetails: null,
+
+      addItem: (data: CartItem) => {
+        const currentItems = get().items;
+        const existingItem = currentItems.find((item) => item.id === data.id);
+
+        if (existingItem) {
+          // Update quantity if already exists
+          set({
+            items: currentItems.map((item) =>
+              item.id === data.id
+                ? { ...item, quantity: item.quantity + data.quantity }
+                : item
+            ),
+          });
+          toast.success(`Updated quantity for ${data.name}`);
+        } else {
+          // Add as new item
+          set({ items: [...currentItems, data] });
+          toast.success(`${data.name} added to cart`);
+        }
+      },
+
+      removeItem: (id: string) => {
+        set({ items: get().items.filter((item) => item.id !== id) });
+        toast.success("Item removed from cart");
+      },
+
+      updateQuantity: (id: string, quantity: number) => {
+        set({
+          items: get().items.map((item) =>
+            item.id === id ? { ...item, quantity } : item
+          ),
+        });
+        toast.success("Quantity updated");
+      },
+
+      setDeliveryOption: (option) => {
+        set({ deliveryOption: option });
+      },
+
+      setPreferredSchedule: (date) => set({ preferredSchedule: date }),
+
+      setCustomerDetails: (details) => set({ customerDetails: details }),
+
+      removeAll: () =>
+        set({
+          items: [],
+          deliveryOption: null,
+          preferredSchedule: null,
+          customerDetails: null,
+        }),
     }),
-}));
+    {
+      name: "tire2go-cart",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        items: state.items,
+      }),
+    }
+  )
+);
 
 export default useCart;

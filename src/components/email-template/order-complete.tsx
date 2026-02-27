@@ -108,10 +108,10 @@ export const OrderComplete = ({ order }: OrderCompleteProps) => (
 
           <Row>
             <Column style={{ width: "70%" }}>
-              <Text style={global.text}>Order Number</Text>
+              <Text style={global.text}>Tracking Number</Text>
             </Column>
             <Column style={{ width: "30%", textAlign: "right" }}>
-              <Text style={global.text}>{order.id}</Text>
+              <Text style={global.text}>{order.trackingNumber ?? order.id}</Text>
             </Column>
           </Row>
 
