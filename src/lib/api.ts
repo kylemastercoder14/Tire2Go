@@ -7,6 +7,17 @@ export type Period =
   | "Semi Anually"
   | "Annually";
 
+const getOrderNetAmount = ({
+  totalAmount,
+  discountedAmount,
+}: {
+  totalAmount: number;
+  discountedAmount: number | null;
+}) => {
+  const discountValue = discountedAmount ?? 0;
+  return Math.max(0, totalAmount - discountValue);
+};
+
 const getPeriodDates = (period: Period) => {
   const now = new Date();
   let currentStart: Date, currentEnd: Date, lastStart: Date, lastEnd: Date;
@@ -99,10 +110,10 @@ export const getStatsByPeriod = async (period: Period) => {
   // Total Revenue
   const revenueThis = orders
     .filter((o) => o.createdAt >= currentStart && o.createdAt <= currentEnd)
-    .reduce((acc, o) => acc + (o.discountedAmount ?? o.totalAmount), 0);
+    .reduce((acc, o) => acc + getOrderNetAmount(o), 0);
   const revenueLast = orders
     .filter((o) => o.createdAt >= lastStart && o.createdAt <= lastEnd)
-    .reduce((acc, o) => acc + (o.discountedAmount ?? o.totalAmount), 0);
+    .reduce((acc, o) => acc + getOrderNetAmount(o), 0);
   const revenueStats = calculateMetric(revenueThis, revenueLast);
 
   // New Customers

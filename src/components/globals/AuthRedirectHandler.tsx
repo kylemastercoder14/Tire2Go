@@ -7,7 +7,8 @@ import { toast } from "sonner";
 
 /**
  * Component to handle redirects based on user type after authentication
- * - ADMIN/OWNER users: Redirect to /admin/dashboard
+ * - ADMIN users: Redirect to /admin/dashboard
+ * - OWNER users: Redirect to /owner/dashboard
  * - CUSTOMER users: Redirect to / (root page)
  */
 export const AuthRedirectHandler = () => {
@@ -57,9 +58,10 @@ export const AuthRedirectHandler = () => {
     // This prevents unnecessary API calls
     const isAuthPage = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
     const isAdminPage = pathname.startsWith("/admin");
+    const isOwnerPage = pathname.startsWith("/owner");
 
-    // If customer is on a valid customer route (not admin, not auth), skip check
-    if (!isAuthPage && !isAdminPage && lastPathname && lastPathname !== pathname) {
+    // If customer is on a valid customer route (not admin/owner, not auth), skip check
+    if (!isAuthPage && !isAdminPage && !isOwnerPage && lastPathname && lastPathname !== pathname) {
       // Pathname changed but user is still on a valid route - might be navigation
       // Only check if we haven't checked recently (within 5 seconds)
       const checkTime = lastChecked ? parseInt(lastChecked, 10) : 0;
@@ -95,10 +97,8 @@ export const AuthRedirectHandler = () => {
             // Ignore storage errors
           }
 
-          // ADMIN/OWNER users: Redirect to admin dashboard
-          if (userType === "ADMIN" || userType === "OWNER") {
-            // If privileged user is on a customer route (not admin route), redirect to dashboard
-            if (!pathname.startsWith("/admin")) {
+          if (userType === "ADMIN") {
+            if (!isAdminPage) {
               try {
                 if (typeof window !== "undefined") {
                   sessionStorage.setItem(`${storageKey}_pathname`, "/admin/dashboard");
@@ -109,11 +109,20 @@ export const AuthRedirectHandler = () => {
               router.replace("/admin/dashboard");
               return;
             }
-          }
-          // CUSTOMER users: Redirect to root page if on admin route
-          else if (userType === "CUSTOMER") {
-            // If customer is on admin page, redirect to home and show error
-            if (pathname.startsWith("/admin")) {
+          } else if (userType === "OWNER") {
+            if (!isOwnerPage) {
+              try {
+                if (typeof window !== "undefined") {
+                  sessionStorage.setItem(`${storageKey}_pathname`, "/owner/dashboard");
+                }
+              } catch {
+                // Ignore storage errors
+              }
+              router.replace("/owner/dashboard");
+              return;
+            }
+          } else if (userType === "CUSTOMER") {
+            if (isAdminPage || isOwnerPage) {
               toast.error("Access denied. You don't have permission to access this page.");
               try {
                 if (typeof window !== "undefined") {
@@ -125,8 +134,6 @@ export const AuthRedirectHandler = () => {
               router.replace("/");
               return;
             }
-            // Customer is on a valid customer route - no redirect needed
-            // Just mark as checked so we don't check again
           }
         }
       } catch (error) {

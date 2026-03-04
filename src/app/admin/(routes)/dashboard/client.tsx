@@ -27,6 +27,11 @@ const periods: Period[] = [
   "Annually",
 ];
 
+const getOrderNetAmount = (order: { totalAmount: number; discountedAmount?: number | null }) => {
+  const discountValue = order.discountedAmount ?? 0;
+  return Math.max(0, order.totalAmount - discountValue);
+};
+
 const DashboardContent = ({
   orders,
   pendingOrders,
@@ -112,7 +117,7 @@ const DashboardContent = ({
       if (o.status === "COMPLETED") {
         salesMap[date].completed += 1;
         // Calculate profit from completed orders
-        const orderTotal = o.discountedAmount ?? o.totalAmount;
+        const orderTotal = getOrderNetAmount(o);
         salesMap[date].profit += orderTotal;
       } else if (o.status === "CANCELLED") {
         salesMap[date].cancelled += 1;
@@ -284,7 +289,7 @@ const DashboardContent = ({
     <h1>202 Mags and Tires Collections</h1>
     <p class="text-center text-sm">Period: ${dateRangeLabel}</p>
 
-    <h2>Statistics Overview</h2>
+    <h2>Key Performance Indicator (KPI) Summary</h2>
     <table>
       <thead>
         <tr><th>Metric</th><th>Value</th><th>Trend</th><th>Change</th></tr>
@@ -324,6 +329,8 @@ const DashboardContent = ({
         ` : ''}
       </tbody>
     </table>
+
+    <div class="page-break"></div>
 
     <h2>Sales Report Summary (${period} Period)</h2>
     <table>

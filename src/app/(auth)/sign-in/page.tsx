@@ -53,12 +53,11 @@ const Page = () => {
           const data = await response.json();
 
           if (data.success && data.userType) {
-            // ADMIN / OWNER: Redirect to admin dashboard
-            if (data.userType === "ADMIN" || data.userType === "OWNER") {
+            if (data.userType === "ADMIN") {
               router.replace("/admin/dashboard");
-            }
-            // CUSTOMER: Redirect to root page
-            else {
+            } else if (data.userType === "OWNER") {
+              router.replace("/owner/dashboard");
+            } else {
               router.replace("/");
             }
           } else {

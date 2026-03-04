@@ -1,4 +1,5 @@
 import React from "react";
+import { redirect } from "next/navigation";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/globals/owner/AppSidebar";
 import { SiteHeader } from "@/components/globals/owner/SiteHeader";
@@ -13,6 +14,14 @@ type Props = {
 
 const OwnerLayout = async ({ children }: Props) => {
   const userType = await getCurrentAdminUserType();
+
+  if (userType === "ADMIN") {
+    redirect("/admin/dashboard?error=access_denied");
+  }
+
+  if (!userType) {
+    redirect("/?error=access_denied");
+  }
 
   return (
     <SidebarProvider

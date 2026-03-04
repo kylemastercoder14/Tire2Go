@@ -71,12 +71,11 @@ const Page = () => {
           const typeData = await typeResponse.json();
 
           if (typeData.success) {
-            // ADMIN / OWNER: Redirect to admin dashboard
-            if (typeData.userType === "ADMIN" || typeData.userType === "OWNER") {
+            if (typeData.userType === "ADMIN") {
               router.replace("/admin/dashboard");
-            }
-            // CUSTOMER: Redirect to root page
-            else {
+            } else if (typeData.userType === "OWNER") {
+              router.replace("/owner/dashboard");
+            } else {
               router.replace("/");
             }
           } else {

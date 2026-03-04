@@ -16,6 +16,10 @@ type Props = {
 const AdminLayout = async ({ children }: Props) => {
   const userType = await getCurrentAdminUserType();
 
+  if (userType === "OWNER") {
+    redirect("/owner/dashboard?error=access_denied");
+  }
+
   if (!userType) {
     redirect("/?error=access_denied");
   }

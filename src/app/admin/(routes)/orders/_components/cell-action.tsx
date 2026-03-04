@@ -37,6 +37,10 @@ const CellActions = ({ data }: { data: Order }) => {
   const [reason, setReason] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const canDelete = can("orders", "delete");
+  const canUpdatePaymentStatus =
+    data.status !== "CANCELLED" && data.paymentStatus !== "PAID";
+  const canMarkPaymentFailed =
+    data.status !== "CANCELLED" && data.paymentStatus !== "FAILED";
 
   const handleDelete = async () => {
     try {
@@ -61,8 +65,10 @@ const CellActions = ({ data }: { data: Order }) => {
         toast.error(response.error);
         return;
       }
-      toast.success(`Order marked as ${status}`);
       router.refresh();
+      // Trigger a second refresh to ensure RSC payload is updated after mutation.
+      setTimeout(() => router.refresh(), 150);
+      toast.success(`Order marked as ${status}`);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -138,9 +144,9 @@ const CellActions = ({ data }: { data: Order }) => {
             <EditIcon className="size-4" />
             View Details
           </DropdownMenuItem>
-          {data.status === "PENDING" && (
+          {(canUpdatePaymentStatus || canMarkPaymentFailed || data.status === "PENDING") && (
             <>
-              {data.paymentStatus === "PENDING" && (
+              {canUpdatePaymentStatus && (
                 <>
                   <DropdownMenuItem
                     onClick={() => handleTogglePaymentStatus("PAID")}
@@ -148,6 +154,10 @@ const CellActions = ({ data }: { data: Order }) => {
                     <Wallet className="size-4" />
                     Mark as Paid
                   </DropdownMenuItem>
+                </>
+              )}
+              {canMarkPaymentFailed && (
+                <>
                   <DropdownMenuItem
                     onClick={() => handleTogglePaymentStatus("FAILED")}
                   >
@@ -156,9 +166,11 @@ const CellActions = ({ data }: { data: Order }) => {
                   </DropdownMenuItem>
                 </>
               )}
-              <DropdownMenuItem onClick={() => setRejectModalOpen(true)}>
-                <XCircle className="size-4" /> Reject Order
-              </DropdownMenuItem>
+              {data.status === "PENDING" && (
+                <DropdownMenuItem onClick={() => setRejectModalOpen(true)}>
+                  <XCircle className="size-4" /> Reject Order
+                </DropdownMenuItem>
+              )}
             </>
           )}
           {canDelete && (
