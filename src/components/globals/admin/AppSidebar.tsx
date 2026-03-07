@@ -17,6 +17,7 @@ import {
   IconUsersGroup,
   IconWallet,
   IconWheel,
+  IconSettings,
   IconZoomQuestion,
 } from "@tabler/icons-react";
 
@@ -110,6 +111,11 @@ const navMainData = [
     title: "User Management",
     url: "/admin/staff-management",
     icon: IconUserCog,
+  },
+  {
+    title: "System Settings",
+    url: "/admin/settings",
+    icon: IconSettings,
   },
 ];
 

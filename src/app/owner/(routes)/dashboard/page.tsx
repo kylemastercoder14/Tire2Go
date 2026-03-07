@@ -6,7 +6,7 @@ import { UserType } from "@prisma/client";
 import DashboardContent from "./client";
 
 const Page = async () => {
-  // Server-side owner check
+  // Server-side admin check
   const { userId } = await auth();
 
   if (!userId) {
@@ -19,11 +19,14 @@ const Page = async () => {
       select: { userType: true },
     });
 
-    if (!user || user.userType !== UserType.OWNER) {
+    if (
+      !user ||
+      (user.userType !== UserType.ADMIN && user.userType !== UserType.OWNER)
+    ) {
       redirect("/?error=access_denied");
     }
   } catch (error) {
-    console.error("Error checking owner access:", error);
+    console.error("Error checking admin access:", error);
     redirect("/sign-in");
   }
 

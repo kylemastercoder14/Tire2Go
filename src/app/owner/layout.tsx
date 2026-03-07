@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/globals/owner/SiteHeader";
 import AdminChatApp from '@/components/globals/owner/AdminChatApp';
 import { PageLoadingOverlay } from "@/components/globals/admin/PageLoadingOverlay";
 import { AdminUserTypeProvider } from "@/components/globals/admin/AdminUserTypeProvider";
+import OwnerRouteGuard from "@/components/globals/owner/OwnerRouteGuard";
 import { getCurrentAdminUserType } from "@/lib/admin-auth";
 
 type Props = {
@@ -33,8 +34,9 @@ const OwnerLayout = async ({ children }: Props) => {
       }
     >
       <AdminUserTypeProvider userType={userType}>
-        <AppSidebar variant="inset" />
+        <AppSidebar variant="inset" userType={userType} />
         <SidebarInset>
+          <OwnerRouteGuard userType={userType} />
           <SiteHeader />
           <PageLoadingOverlay />
           <main className='px-3 sm:px-4 md:px-6 py-4 sm:py-5'>{children}</main>

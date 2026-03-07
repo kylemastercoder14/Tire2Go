@@ -82,11 +82,11 @@ const ADMIN_PERMISSION_MATRIX: PermissionMatrix = {
     promotions: CRUD_ACTIONS,
     feedback: ["view", "delete"],
     policies: CRUD_ACTIONS,
-    backupRecovery: OWNER_FULL_ACTIONS,
+    backupRecovery: CRUD_ACTIONS,
     userManagement: CRUD_ACTIONS,
-    systemSettings: OWNER_FULL_ACTIONS,
-    productReviews: ["view", "delete"],
-    inquiries: OWNER_FULL_ACTIONS,
+    systemSettings: CRUD_ACTIONS,
+    productReviews: [],
+    inquiries: [],
   },
 };
 
@@ -142,6 +142,13 @@ export const getAdminModuleFromPath = (
   const normalizedPath = normalizePathname(pathname);
 
   for (const routeModule of ADMIN_ROUTE_MODULES) {
+    if (routeModule.prefix === "/admin") {
+      if (normalizedPath === "/admin") {
+        return routeModule.module;
+      }
+      continue;
+    }
+
     if (
       normalizedPath === routeModule.prefix ||
       normalizedPath.startsWith(`${routeModule.prefix}/`)

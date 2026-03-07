@@ -65,7 +65,7 @@ export function InventoryAlertsSection({ inventory }: InventoryAlertsSectionProp
                       Qty: {item.quantity}
                     </p>
                   </div>
-                  <Link href="/owner/inventory-management">
+                  <Link href="/admin/inventory-management">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <IconPackage className="h-4 w-4" />
                     </Button>
@@ -74,7 +74,7 @@ export function InventoryAlertsSection({ inventory }: InventoryAlertsSectionProp
               </div>
             ))}
             {criticalItems.length > 5 && (
-              <Link href="/owner/inventory-management">
+              <Link href="/admin/inventory-management">
                 <Button variant="outline" className="w-full mt-2">
                   View All Alerts ({criticalItems.length})
                 </Button>

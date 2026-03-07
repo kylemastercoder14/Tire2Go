@@ -1,0 +1,69 @@
+import React from "react";
+import db from "@/lib/db";
+import Heading from "@/components/globals/Heading";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { IconPlus } from "@tabler/icons-react";
+import { DataTable } from "@/components/globals/DataTable";
+import { columns } from "./_components/columns";
+import { unstable_noStore as noStore } from "next/cache";
+import { getCurrentAdminUserType } from "@/lib/admin-auth";
+import { canPerformAdminAction } from "@/lib/admin-access";
+
+// Force dynamic rendering to prevent caching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const Page = async () => {
+  // Prevent static caching
+  noStore();
+
+  const userType = await getCurrentAdminUserType();
+  const canCreateInventory =
+    userType &&
+    canPerformAdminAction(userType, "inventoryManagement", "create");
+
+  const data = await db.inventory.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      product: {
+        include: {
+          brand: true,
+        },
+      },
+    },
+  });
+  return (
+    <div>
+      <div className="flex items-center flex-wrap gap-3 justify-between">
+        <Heading
+          title="Inventory Management"
+          description="Manage your products and stock levels."
+        />
+
+        {canCreateInventory && (
+          <Button size="sm">
+            <Link
+              href="/admin/inventory-management/create"
+              className="flex items-center gap-2"
+            >
+              <IconPlus className="size-4" />
+              Create new stock item
+            </Link>
+          </Button>
+        )}
+      </div>
+      <div className="mt-5">
+        <DataTable
+          columns={columns}
+          data={data}
+          searchPlaceholder="Filter stock item ID, SKU or product name..."
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Page;

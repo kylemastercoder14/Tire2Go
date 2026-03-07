@@ -265,6 +265,12 @@ const DashboardContent = ({
     .page-break {
       page-break-after: always;
     }
+    .print-page {
+      min-height: calc(100vh - 100px);
+    }
+    .print-section {
+      margin-top: 22px;
+    }
     .text-center { text-align: center; }
     .text-sm { font-size: 12px; color: #666; }
     .mt-8 { margin-top: 32px; }
@@ -286,116 +292,131 @@ const DashboardContent = ({
 </head>
 <body>
   <div class="print-container">
-    <h1>202 Mags and Tires Collections</h1>
-    <p class="text-center text-sm">Period: ${dateRangeLabel}</p>
+    <section class="print-page">
+      <h1>202 Mags and Tires Collections</h1>
+      <p class="text-center text-sm">Period: ${dateRangeLabel}</p>
 
-    <h2>Key Performance Indicator (KPI) Summary</h2>
-    <table>
-      <thead>
-        <tr><th>Metric</th><th>Value</th><th>Trend</th><th>Change</th></tr>
-      </thead>
-      <tbody>
-        ${revenue ? `
-        <tr>
-          <td>${revenue.title}</td>
-          <td>${revenue.data}</td>
-          <td>${revenue.trend || 'N/A'}</td>
-          <td>${revenue.percentage || 0}%</td>
-        </tr>
-        ` : ''}
-        ${customers ? `
-        <tr>
-          <td>${customers.title}</td>
-          <td>${customers.data}</td>
-          <td>${customers.trend || 'N/A'}</td>
-          <td>${customers.percentage || 0}%</td>
-        </tr>
-        ` : ''}
-        ${tiresSold ? `
-        <tr>
-          <td>${tiresSold.title}</td>
-          <td>${tiresSold.data}</td>
-          <td>${tiresSold.trend || 'N/A'}</td>
-          <td>${tiresSold.percentage || 0}%</td>
-        </tr>
-        ` : ''}
-        ${inventory ? `
-        <tr>
-          <td>${inventory.title}</td>
-          <td>${inventory.data}</td>
-          <td>${inventory.trend || 'N/A'}</td>
-          <td>${inventory.percentage || 0}%</td>
-        </tr>
-        ` : ''}
-      </tbody>
-    </table>
+      <div class="print-section">
+        <h2>Key Performance Indicator (KPI) Summary</h2>
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Trend</th><th>Change</th></tr>
+          </thead>
+          <tbody>
+            ${revenue ? `
+            <tr>
+              <td>${revenue.title}</td>
+              <td>${revenue.data}</td>
+              <td>${revenue.trend || 'N/A'}</td>
+              <td>${revenue.percentage || 0}%</td>
+            </tr>
+            ` : ''}
+            ${customers ? `
+            <tr>
+              <td>${customers.title}</td>
+              <td>${customers.data}</td>
+              <td>${customers.trend || 'N/A'}</td>
+              <td>${customers.percentage || 0}%</td>
+            </tr>
+            ` : ''}
+            ${tiresSold ? `
+            <tr>
+              <td>${tiresSold.title}</td>
+              <td>${tiresSold.data}</td>
+              <td>${tiresSold.trend || 'N/A'}</td>
+              <td>${tiresSold.percentage || 0}%</td>
+            </tr>
+            ` : ''}
+            ${inventory ? `
+            <tr>
+              <td>${inventory.title}</td>
+              <td>${inventory.data}</td>
+              <td>${inventory.trend || 'N/A'}</td>
+              <td>${inventory.percentage || 0}%</td>
+            </tr>
+            ` : ''}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="print-section">
+        <h2>Top 5 Brands</h2>
+        <table>
+          <thead>
+            <tr><th>Brand</th><th>Units Sold</th></tr>
+          </thead>
+          <tbody>
+            ${chartData.topBrands.length > 0 ? chartData.topBrands
+            .map(
+              (item) => `
+              <tr>
+                <td>${item.brand}</td>
+                <td>${item.sold}</td>
+              </tr>
+            `
+            )
+            .join("") : `<tr><td colspan="2" class="text-center">No brand data for the ${period.toLowerCase()} period</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="print-section">
+        <h2>Top 5 Products</h2>
+        <table>
+          <thead>
+            <tr><th>Product</th><th>Units Sold</th></tr>
+          </thead>
+          <tbody>
+            ${chartData.topProducts.length > 0 ? chartData.topProducts
+            .map(
+              (item) => `
+              <tr>
+                <td>${item.product}</td>
+                <td>${item.sold}</td>
+              </tr>
+            `
+            )
+            .join("") : `<tr><td colspan="2" class="text-center">No product data for the ${period.toLowerCase()} period</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <div class="page-break"></div>
 
-    <h2>Sales Report Summary (${period} Period)</h2>
-    <table>
-      <thead>
-        <tr><th>Date</th><th>Completed</th><th>Cancelled</th><th>Revenue (₱)</th></tr>
-      </thead>
-      <tbody>
-        ${chartData.salesStateData.length > 0 ? chartData.salesStateData
-          .map(
-            (day) => `
-          <tr>
-            <td>${new Date(day.date).toLocaleDateString()}</td>
-            <td>${day.completed}</td>
-            <td>${day.cancelled}</td>
-            <td>₱${day.profit.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
-          </tr>
-        `
-          )
-          .join("") : `<tr><td colspan="4" class="text-center">No sales data for the ${period.toLowerCase()} period</td></tr>`}
-        <tr style="background-color: #f5f5f5; font-weight: bold;">
-          <td>Total</td>
-          <td>${chartData.salesStateData.reduce((sum, day) => sum + day.completed, 0)}</td>
-          <td>${chartData.salesStateData.reduce((sum, day) => sum + day.cancelled, 0)}</td>
-          <td>₱${chartData.salesStateData.reduce((sum, day) => sum + day.profit, 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
-        </tr>
-      </tbody>
-    </table>
+    <section class="print-page">
+      <h1>202 Mags and Tires Collections</h1>
+      <p class="text-center text-sm">Sales Report (${period} Period)</p>
 
-    <h2>Top 5 Brands</h2>
-    <table>
-      <thead>
-        <tr><th>Brand</th><th>Units Sold</th></tr>
-      </thead>
-      <tbody>
-        ${chartData.topBrands
-          .map(
-            (item) => `
-          <tr>
-            <td>${item.brand}</td>
-            <td>${item.sold}</td>
-          </tr>
-        `
-          )
-          .join("")}
-      </tbody>
-    </table>
-
-    <h2>Top 5 Products</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>Units Sold</th></tr>
-      </thead>
-      <tbody>
-        ${chartData.topProducts
-          .map(
-            (item) => `
-          <tr>
-            <td>${item.product}</td>
-            <td>${item.sold}</td>
-          </tr>
-        `
-          )
-          .join("")}
-      </tbody>
-    </table>
+      <div class="print-section">
+        <h2>Sales Report Summary</h2>
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Completed</th><th>Cancelled</th><th>Revenue (₱)</th></tr>
+          </thead>
+          <tbody>
+            ${chartData.salesStateData.length > 0 ? chartData.salesStateData
+            .map(
+              (day) => `
+              <tr>
+                <td>${new Date(day.date).toLocaleDateString()}</td>
+                <td>${day.completed}</td>
+                <td>${day.cancelled}</td>
+                <td>₱${day.profit.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+              </tr>
+            `
+            )
+            .join("") : `<tr><td colspan="4" class="text-center">No sales data for the ${period.toLowerCase()} period</td></tr>`}
+            <tr style="background-color: #f5f5f5; font-weight: bold;">
+              <td>Total</td>
+              <td>${chartData.salesStateData.reduce((sum, day) => sum + day.completed, 0)}</td>
+              <td>${chartData.salesStateData.reduce((sum, day) => sum + day.cancelled, 0)}</td>
+              <td>₱${chartData.salesStateData.reduce((sum, day) => sum + day.profit, 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <div class="footer-info">
       <p>This report was generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
@@ -420,7 +441,7 @@ const DashboardContent = ({
   return (
     <div>
       {/* Inventory Alert Banner */}
-      <InventoryAlertBanner inventory={criticalInventory} userRole="owner" />
+      <InventoryAlertBanner inventory={criticalInventory} userRole="admin" />
 
       {/* Header, Print Button and Period Selector */}
       <div className="flex items-center flex-wrap gap-3 justify-between mb-5">
@@ -450,16 +471,16 @@ const DashboardContent = ({
         </div>
       </div>
 
-      {/* Pending Orders */}
-      <div className="mb-5">
-        <PendingOrdersSection orders={pendingOrders} />
-      </div>
-
       {/* Printable Section */}
       <div data-printable="true">
         <StatsDashboard onDataChange={setStatData} period={period} />
-        <div className="mt-5">
-          <SoldChart orders={orders} />
+        <div className="grid lg:grid-cols-5 mt-5 grid-cols-1 gap-5">
+          <div className="lg:col-span-3">
+            <SoldChart orders={orders} />
+          </div>
+          <div className="lg:col-span-2">
+            <PendingOrdersSection orders={pendingOrders} />
+          </div>
         </div>
         <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 gap-5">
           <BrandChart orders={orders} />
@@ -471,3 +492,4 @@ const DashboardContent = ({
 };
 
 export default DashboardContent;
+

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -20,8 +21,11 @@ export function PendingOrdersSection({ orders }: PendingOrdersSectionProps) {
           <div className="flex items-center gap-2">
             <IconClock className="h-5 w-5 text-orange-500" />
             <CardTitle>Pending Orders</CardTitle>
+            <Badge variant="secondary">{orders.length}</Badge>
           </div>
-          <Badge variant="secondary">{orders.length}</Badge>
+          <Link href="/admin/orders" className='text-primary text-sm font-semibold'>
+            View All
+          </Link>
         </div>
         <CardDescription>
           Orders awaiting processing
@@ -34,7 +38,7 @@ export function PendingOrdersSection({ orders }: PendingOrdersSectionProps) {
             <p>No pending orders</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 overflow-y-auto h-[270px]">
             {orders.slice(0, 5).map((order) => (
               <div
                 key={order.id}
@@ -62,7 +66,7 @@ export function PendingOrdersSection({ orders }: PendingOrdersSectionProps) {
                       ₱ {formatCurrency(order.discountedAmount || order.totalAmount)}
                     </p>
                   </div>
-                  <Link href="/owner/orders">
+                  <Link href={`/admin/orders/${order.id}`}>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <IconArrowRight className="h-4 w-4" />
                     </Button>
@@ -70,13 +74,6 @@ export function PendingOrdersSection({ orders }: PendingOrdersSectionProps) {
                 </div>
               </div>
             ))}
-            {orders.length > 5 && (
-              <Link href="/owner/orders">
-                <Button variant="outline" className="w-full mt-2">
-                  View All Pending Orders ({orders.length})
-                </Button>
-              </Link>
-            )}
           </div>
         )}
       </CardContent>
