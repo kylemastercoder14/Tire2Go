@@ -26,6 +26,8 @@ const isPublicRoute = createRouteMatcher([
   "/api/stats(.*)",
   "/api/database(.*)",
   "/api/s3(.*)", // allow S3 proxy and signed URL API calls
+  "/api/chat(.*)",
+  "/api/conversations(.*)",
 ]);
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
